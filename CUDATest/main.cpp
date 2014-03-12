@@ -12,11 +12,8 @@
 #include "geometry.h"
 #include "sphere.h"
 
-void SetTitle(sf::RenderWindow& window, unsigned iteration) {
-	std::stringstream ss;
-	ss << "CUDA Path Tracer - Iteration: " << iteration;
-	window.setTitle(ss.str());
-}
+void SetTitle(sf::RenderWindow& window, unsigned iteration);
+bool HandleEvents(sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 
 int main() {
 	std::cout << "CUDA path tracing tests" << std::endl;
@@ -34,9 +31,10 @@ int main() {
 	Camera* d_cam; cudaMalloc(&d_cam, sizeof(Camera));
 	Color* d_result; cudaMalloc(&d_result, NR_PIXELS * sizeof(Color));
 	unsigned char* d_pixelData; cudaMalloc(&d_pixelData, NR_PIXELS * 4 * sizeof(unsigned char));
-	curandState* d_rng; cudaMalloc(&d_rng, sizeof(curandState));
+	curandState* d_rng; cudaMalloc(&d_rng, NR_PIXELS * sizeof(curandState));
 
-	LaunchInitRNG(d_rng, (unsigned long)time(NULL));
+	LaunchInitRNG(d_rng, (unsigned long)time(NULL), WIDTH, HEIGHT, TILE_SIZE);
+	LaunchInitResult(d_result, WIDTH, HEIGHT, TILE_SIZE);
 
 	// This will be a pointer on the host, that points to a device pointer to a scene
 	Scene** pScene = new Scene*;
@@ -56,29 +54,24 @@ int main() {
 	window.setVerticalSyncEnabled(false);
 
 	bool running = true;
-	unsigned iteration = 0;
-	while (running) {
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) running = false;
-			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) running = false;
-		}
-		window.clear();
-
+	unsigned iteration = 2;
+	sf::Image image;
+	sf::Texture texture;
+	sf::Sprite sprite;
+	while (HandleEvents(window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
 		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
-		LaunchConvert(d_result, d_pixelData, WIDTH, HEIGHT, TILE_SIZE);
+		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
+		LaunchConvert(d_result, d_pixelData, iteration, WIDTH, HEIGHT, TILE_SIZE);
 		cudaMemcpy(pixelData, d_pixelData, NR_PIXELS * 4 * sizeof(unsigned char), cudaMemcpyDeviceToHost);
 
-		sf::Image image;
-		sf::Texture texture;
-		sf::Sprite sprite;
 		image.create(WIDTH, HEIGHT, pixelData);
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
 		window.draw(sprite);
 		window.display();
 
-		SetTitle(window, iteration++);
+		SetTitle(window, iteration);
+		iteration += 2;
 	}
 
 	std::cout << "Freeing memory..." << std::endl;
@@ -92,4 +85,38 @@ int main() {
 	delete cam;
 	delete[] result;
 	delete[] pixelData;
+}
+
+void SetTitle(sf::RenderWindow& window, unsigned iteration) {
+	std::stringstream ss;
+	ss << "CUDA Path Tracer - Iteration: " << iteration;
+	window.setTitle(ss.str());
+}
+
+bool HandleEvents(sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize) {
+	const float step = 0.2f;
+	const float rstep = 0.05f;
+	sf::Event event;
+	while (window.pollEvent(event)) {
+		if (event.type == sf::Event::Closed) return false;
+		if (event.type == sf::Event::KeyPressed) {
+			if (event.key.code == sf::Keyboard::Escape) return false;
+			if (event.key.code == sf::Keyboard::A)			cam->Strafe(-step);
+			if (event.key.code == sf::Keyboard::D)			cam->Strafe(step);
+			if (event.key.code == sf::Keyboard::W)			cam->Walk(step);
+			if (event.key.code == sf::Keyboard::S)			cam->Walk(-step);
+			if (event.key.code == sf::Keyboard::Up)			cam->Pitch(rstep);
+			if (event.key.code == sf::Keyboard::Down)		cam->Pitch(-rstep);
+			if (event.key.code == sf::Keyboard::Left)		cam->Yaw(rstep);
+			if (event.key.code == sf::Keyboard::Right)		cam->Yaw(-rstep);
+			if (event.key.code == sf::Keyboard::Space)		cam->Elevate(step);
+			if (event.key.code == sf::Keyboard::LControl)	cam->Elevate(-step);
+
+			cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+			iteration = 2;
+			LaunchInitResult(d_result, width, height, tileSize);
+		}
+	}
+
+	return true;
 }

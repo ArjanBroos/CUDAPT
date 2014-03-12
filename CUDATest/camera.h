@@ -16,6 +16,12 @@ public:
 	// Returns a ray from the viewpoint through the center of pixel (x, y)
 	__host__ __device__ Ray			GetRay(unsigned x, unsigned y) const;
 
+	__host__ __device__ void Walk(float x);
+	__host__ __device__ void Strafe(float x);
+	__host__ __device__ void Elevate(float x);
+	__host__ __device__ void Yaw(float r);
+	__host__ __device__ void Pitch(float r);
+
 private:
 	Point		pos;	// Position
 	Vector		dir;	// Direction camera is looking at

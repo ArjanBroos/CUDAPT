@@ -88,11 +88,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <CudaCompile Include="arealight.cu" />
+    <CudaCompile Include="box.cu" />
     <CudaCompile Include="camera.cu" />
     <CudaCompile Include="color.cu" />
     <CudaCompile Include="kernels.cu" />
     <CudaCompile Include="lambertmaterial.cu" />
     <CudaCompile Include="light.cu" />
+    <CudaCompile Include="mirrormaterial.cu" />
     <CudaCompile Include="plane.cu" />
     <CudaCompile Include="point.cu" />
     <CudaCompile Include="primitive.cu" />
@@ -103,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="arealight.h" />
+    <ClInclude Include="box.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="cuda_inc.h" />
@@ -113,6 +116,7 @@
     <ClInclude Include="light.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="math.h" />
+    <ClInclude Include="mirrormaterial.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="primitive.h" />

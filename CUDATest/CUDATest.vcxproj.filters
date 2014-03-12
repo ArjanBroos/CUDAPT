@@ -114,6 +114,12 @@
     <CudaCompile Include="plane.cu">
       <Filter>Source Files\shapes</Filter>
     </CudaCompile>
+    <CudaCompile Include="mirrormaterial.cu">
+      <Filter>Source Files\materials</Filter>
+    </CudaCompile>
+    <CudaCompile Include="box.cu">
+      <Filter>Source Files\shapes</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h">
@@ -171,6 +177,12 @@
       <Filter>Header Files\lights</Filter>
     </ClInclude>
     <ClInclude Include="plane.h">
+      <Filter>Header Files\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="mirrormaterial.h">
+      <Filter>Header Files\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="box.h">
       <Filter>Header Files\shapes</Filter>
     </ClInclude>
   </ItemGroup>

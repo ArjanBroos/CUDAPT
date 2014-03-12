@@ -5,12 +5,17 @@
 #include "arealight.h"
 #include "plane.h"
 
-void LaunchInitRNG(curandState* state, unsigned long seed) {
-	InitRNG<<<1, 1>>>(state, seed);
+void LaunchInitRNG(curandState* state, unsigned long seed, unsigned width, unsigned height, unsigned tileSize) {
+	dim3 grid(width / tileSize, height / tileSize);
+	dim3 block(tileSize, tileSize);
+	InitRNG<<<grid, block>>>(state, seed, width);
 }
 
-__global__ void InitRNG(curandState* state, unsigned long seed) {
-	curand_init(seed, 0, 0, state);
+__global__ void InitRNG(curandState* state, unsigned long seed, unsigned width) {
+	const unsigned x = blockIdx.x * blockDim.x + threadIdx.x;
+	const unsigned y = blockIdx.y * blockDim.y + threadIdx.y;
+	const unsigned i = y * width + x;
+	curand_init(seed - i, 0, 0, &state[i]);
 }
 
 void LaunchInitScene(Scene** pScene) {
@@ -30,8 +35,21 @@ __global__ void InitScene(Scene** pScene) {
 	Plane*				planeShape1		= new Plane(Point(), Vector(0.f, 1.f, 0.f));
 	LambertMaterial*	planeMat1		= new LambertMaterial(Color(0.f, 1.f, 0.f), 1.f);
 	scene->AddPrimitive(new Primitive(planeShape1, planeMat1));
-	Sphere*				lightShape1		= new Sphere(Point(-1.f, 2.f, 1.f), 1.5f);
+	Sphere*				lightShape1		= new Sphere(Point(-2.f, 3.f, 1.f), 1.5f);
 	scene->AddLight(new AreaLight(lightShape1));
+}
+
+void LaunchInitResult(Color* result, unsigned width, unsigned height, unsigned tileSize) {
+	dim3 grid(width / tileSize, height / tileSize);
+	dim3 block(tileSize, tileSize);
+	InitResult<<<grid, block>>>(result, width);
+}
+
+__global__ void InitResult(Color* result, unsigned width) {
+	const unsigned x = blockIdx.x * blockDim.x + threadIdx.x;
+	const unsigned y = blockIdx.y * blockDim.y + threadIdx.y;
+	const unsigned i = y * width + x;
+	result[i] = Color();
 }
 
 void LaunchTraceRays(const Camera* cam, const Scene* scene, Color* result, curandState* rng, unsigned width, unsigned height, unsigned tileSize) {
@@ -44,34 +62,58 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 	const unsigned x = blockIdx.x * blockDim.x + threadIdx.x;
 	const unsigned y = blockIdx.y * blockDim.y + threadIdx.y;
 	const unsigned i = y * width + x;
-	const Ray ray = cam->GetRay(x, y);
 
-	result[i] = Color();
-
+	Ray ray = cam->GetRay(x, y);
+	const unsigned maxDepth = 4;
 	IntRec intRec;
-	if (scene->Intersect(ray, intRec)) {
-		if (intRec.prim)
-			result[i] = intRec.prim->GetMaterial()->GetColor();
-		if (intRec.light)
-			result[i] = intRec.light->Le();
+	Color color(1.f, 1.f, 1.f);
+
+	for (unsigned depth = 0; depth < maxDepth; depth++) {
+		if (!scene->Intersect(ray, intRec)) {
+			color *= Color(0.2f, 0.2f, 0.3f);
+			break;
+		}
+
+		if (intRec.light) {
+			color *= intRec.light->Le();
+			break;
+		}
+
+		const Material* mat = intRec.prim->GetMaterial();
+		const Shape*	shape = intRec.prim->GetShape();
+		const Point		p = ray(intRec.t);
+		const Vector	n = shape->GetNormal(p);
+
+		Vector in = ray.d;
+		Vector out = mat->GetSample(ray.d, n, &rng[i]);
+		ray = Ray(p, out);
+
+		color *= mat->GetColor();
+		color *= mat->GetMultiplier(in, out, n);
 	}
+
+	result[i] += color;
 }
 
-void LaunchConvert(const Color* result, unsigned char* pixelData, unsigned width, unsigned height, unsigned tileSize) {
+void LaunchConvert(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width, unsigned height, unsigned tileSize) {
 	dim3 grid(width / tileSize, height / tileSize);
 	dim3 block(tileSize, tileSize);
-	Convert<<<grid, block>>>(result, pixelData, width);
+	Convert<<<grid, block>>>(result, pixelData, iteration, width);
 }
 
-__global__ void Convert(const Color* result, unsigned char* pixelData, unsigned width) {
+__global__ void Convert(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width) {
 	const unsigned x = blockIdx.x * blockDim.x + threadIdx.x;
 	const unsigned y = blockIdx.y * blockDim.y + threadIdx.y;
 	const unsigned i = y * width + x;
 	const unsigned pdi = i*4;
 
-	pixelData[pdi]		= (unsigned char)(result[i].r * 255);
-	pixelData[pdi+1]	= (unsigned char)(result[i].g * 255);
-	pixelData[pdi+2]	= (unsigned char)(result[i].b * 255);
+	const float r = (result[i].r / iteration) * 255;
+	const float g = (result[i].g / iteration) * 255;
+	const float b = (result[i].b / iteration) * 255;
+
+	pixelData[pdi]		= Clamp255(r);
+	pixelData[pdi+1]	= Clamp255(g);
+	pixelData[pdi+2]	= Clamp255(b);
 	pixelData[pdi+3]	= 255;
 }
 
@@ -84,3 +126,8 @@ __global__ void DestroyScene(Scene* scene) {
 	scene = NULL;
 }
 
+__device__ unsigned char Clamp255(float s) {
+	if (s < 0.f) s = 0.f;
+	if (s > 255.f) s = 255.f;
+	return (unsigned char)s;
+}
