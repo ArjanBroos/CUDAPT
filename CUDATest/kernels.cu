@@ -4,6 +4,8 @@
 #include "lambertmaterial.h"
 #include "arealight.h"
 #include "plane.h"
+#include "mirrormaterial.h"
+#include "box.h"
 
 void LaunchInitRNG(curandState* state, unsigned long seed, unsigned width, unsigned height, unsigned tileSize) {
 	dim3 grid(width / tileSize, height / tileSize);
@@ -30,13 +32,26 @@ __global__ void InitScene(Scene** pScene) {
 	LambertMaterial*	sphereMat1		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
 	scene->AddPrimitive(new Primitive(sphereShape1, sphereMat1));
 	Sphere*				sphereShape2	= new Sphere(Point(3.f, 0.2f, 0.f), 1.f);
-	LambertMaterial*	sphereMat2		= new LambertMaterial(Color(0.f, 0.f, 1.f), 1.f);
+	MirrorMaterial*		sphereMat2		= new MirrorMaterial(Color(1.f, 1.f, 1.f), 0.8f);
 	scene->AddPrimitive(new Primitive(sphereShape2, sphereMat2));
+	Sphere*				sphereShape3	= new Sphere(Point(-2.f, 8.f, -20.f), 6.f);
+	MirrorMaterial*		sphereMat3		= new MirrorMaterial(Color(1.f, 1.f, 1.f), 0.9f);
+	scene->AddPrimitive(new Primitive(sphereShape3, sphereMat3));
+
+	Box*				boxShape1		= new Box(Point(-1.5f, 0.5f, 3.f), 1.f);
+	LambertMaterial*	boxMat1			= new LambertMaterial();
+	scene->AddPrimitive(new Primitive(boxShape1, boxMat1));
+
 	Plane*				planeShape1		= new Plane(Point(), Vector(0.f, 1.f, 0.f));
-	LambertMaterial*	planeMat1		= new LambertMaterial(Color(0.f, 1.f, 0.f), 1.f);
+	LambertMaterial*	planeMat1		= new LambertMaterial(Color(1.f, 1.f, 0.3f), 1.f);
 	scene->AddPrimitive(new Primitive(planeShape1, planeMat1));
+
 	Sphere*				lightShape1		= new Sphere(Point(-2.f, 3.f, 1.f), 1.5f);
 	scene->AddLight(new AreaLight(lightShape1));
+	Sphere*				lightShape2		= new Sphere(Point(5.f, 1.f, -3.f), 0.8f);
+	scene->AddLight(new AreaLight(lightShape2, Color(1.f, 0.5f, 0.5f), 1.5f));
+	Box*				lightShape3		= new Box(Point(3.f, 0.f, 5.f), 0.8f);
+	scene->AddLight(new AreaLight(lightShape3, Color(1.f, 1.f, 1.f), 2.f));
 }
 
 void LaunchInitResult(Color* result, unsigned width, unsigned height, unsigned tileSize) {
@@ -63,12 +78,17 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 	const unsigned y = blockIdx.y * blockDim.y + threadIdx.y;
 	const unsigned i = y * width + x;
 
-	Ray ray = cam->GetRay(x, y);
+	Ray ray = cam->GetJitteredRay(x, y, rng);
 	const unsigned maxDepth = 4;
 	IntRec intRec;
 	Color color(1.f, 1.f, 1.f);
 
-	for (unsigned depth = 0; depth < maxDepth; depth++) {
+	for (unsigned depth = 0; depth <= maxDepth; depth++) {
+		if (depth == maxDepth) {
+			color *= Color();
+			break;
+		}
+
 		if (!scene->Intersect(ray, intRec)) {
 			color *= Color(0.2f, 0.2f, 0.3f);
 			break;
@@ -84,8 +104,8 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 		const Point		p = ray(intRec.t);
 		const Vector	n = shape->GetNormal(p);
 
-		Vector in = ray.d;
-		Vector out = mat->GetSample(ray.d, n, &rng[i]);
+		const Vector in = ray.d;
+		const Vector out = mat->GetSample(in, n, &rng[i]);
 		ray = Ray(p, out);
 
 		color *= mat->GetColor();

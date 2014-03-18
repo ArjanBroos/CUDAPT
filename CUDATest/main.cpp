@@ -18,8 +18,8 @@ bool HandleEvents(sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned
 int main() {
 	std::cout << "CUDA path tracing tests" << std::endl;
 
-	const unsigned WIDTH = 1024;
-	const unsigned HEIGHT = 768;
+	const unsigned WIDTH = 640;
+	const unsigned HEIGHT = 480;
 	const unsigned NR_PIXELS = WIDTH * HEIGHT;
 	const unsigned TILE_SIZE = 8;
 
@@ -54,12 +54,11 @@ int main() {
 	window.setVerticalSyncEnabled(false);
 
 	bool running = true;
-	unsigned iteration = 2;
+	unsigned iteration = 1;
 	sf::Image image;
 	sf::Texture texture;
 	sf::Sprite sprite;
 	while (HandleEvents(window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
-		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchConvert(d_result, d_pixelData, iteration, WIDTH, HEIGHT, TILE_SIZE);
 		cudaMemcpy(pixelData, d_pixelData, NR_PIXELS * 4 * sizeof(unsigned char), cudaMemcpyDeviceToHost);
@@ -71,7 +70,7 @@ int main() {
 		window.display();
 
 		SetTitle(window, iteration);
-		iteration += 2;
+		iteration += 1;
 	}
 
 	std::cout << "Freeing memory..." << std::endl;
@@ -113,7 +112,7 @@ bool HandleEvents(sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned
 			if (event.key.code == sf::Keyboard::LControl)	cam->Elevate(-step);
 
 			cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 2;
+			iteration = 1;
 			LaunchInitResult(d_result, width, height, tileSize);
 		}
 	}

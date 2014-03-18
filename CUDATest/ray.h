@@ -17,7 +17,7 @@ public:
 	float		maxt; // Maximum distance along ray for intersection checks
 
 	// Initializes a ray with origin o and direction d. mint and maxt are optional
-	__host__ __device__ Ray(const Point& o, const Vector& d, float mint = 1e-6f, float maxt = INFINITY);
+	__host__ __device__ Ray(const Point& o, const Vector& d, float mint = 5e-4f, float maxt = INFINITY);
 
 	// Returns o + t*d
 	__host__ __device__ Point		operator()(float t) const;

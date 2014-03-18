@@ -3,6 +3,7 @@
 #include "geometry.h"
 #include "ray.h"
 #include "cuda_inc.h"
+#include <curand_kernel.h>
 
 // Represents a pinhole camera
 class Camera {
@@ -14,7 +15,9 @@ public:
 		unsigned filmWidth, unsigned filmHeight, float FoV);
 
 	// Returns a ray from the viewpoint through the center of pixel (x, y)
-	__host__ __device__ Ray			GetRay(unsigned x, unsigned y) const;
+	__device__ Ray			GetRay(unsigned x, unsigned y) const;
+	// Returns a ray through pixel (x, y), randomly jittered around its center
+	__device__ Ray			GetJitteredRay(unsigned x, unsigned y, curandState* rng) const;
 
 	__host__ __device__ void Walk(float x);
 	__host__ __device__ void Strafe(float x);

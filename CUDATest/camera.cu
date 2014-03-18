@@ -25,9 +25,22 @@ Camera::Camera(const Point& position, const Vector& direction, const Vector& up,
 }
 
 // Returns a ray from the viewpoint through pixel (x, y)
-Ray	Camera::GetRay(unsigned x, unsigned y) const {
+__device__ Ray Camera::GetRay(unsigned x, unsigned y) const {
 	Vector vx = (xmin + x*dx) * v;
 	Vector vy = (ymin + y*dy) * u;
+	return Ray(pos, Normalize(vx + vy + dir));
+}
+
+// Returns a ray through pixel (x, y), randomly jittered around its center
+__device__ Ray Camera::GetJitteredRay(unsigned x, unsigned y, curandState* rng) const {
+	const float pxmin = -1.f + (float)x * dx;		// Pixel x mininum
+	const float pymin = -1.f + (float)y * dy;		// Pixel y minimum
+
+	const float px = pxmin + curand_uniform(rng) * dx;
+	const float py = pymin + curand_uniform(rng) * dy;
+
+	const Vector vx = px * v;
+	const Vector vy = py * u;
 	return Ray(pos, Normalize(vx + vy + dir));
 }
 
