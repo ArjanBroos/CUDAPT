@@ -1,5 +1,6 @@
 #include "camera.h"
 #include "math.h"
+#include "quaternion.h"
 
 // Initializes a camera at position, looking in direction, with up being the up direction for the camera
 // and a film of filmWidth x filmHeight pixels.
@@ -11,10 +12,10 @@ Camera::Camera(const Point& position, const Vector& direction, const Vector& up,
 				   dir = Normalize(direction);
 				   v = Normalize(Cross(dir, up));
 				   u = Cross(dir, v);
-
+				   worldUp = up;
 				   FoV *= 180.f / PI; // Convert FoV to radians
-				   float halfWidth = tanf(FoV/2.f);
-				   float aspectRatio = (float)filmWidth / (float)filmHeight;
+				   halfWidth = tanf(FoV/2.f);
+				   aspectRatio = (float)filmWidth / (float)filmHeight;
 				   u *= halfWidth; // Make u's length half of the film's width
 				   v *= halfWidth * aspectRatio; // Make v's length half of the film's height
 
@@ -119,4 +120,30 @@ void Camera::Pitch(float r)
 	y = u.y;
 	z = -u.x*sinf(-rx) + u.z*cosf(-rx);
 	u = Vector(x, y, z);
+}
+
+void Camera::RotateCameraU(float angle)
+{
+  Quaternion rQuat;
+  rQuat = Quaternion(worldUp, angle);
+  dir = rQuat * dir;
+
+  CalcUV();
+}
+
+void Camera::RotateCameraV(float angle)
+{
+  Quaternion rQuat;
+  rQuat = Quaternion(v, angle);
+  dir = rQuat * dir;
+
+  CalcUV();
+}
+
+void Camera::CalcUV() {
+	dir = Normalize(dir);
+	v = Normalize(Cross(dir, worldUp));
+	u = Cross(dir, v);
+	u *= halfWidth; // Make u's length half of the film's width
+	v *= halfWidth * aspectRatio; // Make v's length half of the film's height
 }

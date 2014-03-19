@@ -14,6 +14,7 @@
 
 void SetTitle(sf::RenderWindow& window, unsigned iteration);
 bool HandleEvents(sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
+void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 
 int main() {
 	std::cout << "CUDA path tracing tests" << std::endl;
@@ -59,6 +60,7 @@ int main() {
 	sf::Texture texture;
 	sf::Sprite sprite;
 	while (HandleEvents(window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
+		pollKeyboard(cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchConvert(d_result, d_pixelData, iteration, WIDTH, HEIGHT, TILE_SIZE);
 		cudaMemcpy(pixelData, d_pixelData, NR_PIXELS * 4 * sizeof(unsigned char), cudaMemcpyDeviceToHost);
@@ -100,22 +102,75 @@ bool HandleEvents(sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned
 		if (event.type == sf::Event::Closed) return false;
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) return false;
-			if (event.key.code == sf::Keyboard::A)			cam->Strafe(-step);
-			if (event.key.code == sf::Keyboard::D)			cam->Strafe(step);
-			if (event.key.code == sf::Keyboard::W)			cam->Walk(step);
-			if (event.key.code == sf::Keyboard::S)			cam->Walk(-step);
-			if (event.key.code == sf::Keyboard::Up)			cam->Pitch(rstep);
-			if (event.key.code == sf::Keyboard::Down)		cam->Pitch(-rstep);
-			if (event.key.code == sf::Keyboard::Left)		cam->Yaw(rstep);
-			if (event.key.code == sf::Keyboard::Right)		cam->Yaw(-rstep);
-			if (event.key.code == sf::Keyboard::Space)		cam->Elevate(step);
-			if (event.key.code == sf::Keyboard::LControl)	cam->Elevate(-step);
-
-			cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 1;
-			LaunchInitResult(d_result, width, height, tileSize);
 		}
 	}
 
 	return true;
+}
+
+// Handles continuous pressed keys
+void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize) 
+{
+	const float step = 0.2f;
+	const float rstep = 0.05f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		cam->Walk(step);
+		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+			iteration = 1;
+			LaunchInitResult(d_result, width, height, tileSize);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		cam->Walk(-step);
+		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+			iteration = 1;
+			LaunchInitResult(d_result, width, height, tileSize);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		cam->Strafe(-step);
+		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+			iteration = 1;
+			LaunchInitResult(d_result, width, height, tileSize);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		cam->Strafe(step);
+		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+			iteration = 1;
+			LaunchInitResult(d_result, width, height, tileSize);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		cam->Elevate(step);
+		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+			iteration = 1;
+			LaunchInitResult(d_result, width, height, tileSize);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+		cam->Elevate(-step);
+		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+			iteration = 1;
+			LaunchInitResult(d_result, width, height, tileSize);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		cam->RotateCameraU(rstep);
+		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+			iteration = 1;
+			LaunchInitResult(d_result, width, height, tileSize);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		cam->RotateCameraU(-rstep);
+		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+			iteration = 1;
+			LaunchInitResult(d_result, width, height, tileSize);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		cam->RotateCameraV(-rstep);
+		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+			iteration = 1;
+			LaunchInitResult(d_result, width, height, tileSize);
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		cam->RotateCameraV(rstep);
+		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+			iteration = 1;
+			LaunchInitResult(d_result, width, height, tileSize);
+	}
 }

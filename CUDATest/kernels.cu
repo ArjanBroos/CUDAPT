@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "kernels.h"
 #include "sphere.h"
 #include "intrec.h"
