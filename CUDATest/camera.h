@@ -24,12 +24,18 @@ public:
 	__host__ __device__ void Elevate(float x);
 	__host__ __device__ void Yaw(float r);
 	__host__ __device__ void Pitch(float r);
+	__host__ __device__ void RotateCameraU(float angle);
+	__host__ __device__ void RotateCameraV(float angle);
+	__host__ __device__ void CalcUV();
 
 private:
 	Point		pos;	// Position
 	Vector		dir;	// Direction camera is looking at
 	Vector		u;		// Up direction of film plane
 	Vector		v;		// Right direction of film plane
+	Vector		worldUp;
+	float		aspectRatio;
+	float		halfWidth;
 
 	float		xmin;	// Minimum normalized x-coordinate on film plane
 	float		ymin;	// Minimum normalized y-coordinate on film plane

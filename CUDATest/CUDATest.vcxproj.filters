@@ -120,6 +120,9 @@
     <CudaCompile Include="box.cu">
       <Filter>Source Files\shapes</Filter>
     </CudaCompile>
+    <CudaCompile Include="quaternion.cu">
+      <Filter>Source Files\geometry</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h">
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="box.h">
       <Filter>Header Files\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="quaternion.h">
+      <Filter>Header Files\geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
