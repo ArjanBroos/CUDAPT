@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "kernels.h"
 #include "sphere.h"
 #include "intrec.h"
@@ -28,13 +29,13 @@ __global__ void InitScene(Scene** pScene) {
 	*pScene = new Scene();
 	Scene* scene = *pScene;
 
-	Sphere*				sphereShape1	= new Sphere(Point(0.0f, 0.4f, 0.0f), 2.f);
+	Box*				sphereShape1	= new Box(Point(0.0f, 0.4f, 0.0f), 2.f);
 	LambertMaterial*	sphereMat1		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
 	scene->AddPrimitive(new Primitive(sphereShape1, sphereMat1));
-	Sphere*				sphereShape2	= new Sphere(Point(3.f, 0.2f, 0.f), 1.f);
+	Box*				sphereShape2	= new Box(Point(3.f, 0.2f, 0.f), 1.f);
 	MirrorMaterial*		sphereMat2		= new MirrorMaterial(Color(1.f, 1.f, 1.f), 0.8f);
 	scene->AddPrimitive(new Primitive(sphereShape2, sphereMat2));
-	Sphere*				sphereShape3	= new Sphere(Point(-2.f, 8.f, -20.f), 6.f);
+	Box*				sphereShape3	= new Box(Point(-2.f, 8.f, -20.f), 6.f);
 	MirrorMaterial*		sphereMat3		= new MirrorMaterial(Color(1.f, 1.f, 1.f), 0.9f);
 	scene->AddPrimitive(new Primitive(sphereShape3, sphereMat3));
 
@@ -46,9 +47,9 @@ __global__ void InitScene(Scene** pScene) {
 	LambertMaterial*	planeMat1		= new LambertMaterial(Color(1.f, 1.f, 0.3f), 1.f);
 	scene->AddPrimitive(new Primitive(planeShape1, planeMat1));
 
-	Sphere*				lightShape1		= new Sphere(Point(-2.f, 3.f, 1.f), 1.5f);
+	Box*				lightShape1		= new Box(Point(-2.f, 3.f, 1.f), 1.5f);
 	scene->AddLight(new AreaLight(lightShape1));
-	Sphere*				lightShape2		= new Sphere(Point(5.f, 1.f, -3.f), 0.8f);
+	Box*				lightShape2		= new Box(Point(5.f, 1.f, -3.f), 0.8f);
 	scene->AddLight(new AreaLight(lightShape2, Color(1.f, 0.5f, 0.5f), 1.5f));
 	Box*				lightShape3		= new Box(Point(3.f, 0.f, 5.f), 0.8f);
 	scene->AddLight(new AreaLight(lightShape3, Color(1.f, 1.f, 1.f), 2.f));
@@ -79,26 +80,32 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 	const unsigned i = y * width + x;
 
 	Ray ray = cam->GetJitteredRay(x, y, rng);
-	const unsigned maxDepth = 4;
+	const unsigned maxDepth = 10;
 	IntRec intRec;
 	Color color(1.f, 1.f, 1.f);
 
+	float rr = 1.f;
+
 	for (unsigned depth = 0; depth <= maxDepth; depth++) {
+		// Enforce maximum depth
 		if (depth == maxDepth) {
-			color *= Color();
+			color = Color();
 			break;
 		}
 
+		// If ray leaves the scene
 		if (!scene->Intersect(ray, intRec)) {
 			color *= Color(0.2f, 0.2f, 0.3f);
 			break;
 		}
 
+		// If the ray hits a light
 		if (intRec.light) {
 			color *= intRec.light->Le();
 			break;
 		}
 
+		// If ray hit a surface in the scene
 		const Material* mat = intRec.prim->GetMaterial();
 		const Shape*	shape = intRec.prim->GetShape();
 		const Point		p = ray(intRec.t);
@@ -107,9 +114,17 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 		const Vector in = ray.d;
 		const Vector out = mat->GetSample(in, n, &rng[i]);
 		ray = Ray(p, out);
+		const float multiplier = mat->GetMultiplier(in, out, n);
 
 		color *= mat->GetColor();
-		color *= mat->GetMultiplier(in, out, n);
+		color *= multiplier;
+
+		// Russian roulette
+		if (curand_uniform(&rng[i]) > rr) {
+			color = Color();
+			break;
+		}
+		rr *= multiplier;
 	}
 
 	result[i] += color;
