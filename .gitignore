@@ -21,3 +21,5 @@
 *.lai
 *.la
 *.a
+
+*.vcxproj
