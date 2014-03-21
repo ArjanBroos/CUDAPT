@@ -54,11 +54,24 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "CUDA Path tracer");
 	window.setVerticalSyncEnabled(false);
 
-	bool running = true;
-	unsigned iteration = 1;
+	// Render
 	sf::Image image;
 	sf::Texture texture;
 	sf::Sprite sprite;
+
+	// Interface
+	sf::Texture diffBlockTex, mirrBlockTex, glassBlockTex, crosshairTex;
+	sf::Sprite diffBlockSpr, mirrBlockSpr, glassBlockSpr, crosshairSpr;
+	diffBlockTex.loadFromFile("diffuseblock.png"); mirrBlockTex.loadFromFile("mirrorblock.png");
+	glassBlockTex.loadFromFile("glassblock.png"); crosshairTex.loadFromFile("crosshair.png");
+	diffBlockSpr.setTexture(diffBlockTex); mirrBlockSpr.setTexture(mirrBlockTex);
+	glassBlockSpr.setTexture(glassBlockTex); crosshairSpr.setTexture(crosshairTex);
+	diffBlockSpr.setPosition(20.f, 20.f); mirrBlockSpr.setPosition(67.f, 20.f);
+	glassBlockSpr.setPosition(114.f, 20.f); crosshairSpr.setPosition(WIDTH / 2.f - 16.f, HEIGHT / 2.f - 16.f);
+	diffBlockSpr.setScale(0.5f, 0.5f); mirrBlockSpr.setScale(0.5f, 0.5f); glassBlockSpr.setScale(0.5f, 0.5f);
+
+	bool running = true;
+	unsigned iteration = 1;
 	while (HandleEvents(window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
 		pollKeyboard(cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
@@ -69,6 +82,10 @@ int main() {
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
 		window.draw(sprite);
+		window.draw(diffBlockSpr);
+		window.draw(mirrBlockSpr);
+		window.draw(glassBlockSpr);
+		window.draw(crosshairSpr);
 		window.display();
 
 		SetTitle(window, iteration);
@@ -111,7 +128,7 @@ bool HandleEvents(sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned
 // Handles continuous pressed keys
 void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize) 
 {
-	const float step = 0.2f;
+	const float step = 0.4f;
 	const float rstep = 0.05f;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 		cam->Walk(step);
