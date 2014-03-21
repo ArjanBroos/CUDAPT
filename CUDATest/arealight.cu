@@ -7,7 +7,7 @@ __device__ AreaLight::AreaLight(Shape* shape) : shape(shape) {
 }
 
 // Initializes area light with given shape (cannot be NULL)
-__device__ AreaLight::AreaLight(Shape* shape, Color color, float intensity) : shape(shape) {
+__device__ AreaLight::AreaLight(Shape* shape, Color color, float intensity, Point* loc) : Light(loc), shape(shape) {
 	c = color;
 	i = intensity;
 }

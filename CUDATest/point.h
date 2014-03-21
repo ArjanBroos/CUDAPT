@@ -26,4 +26,6 @@ public:
 	__host__ __device__ Point& operator*=(float s);
 	__host__ __device__ Point operator/(float s) const;
 	__host__ __device__ Point& operator/=(float s);
+	__host__ __device__ bool operator>(const Point &p) const;
+	__host__ __device__ bool operator<(const Point &p) const;
 };

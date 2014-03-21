@@ -8,6 +8,9 @@ public:
 	//Upper and lower bound points of the box
 	Point bounds[2];
 
+	// Default constructor
+	__device__ Box() {};
+
 	//Create a box of size 1 at (x,y,z)
 	__device__ Box(Point& p);
 	//Create a box of size s at (x,y,z)

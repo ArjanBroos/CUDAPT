@@ -15,6 +15,8 @@ void LaunchInitResult(Color* result, unsigned width, unsigned height, unsigned t
 __global__ void InitResult(Color* result, unsigned width);
 void LaunchTraceRays(const Camera* cam, const Scene* scene, Color* result, curandState* rng, unsigned width, unsigned height, unsigned tileSize);
 __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, curandState* rng, unsigned width);
+void LaunchAddBlock(const Camera* cam, Scene* scene);
+__global__ void AddBlock(const Camera* cam, Scene* scene);
 void LaunchConvert(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width, unsigned height, unsigned tileSize);
 __global__ void Convert(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width);
 void LaunchDestroyScene(Scene* scene);

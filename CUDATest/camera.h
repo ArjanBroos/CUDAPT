@@ -18,6 +18,8 @@ public:
 	__device__ Ray			GetRay(unsigned x, unsigned y) const;
 	// Returns a ray through pixel (x, y), randomly jittered around its center
 	__device__ Ray			GetJitteredRay(unsigned x, unsigned y, curandState* rng) const;
+	// Returns a ray from the viewpoint through the center of the film
+	__device__ Ray			GetCenterRay() const;
 
 	__host__ __device__ void Walk(float x);
 	__host__ __device__ void Strafe(float x);
@@ -35,6 +37,8 @@ private:
 	Vector		v;		// Right direction of film plane
 	Vector		worldUp;
 	float		aspectRatio;
+	unsigned	width;
+	unsigned	height;
 	float		halfWidth;
 
 	float		xmin;	// Minimum normalized x-coordinate on film plane

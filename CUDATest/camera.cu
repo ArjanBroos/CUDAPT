@@ -19,6 +19,9 @@ Camera::Camera(const Point& position, const Vector& direction, const Vector& up,
 				   u *= halfWidth; // Make u's length half of the film's width
 				   v *= halfWidth * aspectRatio; // Make v's length half of the film's height
 
+				   width = filmWidth;
+				   height = filmHeight;
+
 				   dx = 2.f / (float)filmWidth;
 				   dy = 2.f / (float)filmHeight;
 				   xmin = -1.f + dx / 2.f;
@@ -27,6 +30,15 @@ Camera::Camera(const Point& position, const Vector& direction, const Vector& up,
 
 // Returns a ray from the viewpoint through pixel (x, y)
 __device__ Ray Camera::GetRay(unsigned x, unsigned y) const {
+	Vector vx = (xmin + x*dx) * v;
+	Vector vy = (ymin + y*dy) * u;
+	return Ray(pos, Normalize(vx + vy + dir));
+}
+
+// Returns a ray from the viewpoint through the center of the film
+__device__ Ray	Camera::GetCenterRay() const {
+	float x = (float) width / 2.f;
+	float y = (float) height / 2.f;
 	Vector vx = (xmin + x*dx) * v;
 	Vector vy = (ymin + y*dy) * u;
 	return Ray(pos, Normalize(vx + vy + dir));

@@ -2,10 +2,13 @@
 
 #include "color.h"
 #include "geometry.h"
+#include "object.h"
 
 // The abstract base class for all lights
-class Light {
+class Light: public Object {
 public:
+	__device__ Light();
+	__device__ Light(Point* loc);
 	Color			c;	// Color of light
 	float			i;	// Intensity of light
 
