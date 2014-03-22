@@ -12,6 +12,7 @@
 
 enum subNodes{NEB, NWB, SWB, SEB, NET, NWT, SWT, SET};
 
+class Object;
 class Node {
 public:
 	__device__ Node();
@@ -27,9 +28,9 @@ public:
 	const Object* object;
 
 	// If possible inserts the object in the correct node in the octree
-	__device__ int Insert(const Object* object, int &id);
+	__device__ int Insert(Object* object, int &id);
 	// Removes the object in the node of the octree corresponding to the given location
-	__device__ int Remove(const Point &loc);
+	__device__ void Remove(Object* object);
 	// Checks if a ray intersects with an object in the octree
 	__device__ bool Intersect(const Ray &ray, IntRec& intRec) const;
 	// Finds the next node in a pre-order stackless tree traversal

@@ -23,7 +23,8 @@ public:
 	__device__ void AddPlane(Primitive* plane);
 	__device__ void AddLight(Light* light);
 	// Adds object to the octree of the scene
-	__device__	void AddObject(Object* object);
+	__device__ void AddObject(Object* object);
+	__device__ void RemoveObject(Object* object);
 	__device__ bool	Intersect(const Ray& ray, IntRec& intRec) const;
 	__device__ bool	IntersectOctree(const Ray& ray, IntRec& intRec, bool& intersected) const;
 

@@ -1,11 +1,15 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "point.h"
-#include "ray.h"
+//#include "point.h"
+//#include "ray.h"
+//#include "octree.h"
 
 enum objectType{LIGHT, PRIMITIVE, PLANE};
 
+class Point;
+class Node;
+class Ray;
 class Object
 {
 public:
@@ -15,6 +19,7 @@ public:
 	int			size;
 	Point*		loc;
 	int			type;
+	Node*		parent;
 
 	//Checks if the ray intersects with the shape of the object
 	__device__ virtual bool	Intersect(const Ray& ray, float& t) const = 0;
