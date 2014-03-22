@@ -73,6 +73,12 @@
     <Filter Include="Source Files\color">
       <UniqueIdentifier>{21834ba6-1b1c-48d5-8fe8-3dbc041f7b24}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\octree">
+      <UniqueIdentifier>{b3baadde-7d07-4cf1-9bdd-752ae91022a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\octree">
+      <UniqueIdentifier>{cf046065-7aee-4f00-a55d-7cdb98e66da5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="camera.cu">
@@ -122,6 +128,12 @@
     </CudaCompile>
     <CudaCompile Include="quaternion.cu">
       <Filter>Source Files\geometry</Filter>
+    </CudaCompile>
+    <CudaCompile Include="octree.cu">
+      <Filter>Source Files\octree</Filter>
+    </CudaCompile>
+    <CudaCompile Include="object.cu">
+      <Filter>Source Files\octree</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +202,12 @@
     </ClInclude>
     <ClInclude Include="quaternion.h">
       <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="octree.h">
+      <Filter>Header Files\octree</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>Header Files\octree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

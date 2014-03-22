@@ -66,3 +66,13 @@ Point& Point::operator/=(float s) {
 	z /= s;
 	return *this;
 }
+
+bool Point::operator<(const Point &p) const
+{
+	return ( (x < p.x) || (y < p.y) || (z < p.z) );
+}
+
+bool Point::operator>(const Point &p) const
+{
+	return ( (x > p.x) || (y > p.y) || (z > p.z) );
+}

@@ -13,7 +13,7 @@
 #include "sphere.h"
 
 void SetTitle(sf::RenderWindow& window, unsigned iteration);
-bool HandleEvents(sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
+bool HandleEvents(Scene* pScene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 
 int main() {
@@ -26,7 +26,7 @@ int main() {
 
 	std::cout << "Allocating memory..." << std::endl;
 
-	Camera* cam = new Camera(Point(0.f, 4.f, 10.f), Normalize(Vector(0.f, -0.4f, -1.f)), Vector(0.f, 1.f, 0.f), WIDTH, HEIGHT, 60.f);
+	Camera* cam = new Camera(Point(8.f, 2.8f, 8.f), Normalize(Vector(10.f, -4.f, 10.f)), Vector(0.f, 1.f, 0.f), WIDTH, HEIGHT, 60.f);
 	Color* result = new Color[NR_PIXELS];
 	unsigned char* pixelData = new unsigned char[NR_PIXELS * 4];
 	Camera* d_cam; cudaMalloc(&d_cam, sizeof(Camera));
@@ -50,9 +50,10 @@ int main() {
 	cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
 
 	std::cout << "Done" << std::endl;
-
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "CUDA Path tracer");
 	window.setVerticalSyncEnabled(false);
+
+	std::cout << "Calculating rays" << std::endl << std::flush;
 
 	// Render
 	sf::Image image;
@@ -72,7 +73,7 @@ int main() {
 
 	bool running = true;
 	unsigned iteration = 1;
-	while (HandleEvents(window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
+	while (HandleEvents(*pScene, window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
 		pollKeyboard(cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchConvert(d_result, d_pixelData, iteration, WIDTH, HEIGHT, TILE_SIZE);
@@ -111,7 +112,7 @@ void SetTitle(sf::RenderWindow& window, unsigned iteration) {
 	window.setTitle(ss.str());
 }
 
-bool HandleEvents(sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize) {
+bool HandleEvents(Scene* scene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize) {
 	const float step = 0.2f;
 	const float rstep = 0.05f;
 	sf::Event event;
@@ -119,6 +120,14 @@ bool HandleEvents(sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned
 		if (event.type == sf::Event::Closed) return false;
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) return false;
+			if (event.key.code == sf::Keyboard::L) LaunchChangeLight(scene);
+		}
+		if (event.type == sf::Event::MouseButtonPressed) {
+			if (event.key.code == sf::Mouse::Left) {
+				LaunchAddBlock(d_cam, scene);
+				iteration = 1;
+				LaunchInitResult(d_result, width, height, tileSize);
+			}
 		}
 	}
 
@@ -133,61 +142,61 @@ void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_resu
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 		cam->Walk(step);
 		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 1;
-			LaunchInitResult(d_result, width, height, tileSize);
+		iteration = 1;
+		LaunchInitResult(d_result, width, height, tileSize);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 		cam->Walk(-step);
 		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 1;
-			LaunchInitResult(d_result, width, height, tileSize);
+		iteration = 1;
+		LaunchInitResult(d_result, width, height, tileSize);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		cam->Strafe(-step);
 		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 1;
-			LaunchInitResult(d_result, width, height, tileSize);
+		iteration = 1;
+		LaunchInitResult(d_result, width, height, tileSize);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		cam->Strafe(step);
 		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 1;
-			LaunchInitResult(d_result, width, height, tileSize);
+		iteration = 1;
+		LaunchInitResult(d_result, width, height, tileSize);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 		cam->Elevate(step);
 		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 1;
-			LaunchInitResult(d_result, width, height, tileSize);
+		iteration = 1;
+		LaunchInitResult(d_result, width, height, tileSize);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 		cam->Elevate(-step);
 		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 1;
-			LaunchInitResult(d_result, width, height, tileSize);
+		iteration = 1;
+		LaunchInitResult(d_result, width, height, tileSize);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 		cam->RotateCameraU(rstep);
 		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 1;
-			LaunchInitResult(d_result, width, height, tileSize);
+		iteration = 1;
+		LaunchInitResult(d_result, width, height, tileSize);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 		cam->RotateCameraU(-rstep);
 		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 1;
-			LaunchInitResult(d_result, width, height, tileSize);
+		iteration = 1;
+		LaunchInitResult(d_result, width, height, tileSize);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 		cam->RotateCameraV(-rstep);
 		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 1;
-			LaunchInitResult(d_result, width, height, tileSize);
+		iteration = 1;
+		LaunchInitResult(d_result, width, height, tileSize);
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 		cam->RotateCameraV(rstep);
 		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-			iteration = 1;
-			LaunchInitResult(d_result, width, height, tileSize);
+		iteration = 1;
+		LaunchInitResult(d_result, width, height, tileSize);
 	}
 }
