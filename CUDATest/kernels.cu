@@ -119,6 +119,23 @@ __global__ void AddBlock(const Camera* cam, Scene* scene) {
 	}
 }
 
+void LaunchRemoveBlock(const Camera* cam, Scene* scene) {
+	RemoveBlock<<<1,1>>>(cam, scene);
+}
+
+__global__ void RemoveBlock(const Camera* cam, Scene* scene) {
+	Ray ray = cam->GetCenterRay();
+	IntRec intRec;
+	if (scene->Intersect(ray, intRec)) {
+		if(intRec.light) {
+			scene->RemoveObject(intRec.light);
+		}
+		if(intRec.prim && (intRec.prim->type = PRIMITIVE) ) {
+			scene->RemoveObject(intRec.prim);
+		}
+	}
+}
+
 void LaunchInitResult(Color* result, unsigned width, unsigned height, unsigned tileSize) {
 	dim3 grid(width / tileSize, height / tileSize);
 	dim3 block(tileSize, tileSize);

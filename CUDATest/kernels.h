@@ -21,6 +21,9 @@ __global__ void ChangeLight(Scene* scene);
 
 void LaunchAddBlock(const Camera* cam, Scene* scene);
 __global__ void AddBlock(const Camera* cam, Scene* scene);
+void LaunchRemoveBlock(const Camera* cam, Scene* scene);
+__global__ void RemoveBlock(const Camera* cam, Scene* scene);
+
 void LaunchConvert(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width, unsigned height, unsigned tileSize);
 __global__ void Convert(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width);
 void LaunchDestroyScene(Scene* scene);

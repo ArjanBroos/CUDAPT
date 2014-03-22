@@ -1,7 +1,7 @@
 #include "scene.h"
 #include "math.h"
 
-__device__ Scene::Scene() : primCounter(0), lightCounter(0), objectCounter(0), planeCounter(0), nextId(0), nextLight(false), nextR(1.f), nextG(0.f), nextB(0.f), nextE(1.f) {
+__device__ Scene::Scene() : primCounter(0), lightCounter(0), objectCounter(0), planeCounter(0), nextId(0), nextLight(false), nextR(1.f), nextG(0.f), nextB(0.f), nextE(5.f) {
 	primitives = new Primitive*[MAX_PRIMITIVES];
 	objects = new Object*[MAX_OBJECTS];
 	lights = new Light*[MAX_LIGHTS];
@@ -35,11 +35,12 @@ __device__ void Scene::AddLight(Light* light) {
 
 // Adds an object to the octree of the scene
 __device__ void Scene::AddObject(Object* object) {
-	if (objectCounter < MAX_PRIMITIVES - 1) {
-		objects[objectCounter] = object;
-		octree.Insert(objects[objectCounter], nextId);
-		objectCounter++;
-	}
+	octree.Insert(object, nextId);
+}
+
+// Removes an object from the octree of the scene
+__device__ void Scene::RemoveObject(Object* object) {
+	octree.Remove(object);
 }
 
 __device__ bool Scene::Intersect(const Ray& ray, IntRec& intRec) const {
@@ -49,11 +50,11 @@ __device__ bool Scene::Intersect(const Ray& ray, IntRec& intRec) const {
 
 	//// Check intersection with primitives
 	/*for (unsigned i = 0; i < primCounter; i++) {
-		if (primitives[i]->GetShape()->Intersect(ray, t) && t < intRec.t) {
-			intRec.prim = primitives[i];
-			intRec.t = t;
-			intersected = true;
-		}
+	if (primitives[i]->GetShape()->Intersect(ray, t) && t < intRec.t) {
+	intRec.prim = primitives[i];
+	intRec.t = t;
+	intersected = true;
+	}
 	}*/
 
 	//// Check intersection with lights

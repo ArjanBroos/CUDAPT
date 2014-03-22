@@ -38,7 +38,7 @@ __device__ Node::Node(Point bounda, Point boundb, int octant, Node* parent, int 
 		nodes[i] = nullptr;
 }
 
-__device__ int Node::Insert(const Object* object, int &id)
+__device__ int Node::Insert(Object* object, int &id)
 {
 	Point loc = (*object->loc);
 	Node* currentNode = this;
@@ -103,6 +103,7 @@ __device__ int Node::Insert(const Object* object, int &id)
 		return -1;
 	}
 	currentNode->object = object;
+	object->parent = currentNode;
 
 	//Fix number of objects in parents
 	while(currentNode->parent != nullptr) {
@@ -113,8 +114,20 @@ __device__ int Node::Insert(const Object* object, int &id)
 	return 1;
 }
 
-__device__ int Node::Remove(const Point &loc) {
-	return 1;
+__device__ void Node::Remove(Object* object) {
+	Node* currentNode, *previousNode;
+	currentNode = object->parent;
+	//Fix number of objects in parents
+	while(currentNode->parent != nullptr) {
+		currentNode->nObjects--;
+		previousNode = currentNode;
+		currentNode = currentNode->parent;
+		if(previousNode->nObjects == 0) {
+			delete currentNode->nodes[previousNode->octant];
+			currentNode->nodes[previousNode->octant] = NULL;
+		}
+	}
+	delete object;
 }
 
 __device__ bool Node::Intersect(const Ray &ray, IntRec& intRec) const {
