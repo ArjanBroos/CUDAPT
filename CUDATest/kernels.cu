@@ -79,7 +79,7 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 	const unsigned i = y * width + x;
 
 	Ray ray = cam->GetJitteredRay(x, y, rng);
-	const unsigned maxDepth = 10;
+	const unsigned maxDepth = 6;
 	IntRec intRec;
 	Color color(1.f, 1.f, 1.f);
 
