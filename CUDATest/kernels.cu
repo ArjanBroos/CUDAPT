@@ -29,57 +29,53 @@ __global__ void InitScene(Scene** pScene) {
 	*pScene = new Scene();
 	Scene* scene = *pScene;
 
-	Box*				sphereShape1	= new Box(Point(10.f, 0.f, 10.f));
+	Plane*				planeShape		= new Plane(Point(0,0,0), Vector(0.f, 1.f, 0.f));
+	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 0.3f), 1.f);
+	Primitive*			plane = new Primitive(planeShape, planeMat, &planeShape->p);
+	plane->type = PLANE;
+	scene->AddPlane(plane);
+
+	Box*				sphereShape1	= new Box(Point(0.f, 0.f, 0.f));
 	LambertMaterial*	sphereMat1		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
 	Primitive*			spherePrim1		= new Primitive(sphereShape1, sphereMat1, &sphereShape1->bounds[0]);
 	spherePrim1->type = PRIMITIVE;
 	scene->AddObject(spherePrim1);
 
-	Box*				sphereShape2	= new Box(Point(11.f, 1.f, 10.f));
-	LambertMaterial*	sphereMat2		= new LambertMaterial(Color(1.f, 1.f, 1.f), 1.f);
+	Box*				sphereShape2	= new Box(Point(127.f, 0.f, 0.f));
+	LambertMaterial*	sphereMat2		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
 	Primitive*			spherePrim2		= new Primitive(sphereShape2, sphereMat2, &sphereShape2->bounds[0]);
 	spherePrim2->type = PRIMITIVE;
 	scene->AddObject(spherePrim2);
 
-	Box*				sphereShape4	= new Box(Point(10.f, 1.f, 11.f));
-	LambertMaterial*	sphereMat4		= new LambertMaterial(Color(0.f, 0.f, 1.f), 1.f);
+	Box*				sphereShape3	= new Box(Point(127.f, 0.f, 127.f));
+	LambertMaterial*	sphereMat3		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
+	Primitive*			spherePrim3		= new Primitive(sphereShape3, sphereMat3, &sphereShape3->bounds[0]);
+	spherePrim3->type = PRIMITIVE;
+	scene->AddObject(spherePrim3);
+
+	Box*				sphereShape4	= new Box(Point(0.f, 0.f, 127.f));
+	LambertMaterial*	sphereMat4		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
 	Primitive*			spherePrim4		= new Primitive(sphereShape4, sphereMat4, &sphereShape4->bounds[0]);
 	spherePrim4->type = PRIMITIVE;
 	scene->AddObject(spherePrim4);
+}
 
-	Box*				sphereShape5	= new Box(Point(12.f, 2.f, 10.f));
-	MirrorMaterial*		sphereMat5		= new MirrorMaterial(Color(1.f, 1.f, 1.f), .8f);
-	Primitive*			spherePrim5		= new Primitive(sphereShape5, sphereMat5, &sphereShape5->bounds[0]);
-	spherePrim5->type = PRIMITIVE;
-	scene->AddObject(spherePrim5);
+void LaunchChangeLight(Scene* scene) {
+	ChangeLight<<<1,1>>>(scene);
+}
 
-	Box*				lightShape1		= new Box(Point(11.f, 2.f, 11.f));
-	AreaLight*			light1			= new AreaLight(lightShape1, Color(0.2f, 0.2f, 0.2f), 16.f, &lightShape1->bounds[0]);
-	light1->type = LIGHT;
-	scene->AddObject(light1);
-
-	//Box*				sphereShape1	= new Box(Point(0.0f, 0.4f, 0.0f), 2.f);
-	//LambertMaterial*	sphereMat1		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
-	//scene->AddPrimitive(new Primitive(sphereShape1, sphereMat1));
-	//Box*				sphereShape2	= new Box(Point(3.f, 0.2f, 0.f), 1.f);
-	//MirrorMaterial*		sphereMat2		= new MirrorMaterial(Color(1.f, 1.f, 1.f), 0.8f);
-	//scene->AddPrimitive(new Primitive(sphereShape2, sphereMat2));
-	//Box*				sphereShape3	= new Box(Point(-2.f, 8.f, -20.f), 6.f);
-	//MirrorMaterial*		sphereMat3		= new MirrorMaterial(Color(1.f, 1.f, 1.f), 0.9f);
-	//scene->AddPrimitive(new Primitive(sphereShape3, sphereMat3));
-
-	//Box*				boxShape1		= new Box(Point(-1.5f, 0.5f, 3.f), 1.f);
-	//LambertMaterial*	boxMat1			= new LambertMaterial();
-	//scene->AddPrimitive(new Primitive(boxShape1, boxMat1));
-
-	Plane*				planeShape1		= new Plane(Point(), Vector(0.f, 1.f, 0.f));
-	LambertMaterial*	planeMat1		= new LambertMaterial(Color(1.f, 1.f, 0.3f), 1.f);
-	scene->AddPlane(new Primitive(planeShape1, planeMat1, &planeShape1->p));
-
-	//Box*				lightShape2		= new Box(Point(5.f, 1.f, -3.f), 0.8f);
-	//scene->AddLight(new AreaLight(lightShape2, Color(1.f, 0.5f, 0.5f), 1.5f));
-	//Box*				lightShape3		= new Box(Point(3.f, 0.f, 5.f), 0.8f);
-	//scene->AddLight(new AreaLight(lightShape3, Color(1.f, 1.f, 1.f), 2.f));
+__global__ void ChangeLight(Scene* scene) {
+	if(scene->nextLight) {
+		scene->nextLight = !scene->nextLight;
+		scene->nextR = 1.f;
+		scene->nextG = 0.f;
+		scene->nextB = 0.f;
+	} else {
+		scene->nextLight = !scene->nextLight;
+		scene->nextR = 1.f;
+		scene->nextG = 1.f;
+		scene->nextB = 1.f;
+	}
 }
 
 void LaunchAddBlock(const Camera* cam, Scene* scene) {
@@ -90,15 +86,36 @@ __global__ void AddBlock(const Camera* cam, Scene* scene) {
 	Ray ray = cam->GetCenterRay();
 	IntRec intRec;
 	if (scene->Intersect(ray, intRec)) {
-		const Shape*	shape = intRec.prim->GetShape();
-		const Point		p = ray(intRec.t);
-		const Vector	n = shape->GetNormal(p);
-		Point* newLoc = new Point((int)(p.x+.5f)+(int)n.x, (int)(p.y+.5f)+(int)n.y, (int)(p.z+.5f)+(int)n.z);
-		Box*				sphereShape1	= new Box(*newLoc);
-		LambertMaterial*	sphereMat1		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
-		Primitive*			spherePrim1		= new Primitive(sphereShape1, sphereMat1, &sphereShape1->bounds[0]);
-		spherePrim1->type = PRIMITIVE;
-		scene->AddObject(spherePrim1);
+		const Shape*	shape;
+		Point*			newLoc;
+		Vector			n;
+		Point			p = ray(intRec.t);
+		if(intRec.light) {
+			shape = intRec.light->shape;
+			n = shape->GetNormal(p);
+			newLoc = new Point((int)(intRec.light->loc->x+n.x+.5f), (int)(intRec.light->loc->y+n.y+.5f), (int)(intRec.light->loc->z+n.z+.5f)); 
+		}
+		if(intRec.prim) {
+			shape = intRec.prim->GetShape();
+			n = shape->GetNormal(p);
+			if(intRec.prim->type == PLANE)
+				newLoc = new Point((int)(p.x), (int)(p.y), (int)(p.z));
+			else {
+				newLoc = new Point((int)(intRec.prim->loc->x+n.x+.5f), (int)(intRec.prim->loc->y+n.y+.5f), (int)(intRec.prim->loc->z+n.z+.5f)); 
+			}
+		}
+		if(!scene->nextLight) {
+			Box*				sphereShape1	= new Box(*newLoc);
+			LambertMaterial*	sphereMat1		= new LambertMaterial(Color(scene->nextR, scene->nextG, scene->nextB), 1.f);
+			Primitive*			spherePrim1		= new Primitive(sphereShape1, sphereMat1, &sphereShape1->bounds[0]);
+			spherePrim1->type = PRIMITIVE;
+			scene->AddObject(spherePrim1);
+		} else {
+			Box*				lightShape1	= new Box(*newLoc);
+			AreaLight*			light1 = new AreaLight(lightShape1, Color(scene->nextR, scene->nextG, scene->nextB), scene->nextE, &lightShape1->bounds[0]);
+			light1->type = LIGHT;
+			scene->AddObject(light1);
+		}
 	}
 }
 
@@ -127,7 +144,7 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 	const unsigned i = y * width + x;
 
 	Ray ray = cam->GetJitteredRay(x, y, rng);
-	const unsigned maxDepth = 10;
+	const unsigned maxDepth = 4;
 	IntRec intRec;
 	Color color(1.f, 1.f, 1.f);
 

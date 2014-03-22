@@ -4,7 +4,7 @@
 #include "point.h"
 #include "ray.h"
 
-enum objectType{LIGHT, PRIMITIVE};
+enum objectType{LIGHT, PRIMITIVE, PLANE};
 
 class Object
 {

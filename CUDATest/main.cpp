@@ -50,9 +50,10 @@ int main() {
 	cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
 
 	std::cout << "Done" << std::endl;
-
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "CUDA Path tracer");
 	window.setVerticalSyncEnabled(false);
+
+	std::cout << "Calculating rays" << std::endl << std::flush;
 
 	// Render
 	sf::Image image;
@@ -119,10 +120,10 @@ bool HandleEvents(Scene* scene, sf::RenderWindow& window, Camera* cam, Camera* d
 		if (event.type == sf::Event::Closed) return false;
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) return false;
+			if (event.key.code == sf::Keyboard::L) LaunchChangeLight(scene);
 		}
 		if (event.type == sf::Event::MouseButtonPressed) {
 			if (event.key.code == sf::Mouse::Left) {
-				std::cout << "Klik" << std::endl;
 				LaunchAddBlock(d_cam, scene);
 				iteration = 1;
 				LaunchInitResult(d_result, width, height, tileSize);
