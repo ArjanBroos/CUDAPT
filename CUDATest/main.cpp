@@ -17,6 +17,8 @@ bool HandleEvents(Scene* pScene, sf::RenderWindow& window, Camera* cam, Camera* 
 void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 void resetCamera(unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 
+bool freeze = false;
+
 int main() {
 	std::cout << "CUDA path tracing tests" << std::endl;
 
@@ -75,7 +77,8 @@ int main() {
 	bool running = true;
 	unsigned iteration = 1;
 	while (HandleEvents(*pScene, window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
-		pollKeyboard(cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE);
+		if(!freeze)
+			pollKeyboard(cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchConvert(d_result, d_pixelData, iteration, WIDTH, HEIGHT, TILE_SIZE);
 		cudaMemcpy(pixelData, d_pixelData, NR_PIXELS * 4 * sizeof(unsigned char), cudaMemcpyDeviceToHost);
@@ -125,6 +128,7 @@ bool HandleEvents(Scene* scene, sf::RenderWindow& window, Camera* cam, Camera* d
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) return false;
 			if (event.key.code == sf::Keyboard::L) LaunchChangeLight(scene);
+			if (event.key.code == sf::Keyboard::F) freeze = !freeze;
 		}
 		if (event.type == sf::Event::MouseButtonPressed) {
 			if (event.key.code == sf::Mouse::Left) {
