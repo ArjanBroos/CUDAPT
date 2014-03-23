@@ -8,6 +8,7 @@
 // Represents a ray with an origin and direction through 3-dimensional space
 class Ray {
 public:
+	__device__ Ray() {};
 	Point		o;	// Origin
 	Vector		d;	// Direction
 	Vector		inv;

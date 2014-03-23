@@ -7,6 +7,8 @@
 #include "mirrormaterial.h"
 #include "box.h"
 #include "point.h"
+#include "cuda_runtime.h"
+#include "device_functions.h"
 
 void LaunchInitRNG(curandState* state, unsigned long seed, unsigned width, unsigned height, unsigned tileSize) {
 	dim3 grid(width / tileSize, height / tileSize);
@@ -159,24 +161,30 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 	const unsigned x = blockIdx.x * blockDim.x + threadIdx.x;
 	const unsigned y = blockIdx.y * blockDim.y + threadIdx.y;
 	const unsigned i = y * width + x;
+	__shared__ Color black;
+	__shared__ Color env;
+	if(threadIdx.x == 0) {
+		black = Color();
+		env = Color(0.2f, 0.2f, 0.3f);
+	}
+	__syncthreads();
 
 	Ray ray = cam->GetJitteredRay(x, y, rng);
-	const unsigned maxDepth = 4;
+	//const unsigned maxDepth = 4;
 	IntRec intRec;
 	Color color(1.f, 1.f, 1.f);
-
 	float rr = 1.f;
 
-	for (unsigned depth = 0; depth <= maxDepth; depth++) {
+	for (unsigned depth = 0; depth <= MAX_DEPTH; depth++) {
 		// Enforce maximum depth
-		if (depth == maxDepth) {
-			color = Color();
+		if (depth == MAX_DEPTH) {
+			color = black;
 			break;
 		}
 
 		// If ray leaves the scene
 		if (!scene->Intersect(ray, intRec)) {
-			color *= Color(0.2f, 0.2f, 0.3f);
+			color *= env;
 			break;
 		}
 
@@ -192,17 +200,17 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 		const Point		p = ray(intRec.t);
 		const Vector	n = shape->GetNormal(p);
 
-		const Vector in = ray.d;
-		const Vector out = mat->GetSample(in, n, &rng[i]);
+		//const Vector in = ray.d;
+		const Vector out = mat->GetSample(ray.d, n, &rng[i]);
+		const float multiplier = mat->GetMultiplier(ray.d, out, n);
 		ray = Ray(p, out);
-		const float multiplier = mat->GetMultiplier(in, out, n);
 
 		color *= mat->GetColor();
 		color *= multiplier;
 
 		// Russian roulette
 		if (curand_uniform(&rng[i]) > rr) {
-			color = Color();
+			color = black;
 			break;
 		}
 		rr *= multiplier;
