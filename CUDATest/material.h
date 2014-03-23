@@ -4,6 +4,13 @@
 #include "geometry.h"
 #include "curand_kernel.h"
 
+enum MaterialType {
+	MT_START = 0,
+	MT_DIFFUSE = MT_START,
+	MT_MIRROR,
+	MT_END,
+};
+
 // Represents the base material
 class Material {
 public:
