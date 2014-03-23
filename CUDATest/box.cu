@@ -21,50 +21,31 @@ __device__ Box::Box(Point& p, Point& q)
 
 __device__ bool Box::Intersect(const Ray& ray, float& t) const
 {
-	float tmin, tmax, tymin, tymax, tzmin, tzmax;
+	float tmin, tmax, tminn, tmaxn;
 
-	//Check x-direction
-	if (ray.d.x >= 0) {
-		tmin = (bounds[0].x - ray.o.x) / ray.d.x;
-		tmax = (bounds[1].x - ray.o.x) / ray.d.x;
-	}
-	else {
-		tmin = (bounds[1].x - ray.o.x) / ray.d.x;
-		tmax = (bounds[0].x - ray.o.x) / ray.d.x;
-	}
-	//Check y-direction
-	if (ray.d.y >= 0) {
-		tymin = (bounds[0].y - ray.o.y) / ray.d.y;
-		tymax = (bounds[1].y - ray.o.y) / ray.d.y;
-	}
-	else {
-		tymin = (bounds[1].y - ray.o.y) / ray.d.y;
-		tymax = (bounds[0].y - ray.o.y) / ray.d.y;
-	}
+	tmin = (bounds[ray.sign[0]].x - ray.o.x) * ray.inv.x;
+	tmax = (bounds[1-ray.sign[0]].x - ray.o.x) * ray.inv.x;
+	tminn = (bounds[ray.sign[1]].y - ray.o.y) * ray.inv.y;
+	tmaxn = (bounds[1-ray.sign[1]].y - ray.o.y) * ray.inv.y;
+
 	//Compare to previous interval
-	if ( (tmin > tymax) || (tymin > tmax) )
+	if ( (tmin > tmaxn) || (tminn > tmax) )
 		return false;
-	if (tymin > tmin)
-		tmin = tymin;
-	if (tymax < tmax)
-		tmax = tymax;
-	//Check z-direction
-	if (ray.d.z >= 0) {
-		tzmin = (bounds[0].z - ray.o.z) / ray.d.z;
-		tzmax = (bounds[1].z - ray.o.z) / ray.d.z;
-	}
-	else {
-		tzmin = (bounds[1].z - ray.o.z) / ray.d.z;
-		tzmax = (bounds[0].z - ray.o.z) / ray.d.z;
-	}
+	if (tminn > tmin)
+		tmin = tminn;
+	if (tmaxn < tmax)
+		tmax = tmaxn;
+
+	tminn = (bounds[ray.sign[2]].z - ray.o.z) * ray.inv.z;
+	tmaxn = (bounds[1-ray.sign[2]].z - ray.o.z) * ray.inv.z;
 	//Compare to previous interval
-	if ( (tmin > tzmax) || (tzmin > tmax) )
+	if ( (tmin > tmaxn) || (tminn > tmax) )
 		return false;
-	if (tzmin > tmin)
-		tmin = tzmin;
-	if (tzmax < tmax)
-		tmax = tzmax;
-	if ( (tmin < ray.maxt) && (tmax > ray.mint) ) {
+	if (tminn > tmin)
+		tmin = tminn;
+	if (tmaxn < tmax)
+		tmax = tmaxn;
+	if ( (tmin < ray.maxt) && (tmax > ray.mint) && (tmax > 0)) {
 		t = tmin;
 		return true;
 	}
