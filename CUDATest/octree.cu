@@ -133,13 +133,12 @@ __device__ void Node::Remove(Object* object) {
 __device__ bool Node::Intersect(const Ray &ray, IntRec& intRec) const {
 	float temp;
 	bool intersect = false;
-	Node* current = NextNode(this, ray);
+	Node* current = NextNode(this, ray, INFINITY);
 	while(current) {
 		if(current->NodeIntersect(ray, temp) && temp < intRec.t) {
 			if(current->object) {
-				float distObj;
-				if(current->object->Intersect(ray, distObj) && distObj < intRec.t) {
-					intRec.t = distObj;
+				if(current->object->Intersect(ray, temp) && temp < intRec.t) {
+					intRec.t = temp;
 					intersect = true;
 					if(current->object->type == PRIMITIVE) {
 						intRec.prim = (Primitive*) current->object;
@@ -151,81 +150,60 @@ __device__ bool Node::Intersect(const Ray &ray, IntRec& intRec) const {
 				}
 			}
 		}
-		current = NextNode(current, ray);
+		current = NextNode(current, ray, intRec.t);
 	}
 	return intersect;
 }
 
-__device__ Node* Node::NextNode(const Node* current, const Ray &ray) const{
+__device__ Node* Node::NextNode(const Node* current, const Ray &ray, float closest) const{
 	float temp;
 	// Return the left most child node that intersects with the ray
-	Node* child;
+	Node* node;
 	for(int i = NEB; i <= SET; i++) {
-		child = current->nodes[i];
-		if(child && child->NodeIntersect(ray, temp)) {
-			return child;
+		node = current->nodes[i];
+		if(node && node->NodeIntersect(ray, temp) && temp < closest) {
+			return node;
 		}
 	}
 
 	// If it's a leaf node, find the next sibling or ascend and repeat
 	while(current->parent) {
-		Node* parent = current->parent;
+		node = current->parent;
 		for(int i = current->octant + 1; i <= SET; i++) {
-			if(parent->nodes[i] && parent->nodes[i]->NodeIntersect(ray, temp)) {
-				//std::cout << "Check: " << current->parent->nodes[i] << std::endl;
-				//std::cout << "Check: " << &ray << std::endl;
-				return parent->nodes[i];
+			if(node->nodes[i] && node->nodes[i]->NodeIntersect(ray, temp) && temp < closest) {
+				return node->nodes[i];
 			}
 		}
 		current = current->parent;
 	}
-	//std::cout << "Check: " << std::endl;
 	return nullptr;
 }
 
 __device__ bool Node::NodeIntersect(const Ray &ray, float &t) const {
-	float tmin, tmax, tymin, tymax, tzmin, tzmax;
-	//Check x-direction
-	if (ray.d.x >= 0) {
-		tmin = (bounds[0].x - ray.o.x) / ray.d.x;
-		tmax = (bounds[1].x - ray.o.x) / ray.d.x;
-	}
-	else {
-		tmin = (bounds[1].x - ray.o.x) / ray.d.x;
-		tmax = (bounds[0].x - ray.o.x) / ray.d.x;
-	}
-	//Check y-direction
-	if (ray.d.y >= 0) {
-		tymin = (bounds[0].y - ray.o.y) / ray.d.y;
-		tymax = (bounds[1].y - ray.o.y) / ray.d.y;
-	}
-	else {
-		tymin = (bounds[1].y - ray.o.y) / ray.d.y;
-		tymax = (bounds[0].y - ray.o.y) / ray.d.y;
-	}
+	float tmin, tmax, tminn, tmaxn;
+
+	tmin = (bounds[ray.sign[0]].x - ray.o.x) * ray.inv.x;
+	tmax = (bounds[1-ray.sign[0]].x - ray.o.x) * ray.inv.x;
+	tminn = (bounds[ray.sign[1]].y - ray.o.y) * ray.inv.y;
+	tmaxn = (bounds[1-ray.sign[1]].y - ray.o.y) * ray.inv.y;
+
 	//Compare to previous interval
-	if ( (tmin > tymax) || (tymin > tmax) )
+	if ( (tmin > tmaxn) || (tminn > tmax) )
 		return false;
-	if (tymin > tmin)
-		tmin = tymin;
-	if (tymax < tmax)
-		tmax = tymax;
-	//Check z-direction
-	if (ray.d.z >= 0) {
-		tzmin = (bounds[0].z - ray.o.z) / ray.d.z;
-		tzmax = (bounds[1].z - ray.o.z) / ray.d.z;
-	}
-	else {
-		tzmin = (bounds[1].z - ray.o.z) / ray.d.z;
-		tzmax = (bounds[0].z - ray.o.z) / ray.d.z;
-	}
+	if (tminn > tmin)
+		tmin = tminn;
+	if (tmaxn < tmax)
+		tmax = tmaxn;
+
+	tminn = (bounds[ray.sign[2]].z - ray.o.z) * ray.inv.z;
+	tmaxn = (bounds[1-ray.sign[2]].z - ray.o.z) * ray.inv.z;
 	//Compare to previous interval
-	if ( (tmin > tzmax) || (tzmin > tmax) )
+	if ( (tmin > tmaxn) || (tminn > tmax) )
 		return false;
-	if (tzmin > tmin)
-		tmin = tzmin;
-	if (tzmax < tmax)
-		tmax = tzmax;
+	if (tminn > tmin)
+		tmin = tminn;
+	if (tmaxn < tmax)
+		tmax = tmaxn;
 	if ( (tmin < ray.maxt) && (tmax > ray.mint) && (tmax > 0)) {
 		t = tmin;
 		return true;

@@ -10,6 +10,8 @@ class Ray {
 public:
 	Point		o;	// Origin
 	Vector		d;	// Direction
+	Vector		inv;
+	int			sign[3];
 
 	// The ray is clamped between o + mint * d and o + maxt * d
 	// To prevent intersection with a surface that this ray originated from
