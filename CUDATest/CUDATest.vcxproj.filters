@@ -79,6 +79,12 @@
     <Filter Include="Header Files\octree">
       <UniqueIdentifier>{cf046065-7aee-4f00-a55d-7cdb98e66da5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\builder">
+      <UniqueIdentifier>{34d926c0-56c8-4217-9ec9-df97d61dec33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\builder">
+      <UniqueIdentifier>{272398e2-9d09-4c08-96ed-fa8735333af6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="camera.cu">
@@ -132,8 +138,17 @@
     <CudaCompile Include="octree.cu">
       <Filter>Source Files\octree</Filter>
     </CudaCompile>
-    <CudaCompile Include="object.cu">
-      <Filter>Source Files\octree</Filter>
+    <CudaCompile Include="materialpicker.cu">
+      <Filter>Source Files\materials</Filter>
+    </CudaCompile>
+    <CudaCompile Include="colorpicker.cu">
+      <Filter>Source Files\color</Filter>
+    </CudaCompile>
+    <CudaCompile Include="lightpicker.cu">
+      <Filter>Source Files\lights</Filter>
+    </CudaCompile>
+    <CudaCompile Include="builder.cu">
+      <Filter>Source Files\builder</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,8 +221,17 @@
     <ClInclude Include="octree.h">
       <Filter>Header Files\octree</Filter>
     </ClInclude>
-    <ClInclude Include="object.h">
-      <Filter>Header Files\octree</Filter>
+    <ClInclude Include="materialpicker.h">
+      <Filter>Header Files\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="lightpicker.h">
+      <Filter>Header Files\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="colorpicker.h">
+      <Filter>Header Files\color</Filter>
+    </ClInclude>
+    <ClInclude Include="builder.h">
+      <Filter>Header Files\builder</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -20,7 +20,7 @@ __global__ void InitRNG(curandState* state, unsigned long seed, unsigned width) 
 	const unsigned x = blockIdx.x * blockDim.x + threadIdx.x;
 	const unsigned y = blockIdx.y * blockDim.y + threadIdx.y;
 	const unsigned i = y * width + x;
-	curand_init(seed - i, 0, 0, &state[i]);
+	curand_init(seed - i*x, 0, 0, &state[i]);
 }
 
 void LaunchInitScene(Scene** pScene) {
@@ -33,7 +33,7 @@ __global__ void InitScene(Scene** pScene) {
 
 	Plane*				planeShape		= new Plane(Point(0,0,0), Vector(0.f, 1.f, 0.f));
 	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 0.3f), 1.f);
-	Primitive*			plane = new Primitive(planeShape, planeMat, &planeShape->p);
+	Primitive*			plane			= new Primitive(planeShape, planeMat, &planeShape->p);
 	plane->type = PLANE;
 	scene->AddPlane(plane);
 
@@ -93,7 +93,7 @@ __global__ void AddBlock(const Camera* cam, Scene* scene) {
 		Vector			n;
 		Point			p = ray(intRec.t);
 		if(intRec.light) {
-			shape = intRec.light->shape;
+			shape = ((AreaLight*)(intRec.light))->shape;
 			n = shape->GetNormal(p);
 			newLoc = new Point((int)(intRec.light->loc->x+n.x+.5f), (int)(intRec.light->loc->y+n.y+.5f), (int)(intRec.light->loc->z+n.z+.5f)); 
 		}
@@ -101,7 +101,7 @@ __global__ void AddBlock(const Camera* cam, Scene* scene) {
 			shape = intRec.prim->GetShape();
 			n = shape->GetNormal(p);
 			if(intRec.prim->type == PLANE)
-				newLoc = new Point((int)(p.x), (int)(p.y), (int)(p.z));
+				newLoc = new Point(Point((int)p.x, (int)p.y, (int)p.z));
 			else {
 				newLoc = new Point((int)(intRec.prim->loc->x+n.x+.5f), (int)(intRec.prim->loc->y+n.y+.5f), (int)(intRec.prim->loc->z+n.z+.5f)); 
 			}
@@ -132,7 +132,7 @@ __global__ void RemoveBlock(const Camera* cam, Scene* scene) {
 		if(intRec.light) {
 			scene->RemoveObject(intRec.light);
 		}
-		if(intRec.prim && (intRec.prim->type = PRIMITIVE) ) {
+		if(intRec.prim && intRec.prim->type == PRIMITIVE) {
 			scene->RemoveObject(intRec.prim);
 		}
 	}

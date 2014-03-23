@@ -9,6 +9,8 @@
 // Represents an area light (ie. with a surface/shape)
 class AreaLight : public Light {
 public:	
+	Shape*	shape;	// The shape of this area light
+
 	__device__ AreaLight() {};
 	// Initializes area light with given shape (cannot be NULL) and reasonable attenuation factors
 	__device__ AreaLight(Shape* shape);
