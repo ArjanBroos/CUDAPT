@@ -13,7 +13,7 @@
 #define MAX_PRIMITIVES	1024
 #define MAX_OBJECTS	1024
 #define MAX_PLANES	8
-#define MAX_LIGHTS		32
+#define MAX_LIGHTS		1024
 
 class Scene {
 public:

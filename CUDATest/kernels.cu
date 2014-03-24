@@ -27,6 +27,14 @@ void LaunchInitScene(Scene** pScene) {
 	InitScene<<<1,1>>>(pScene);
 }
 
+__device__ void PreAddBlock(Point* loc, Scene* scene) {
+	Box*				sphereShape1	= new Box(*loc);
+	LambertMaterial*	sphereMat1		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
+	Primitive*			spherePrim1		= new Primitive(sphereShape1, sphereMat1, &sphereShape1->bounds[0]);
+	spherePrim1->type = PRIMITIVE;
+	scene->AddObject(spherePrim1);
+}
+
 __global__ void InitScene(Scene** pScene) {
 	*pScene = new Scene();
 	Scene* scene = *pScene;
@@ -37,29 +45,79 @@ __global__ void InitScene(Scene** pScene) {
 	plane->type = PLANE;
 	scene->AddPlane(plane);
 
-	Box*				sphereShape1	= new Box(Point(0.f, 0.f, 0.f));
-	LambertMaterial*	sphereMat1		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
-	Primitive*			spherePrim1		= new Primitive(sphereShape1, sphereMat1, &sphereShape1->bounds[0]);
-	spherePrim1->type = PRIMITIVE;
-	scene->AddObject(spherePrim1);
+	//Box*				sphereShape1	= new Box(Point(0.f, 0.f, 0.f));
+	//LambertMaterial*	sphereMat1		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
+	//Primitive*			spherePrim1		= new Primitive(sphereShape1, sphereMat1, &sphereShape1->bounds[0]);
+	//spherePrim1->type = PRIMITIVE;
+	//scene->AddObject(spherePrim1);
 
-	Box*				sphereShape2	= new Box(Point(127.f, 0.f, 0.f));
-	LambertMaterial*	sphereMat2		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
-	Primitive*			spherePrim2		= new Primitive(sphereShape2, sphereMat2, &sphereShape2->bounds[0]);
-	spherePrim2->type = PRIMITIVE;
-	scene->AddObject(spherePrim2);
+	//Onderste rand
+	PreAddBlock(&Point(6.f,0.f,1.f), scene);
+	PreAddBlock(&Point(4.f,0.f,1.f), scene);
+	PreAddBlock(&Point(3.f,0.f,2.f), scene);
+	PreAddBlock(&Point(2.f,0.f,3.f), scene);
+	PreAddBlock(&Point(1.f,0.f,4.f), scene);
+	PreAddBlock(&Point(1.f,0.f,5.f), scene);
+	PreAddBlock(&Point(1.f,0.f,6.f), scene);
+	PreAddBlock(&Point(2.f,0.f,7.f), scene);
+	PreAddBlock(&Point(3.f,0.f,8.f), scene);
+	PreAddBlock(&Point(4.f,0.f,9.f), scene);
+	PreAddBlock(&Point(5.f,0.f,9.f), scene);
+	PreAddBlock(&Point(6.f,0.f,9.f), scene);
+	PreAddBlock(&Point(7.f,0.f,8.f), scene);
+	PreAddBlock(&Point(8.f,0.f,7.f), scene);
+	PreAddBlock(&Point(9.f,0.f,6.f), scene);
+	PreAddBlock(&Point(9.f,0.f,5.f), scene);
+	PreAddBlock(&Point(9.f,0.f,4.f), scene);
+	PreAddBlock(&Point(8.f,0.f,3.f), scene);
+	PreAddBlock(&Point(7.f,0.f,2.f), scene);
 
-	Box*				sphereShape3	= new Box(Point(127.f, 0.f, 127.f));
-	LambertMaterial*	sphereMat3		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
-	Primitive*			spherePrim3		= new Primitive(sphereShape3, sphereMat3, &sphereShape3->bounds[0]);
-	spherePrim3->type = PRIMITIVE;
-	scene->AddObject(spherePrim3);
+	//Middelste rand
+	PreAddBlock(&Point(6.f,1.f,1.f), scene);
+	PreAddBlock(&Point(4.f,1.f,1.f), scene);
+	PreAddBlock(&Point(3.f,1.f,2.f), scene);
+	PreAddBlock(&Point(2.f,1.f,3.f), scene);
+	PreAddBlock(&Point(1.f,1.f,4.f), scene);
+	PreAddBlock(&Point(1.f,1.f,5.f), scene);
+	PreAddBlock(&Point(1.f,1.f,6.f), scene);
+	PreAddBlock(&Point(2.f,1.f,7.f), scene);
+	PreAddBlock(&Point(3.f,1.f,8.f), scene);
+	PreAddBlock(&Point(4.f,1.f,9.f), scene);
+	PreAddBlock(&Point(5.f,1.f,9.f), scene);
+	PreAddBlock(&Point(6.f,1.f,9.f), scene);
+	PreAddBlock(&Point(7.f,1.f,8.f), scene);
+	PreAddBlock(&Point(8.f,1.f,7.f), scene);
+	PreAddBlock(&Point(9.f,1.f,6.f), scene);
+	PreAddBlock(&Point(9.f,1.f,5.f), scene);
+	PreAddBlock(&Point(9.f,1.f,4.f), scene);
+	PreAddBlock(&Point(8.f,1.f,3.f), scene);
+	PreAddBlock(&Point(7.f,1.f,2.f), scene);
 
-	Box*				sphereShape4	= new Box(Point(0.f, 0.f, 127.f));
-	LambertMaterial*	sphereMat4		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
-	Primitive*			spherePrim4		= new Primitive(sphereShape4, sphereMat4, &sphereShape4->bounds[0]);
-	spherePrim4->type = PRIMITIVE;
-	scene->AddObject(spherePrim4);
+	//Bovenste rand
+	PreAddBlock(&Point(6.f,2.f,1.f), scene);
+	PreAddBlock(&Point(4.f,2.f,1.f), scene);
+	PreAddBlock(&Point(3.f,2.f,2.f), scene);
+	PreAddBlock(&Point(2.f,2.f,3.f), scene);
+	PreAddBlock(&Point(1.f,2.f,4.f), scene);
+	PreAddBlock(&Point(1.f,2.f,5.f), scene);
+	PreAddBlock(&Point(1.f,2.f,6.f), scene);
+	PreAddBlock(&Point(2.f,2.f,7.f), scene);
+	PreAddBlock(&Point(3.f,2.f,8.f), scene);
+	PreAddBlock(&Point(4.f,2.f,9.f), scene);
+	PreAddBlock(&Point(5.f,2.f,9.f), scene);
+	PreAddBlock(&Point(6.f,2.f,9.f), scene);
+	PreAddBlock(&Point(7.f,2.f,8.f), scene);
+	PreAddBlock(&Point(8.f,2.f,7.f), scene);
+	PreAddBlock(&Point(9.f,2.f,6.f), scene);
+	PreAddBlock(&Point(9.f,2.f,5.f), scene);
+	PreAddBlock(&Point(9.f,2.f,4.f), scene);
+	PreAddBlock(&Point(8.f,2.f,3.f), scene);
+	PreAddBlock(&Point(7.f,2.f,2.f), scene);
+
+	//sphereShape1	= new Box(Point(0.f, 0.f, 0.f));
+	//spherePrim1		= new Primitive(sphereShape1, sphereMat1, &sphereShape1->bounds[0]);
+	//spherePrim1->type = PRIMITIVE;
+	//scene->AddObject(spherePrim1);
 }
 
 void LaunchChangeLight(Scene* scene) {
@@ -113,8 +171,10 @@ __global__ void AddBlock(const Camera* cam, Scene* scene) {
 			spherePrim1->type = PRIMITIVE;
 			scene->AddObject(spherePrim1);
 		} else {
-			Box*				lightShape1	= new Box(*newLoc);
-			AreaLight*			light1 = new AreaLight(lightShape1, Color(scene->nextR, scene->nextG, scene->nextB), scene->nextE, &lightShape1->bounds[0]);
+			//Box*				lightShape1	= new Box(*newLoc);
+			Sphere*				lightShape1	= new Sphere(*newLoc);
+			//AreaLight*			light1 = new AreaLight(lightShape1, Color(scene->nextR, scene->nextG, scene->nextB), scene->nextE, &lightShape1->bounds[0]);
+			AreaLight*			light1 = new AreaLight(lightShape1, Color(scene->nextR, scene->nextG, scene->nextB), scene->nextE, newLoc);
 			light1->type = LIGHT;
 			scene->AddObject(light1);
 		}

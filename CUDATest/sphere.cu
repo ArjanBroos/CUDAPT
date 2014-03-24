@@ -7,7 +7,12 @@ __device__ Sphere::Sphere() : c(Point(0.f, 0.f, 0.f)), r(1.f) {
 }
 
 // Initializes a sphere at c with radius r
-__device__ Sphere::Sphere(const Point& c, float r) : c(c), r(r) {
+__device__ Sphere::Sphere(const Point& c, float r = .5f) : c(c), r(r) {
+}
+
+// Initializes a sphere at c with radius r
+__device__ Sphere::Sphere(const Point& c) : r(.5f) {
+	this->c = c + Point(.5f, .5f, .5f);
 }
 
 // Returns true when this sphere intersects ray

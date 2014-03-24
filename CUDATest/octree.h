@@ -34,9 +34,9 @@ public:
 	// Checks if a ray intersects with an object in the octree
 	__device__ bool Intersect(const Ray &ray, IntRec& intRec) const;
 	// Finds the next node in a pre-order stackless tree traversal
-	__device__ Node* NextNode(const Node* current, const Ray &ray, float closest) const;
+	__device__ Node* NextNode(const Node* current, const Ray &ray, float &closest) const;
 	// Checks if a ray intersects with an internal node in the octree
-	__device__ bool NodeIntersect(const Ray &ray, float &t) const;
+	__device__ float NodeIntersect(const Ray &ray) const;
 };
 
 #endif

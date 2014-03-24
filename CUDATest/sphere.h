@@ -13,6 +13,8 @@ public:
 	__device__ Sphere();
 	// Initializes a sphere at c with radius r
 	__device__ Sphere(const Point& c, float r);
+	// Initializes a sphere at c with radius r
+	__device__ Sphere(const Point& c);
 
 	// Returns true when this sphere intersects ray
 	// If so, output parameter t becomes the distance along ray to the closest intersection

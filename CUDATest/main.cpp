@@ -22,14 +22,14 @@ bool freeze = false;
 int main() {
 	std::cout << "CUDA path tracing tests" << std::endl;
 
-	const unsigned WIDTH = 640;
-	const unsigned HEIGHT = 480;
+	const unsigned WIDTH = 1680;
+	const unsigned HEIGHT = 1050;
 	const unsigned NR_PIXELS = WIDTH * HEIGHT;
 	const unsigned TILE_SIZE = 8;
 
 	std::cout << "Allocating memory..." << std::endl;
 
-	Camera* cam = new Camera(Point(8.f, 2.8f, 8.f), Normalize(Vector(10.f, -4.f, 10.f)), Vector(0.f, 1.f, 0.f), WIDTH, HEIGHT, 60.f);
+	Camera* cam = new Camera(Point(5.5f, 1.5f, 1.2f), Normalize(Vector(0.f, 0.f, 1.f)), Vector(0.f, 1.f, 0.f), WIDTH, HEIGHT, 60.f);
 	Color* result = new Color[NR_PIXELS];
 	unsigned char* pixelData = new unsigned char[NR_PIXELS * 4];
 	Camera* d_cam; cudaMalloc(&d_cam, sizeof(Camera));

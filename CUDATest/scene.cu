@@ -6,7 +6,7 @@ __device__ Scene::Scene() : primCounter(0), lightCounter(0), objectCounter(0), p
 	objects = new Object*[MAX_OBJECTS];
 	lights = new Light*[MAX_LIGHTS];
 	planes = new Primitive*[MAX_PLANES];
-	octree = (*new Node(Point(0,0,0), Point(128,128,128), nextId++));
+	octree = (*new Node(Point(0,0,0), Point(16,16,16), nextId++));
 }
 
 __device__ Scene::~Scene() {
@@ -49,23 +49,23 @@ __device__ bool Scene::Intersect(const Ray& ray, IntRec& intRec) const {
 	bool intersected = false;
 
 	//// Check intersection with primitives
-	/*for (unsigned i = 0; i < primCounter; i++) {
-	if (primitives[i]->GetShape()->Intersect(ray, t) && t < intRec.t) {
-	intRec.prim = primitives[i];
-	intRec.t = t;
-	intersected = true;
+	for (unsigned i = 0; i < primCounter; i++) {
+		if (primitives[i]->GetShape()->Intersect(ray, t) && t < intRec.t) {
+			intRec.prim = primitives[i];
+			intRec.t = t;
+			intersected = true;
+		}
 	}
-	}*/
 
 	//// Check intersection with lights
-	//for (unsigned i = 0; i < lightCounter; i++) {
-	//	if (lights[i]->Intersect(ray, t) && t < intRec.t) {
-	//		intRec.prim = NULL;
-	//		intRec.light = lights[i];
-	//		intRec.t = t;
-	//		intersected = true;
-	//	}
-	//}
+	for (unsigned i = 0; i < lightCounter; i++) {
+		if (lights[i]->Intersect(ray, t) && t < intRec.t) {
+			intRec.prim = NULL;
+			intRec.light = lights[i];
+			intRec.t = t;
+			intersected = true;
+		}
+	}
 	for (unsigned i = 0; i < planeCounter; i++) {
 		if(planes[i]->Intersect(ray,t) && t < intRec.t) {
 			intRec.prim = (Primitive*) planes[i];

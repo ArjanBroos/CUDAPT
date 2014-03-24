@@ -133,9 +133,9 @@ __device__ void Node::Remove(Object* object) {
 __device__ bool Node::Intersect(const Ray &ray, IntRec& intRec) const {
 	float temp;
 	bool intersect = false;
-	Node* current = NextNode(this, ray, INFINITY);
+	Node* current = NextNode(this, ray, intRec.t);
 	while(current) {
-		if(current->NodeIntersect(ray, temp) && temp < intRec.t) {
+		if(current->NodeIntersect(ray) < intRec.t) {
 			if(current->object) {
 				if(current->object->Intersect(ray, temp) && temp < intRec.t) {
 					intRec.t = temp;
@@ -155,13 +155,12 @@ __device__ bool Node::Intersect(const Ray &ray, IntRec& intRec) const {
 	return intersect;
 }
 
-__device__ Node* Node::NextNode(const Node* current, const Ray &ray, float closest) const{
-	float temp;
+__device__ Node* Node::NextNode(const Node* current, const Ray &ray, float &closest) const{
 	// Return the left most child node that intersects with the ray
 	Node* node;
 	for(int i = NEB; i <= SET; i++) {
 		node = current->nodes[i];
-		if(node && node->NodeIntersect(ray, temp) && temp < closest) {
+		if(node && node->NodeIntersect(ray) < closest) {
 			return node;
 		}
 	}
@@ -170,8 +169,9 @@ __device__ Node* Node::NextNode(const Node* current, const Ray &ray, float close
 	while(current->parent) {
 		node = current->parent;
 		for(int i = current->octant + 1; i <= SET; i++) {
-			if(node->nodes[i] && node->nodes[i]->NodeIntersect(ray, temp) && temp < closest) {
-				return node->nodes[i];
+			Node* node2 = node->nodes[i];
+			if(node2 && node2->NodeIntersect(ray) < closest) {
+				return node2;
 			}
 		}
 		current = current->parent;
@@ -179,7 +179,7 @@ __device__ Node* Node::NextNode(const Node* current, const Ray &ray, float close
 	return nullptr;
 }
 
-__device__ bool Node::NodeIntersect(const Ray &ray, float &t) const {
+__device__ float Node::NodeIntersect(const Ray &ray) const {
 	float tmin, tmax, tminn, tmaxn;
 
 	tmin = (bounds[ray.sign[0]].x - ray.o.x) * ray.inv.x;
@@ -189,7 +189,7 @@ __device__ bool Node::NodeIntersect(const Ray &ray, float &t) const {
 
 	//Compare to previous interval
 	if ( (tmin > tmaxn) || (tminn > tmax) )
-		return false;
+		return INFINITY;
 	if (tminn > tmin)
 		tmin = tminn;
 	if (tmaxn < tmax)
@@ -199,14 +199,15 @@ __device__ bool Node::NodeIntersect(const Ray &ray, float &t) const {
 	tmaxn = (bounds[1-ray.sign[2]].z - ray.o.z) * ray.inv.z;
 	//Compare to previous interval
 	if ( (tmin > tmaxn) || (tminn > tmax) )
-		return false;
+		return INFINITY;
 	if (tminn > tmin)
 		tmin = tminn;
 	if (tmaxn < tmax)
 		tmax = tmaxn;
+	if(tmax < 0)
+		return INFINITY;
 	if ( (tmin < ray.maxt) && (tmax > ray.mint) && (tmax > 0)) {
-		t = tmin;
-		return true;
+		return tmin;
 	}
-	return false;
+	return INFINITY;
 }
