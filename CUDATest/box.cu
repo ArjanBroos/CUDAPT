@@ -1,19 +1,19 @@
 #include "box.h"
 #include <cassert>
 
-__device__ Box::Box(Point& p)
+__device__ Box::Box(const Point& p)
 {
 	bounds[0] = p;
 	bounds[1]= Point(p.x+1.f,p.y+1.f,p.z+1.f);
 }
 
-__device__ Box::Box(Point& p, float s)
+__device__ Box::Box(const Point& p, float s)
 {
 	bounds[0] = p;
 	bounds[1]= Point(p.x+s,p.y+s,p.z+s);
 }
 
-__device__ Box::Box(Point& p, Point& q)
+__device__ Box::Box(const Point& p, const Point& q)
 {
 	bounds[0] = p;
 	bounds[1]= q;

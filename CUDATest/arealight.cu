@@ -19,3 +19,7 @@ __device__ AreaLight::AreaLight(Shape* shape, Color color, float intensity, Poin
 __device__ bool AreaLight::Intersect(const Ray& ray, float& t) const {
 	return shape->Intersect(ray, t);
 }
+
+__device__ Shape* AreaLight::GetShape() const {
+	return shape;
+}

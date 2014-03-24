@@ -12,11 +12,11 @@ public:
 	__device__ Box() {};
 
 	//Create a box of size 1 at (x,y,z)
-	__device__ Box(Point& p);
+	__device__ Box(const Point& p);
 	//Create a box of size s at (x,y,z)
-	__device__ Box(Point& p, float s);
+	__device__ Box(const Point& p, float s);
 	//Create a box with lower bound p and upper bound q
-	__device__ Box(Point& p, Point& q);
+	__device__ Box(const Point& p, const Point& q);
 
 	// Returns true when this box intersects ray
 	// If so, output parameter t becomes the distance along ray to the closest intersection

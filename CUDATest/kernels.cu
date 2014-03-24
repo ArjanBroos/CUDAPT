@@ -62,62 +62,32 @@ __global__ void InitScene(Scene** pScene) {
 	scene->AddObject(spherePrim4);
 }
 
-void LaunchChangeLight(Scene* scene) {
-	ChangeLight<<<1,1>>>(scene);
+void LaunchInitBuilder(Builder** builder) {
+	InitBuilder<<<1,1>>>(builder);
 }
 
-__global__ void ChangeLight(Scene* scene) {
-	if(scene->nextLight) {
-		scene->nextLight = !scene->nextLight;
-		scene->nextR = 1.f;
-		scene->nextG = 0.f;
-		scene->nextB = 0.f;
-	} else {
-		scene->nextLight = !scene->nextLight;
-		scene->nextR = 1.f;
-		scene->nextG = 1.f;
-		scene->nextB = 1.f;
-	}
+__global__ void InitBuilder(Builder** builder) {
+	*builder = new Builder();
 }
 
-void LaunchAddBlock(const Camera* cam, Scene* scene) {
-	AddBlock<<<1,1>>>(cam, scene);
+void LaunchAddBlock(const Camera* cam, Scene* scene, Builder* builder) {
+	AddBlock<<<1,1>>>(cam, scene, builder);
 }
 
-__global__ void AddBlock(const Camera* cam, Scene* scene) {
-	Ray ray = cam->GetCenterRay();
+__global__ void AddBlock(const Camera* cam, Scene* scene, Builder* builder) {
+	const Ray ray = cam->GetCenterRay();
 	IntRec intRec;
 	if (scene->Intersect(ray, intRec)) {
-		const Shape*	shape;
-		Point*			newLoc;
-		Vector			n;
-		Point			p = ray(intRec.t);
-		if(intRec.light) {
-			shape = ((AreaLight*)(intRec.light))->shape;
-			n = shape->GetNormal(p);
-			newLoc = new Point((int)(intRec.light->loc->x+n.x+.5f), (int)(intRec.light->loc->y+n.y+.5f), (int)(intRec.light->loc->z+n.z+.5f)); 
-		}
-		if(intRec.prim) {
-			shape = intRec.prim->GetShape();
-			n = shape->GetNormal(p);
-			if(intRec.prim->type == PLANE)
-				newLoc = new Point(Point((int)p.x, (int)p.y, (int)p.z));
-			else {
-				newLoc = new Point((int)(intRec.prim->loc->x+n.x+.5f), (int)(intRec.prim->loc->y+n.y+.5f), (int)(intRec.prim->loc->z+n.z+.5f)); 
-			}
-		}
-		if(!scene->nextLight) {
-			Box*				sphereShape1	= new Box(*newLoc);
-			LambertMaterial*	sphereMat1		= new LambertMaterial(Color(scene->nextR, scene->nextG, scene->nextB), 1.f);
-			Primitive*			spherePrim1		= new Primitive(sphereShape1, sphereMat1, &sphereShape1->bounds[0]);
-			spherePrim1->type = PRIMITIVE;
-			scene->AddObject(spherePrim1);
-		} else {
-			Box*				lightShape1	= new Box(*newLoc);
-			AreaLight*			light1 = new AreaLight(lightShape1, Color(scene->nextR, scene->nextG, scene->nextB), scene->nextE, &lightShape1->bounds[0]);
-			light1->type = LIGHT;
-			scene->AddObject(light1);
-		}
+		Point* location;
+		if (intRec.prim)
+			location = builder->GetPosition(intRec.prim, ray(intRec.t));
+		if (intRec.light)
+			location = builder->GetPosition((AreaLight*)intRec.light, ray(intRec.t));
+
+		Shape* shape = builder->GetShape(*location);
+		Object* object = builder->GetObject(shape, location);
+		scene->AddPrimitive((Primitive*)object);
+		//scene->AddObject(object);
 	}
 }
 
@@ -137,6 +107,47 @@ __global__ void RemoveBlock(const Camera* cam, Scene* scene) {
 		}
 	}
 }
+
+void LaunchBuilderNextBuildType(Builder* builder) {
+	BuilderNextBuildType<<<1,1>>>(builder);
+}
+
+__global__ void BuilderNextBuildType(Builder* builder) {
+	builder->NextBuildType();
+}
+
+void LaunchBuilderNextMaterialType(Builder* builder) {
+	BuilderNextMaterialType<<<1,1>>>(builder);
+}
+
+__global__ void BuilderNextMaterialType(Builder* builder) {
+	builder->NextMaterialType();
+}
+
+void LaunchBuilderNextColor(Builder* builder)  {
+	BuilderNextColor<<<1,1>>>(builder);
+}
+
+__global__ void BuilderNextColor(Builder* builder)  {
+	builder->NextColor();
+}
+
+void LaunchBuilderIncrease(Builder* builder)  {
+	BuilderIncrease<<<1,1>>>(builder);
+}
+
+__global__ void BuilderIncrease(Builder* builder)  {
+	builder->IncreaseAorI(0.1f);
+}
+
+void LaunchBuilderDecrease(Builder* builder)  {
+	BuilderDecrease<<<1,1>>>(builder);
+}
+
+__global__ void BuilderDecrease(Builder* builder) {
+	builder->DecreaseAorI(0.1f);
+}
+
 
 void LaunchInitResult(Color* result, unsigned width, unsigned height, unsigned tileSize) {
 	dim3 grid(width / tileSize, height / tileSize);
