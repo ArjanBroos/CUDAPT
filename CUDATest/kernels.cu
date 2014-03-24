@@ -144,8 +144,8 @@ __global__ void AddBlock(const Camera* cam, Scene* scene, Builder* builder) {
 
 		Shape* shape = builder->GetShape(*location);
 		Object* object = builder->GetObject(shape, location);
-		scene->AddPrimitive((Primitive*)object);
-		//scene->AddObject(object);
+		//scene->AddPrimitive((Primitive*)object);
+		scene->AddObject(object);
 	}
 }
 

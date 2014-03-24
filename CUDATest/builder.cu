@@ -24,10 +24,16 @@ __device__ Point* Builder::GetPosition(Primitive* neighbor, const Point& isct) c
 }
 
 __device__ Object* Builder::GetObject(Shape* shape, Point* location) const {
-	if (buildType == BT_PRIMITIVE)
-		return new Primitive(shape, materialPicker.GetMaterial(colorPicker.GetColor()), location);
-	if (buildType == BT_LIGHT)
-		return lightPicker.GetLight(shape, colorPicker.GetColor(), location);
+	if (buildType == BT_PRIMITIVE) {
+		Object* newPrim = new Primitive(shape, materialPicker.GetMaterial(colorPicker.GetColor()), location);
+		newPrim->type = PRIMITIVE;
+		return newPrim;
+	}
+	if (buildType == BT_LIGHT) {
+		Object* newLight = lightPicker.GetLight(shape, colorPicker.GetColor(), location);
+		newLight->type = LIGHT;
+		return newLight;
+	}
 	
 	return NULL;
 }
