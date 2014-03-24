@@ -35,22 +35,7 @@ __device__ void PreAddBlock(Point* loc, Scene* scene) {
 	scene->AddObject(spherePrim1);
 }
 
-__global__ void InitScene(Scene** pScene) {
-	*pScene = new Scene();
-	Scene* scene = *pScene;
-
-	Plane*				planeShape		= new Plane(Point(0,0,0), Vector(0.f, 1.f, 0.f));
-	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 0.3f), 1.f);
-	Primitive*			plane			= new Primitive(planeShape, planeMat, &planeShape->p);
-	plane->type = PLANE;
-	scene->AddPlane(plane);
-
-	//Box*				sphereShape1	= new Box(Point(0.f, 0.f, 0.f));
-	//LambertMaterial*	sphereMat1		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
-	//Primitive*			spherePrim1		= new Primitive(sphereShape1, sphereMat1, &sphereShape1->bounds[0]);
-	//spherePrim1->type = PRIMITIVE;
-	//scene->AddObject(spherePrim1);
-
+__device__ void CreateRoomScene(Scene* scene) {
 	//Onderste rand
 	PreAddBlock(&Point(6.f,0.f,1.f), scene);
 	PreAddBlock(&Point(4.f,0.f,1.f), scene);
@@ -113,11 +98,25 @@ __global__ void InitScene(Scene** pScene) {
 	PreAddBlock(&Point(9.f,2.f,4.f), scene);
 	PreAddBlock(&Point(8.f,2.f,3.f), scene);
 	PreAddBlock(&Point(7.f,2.f,2.f), scene);
+}
 
-	//sphereShape1	= new Box(Point(0.f, 0.f, 0.f));
-	//spherePrim1		= new Primitive(sphereShape1, sphereMat1, &sphereShape1->bounds[0]);
-	//spherePrim1->type = PRIMITIVE;
-	//scene->AddObject(spherePrim1);
+__global__ void InitScene(Scene** pScene) {
+	*pScene = new Scene();
+	Scene* scene = *pScene;
+
+	Plane*				planeShape		= new Plane(Point(0,0,0), Vector(0.f, 1.f, 0.f));
+	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 1.f), .9f);
+	Primitive*			plane			= new Primitive(planeShape, planeMat, &planeShape->p);
+	plane->type = PLANE;
+	scene->AddPlane(plane);
+
+	//CreateRoomScene(scene);
+
+	PreAddBlock(&Point(1.f, 0.f, 1.f), scene);
+	PreAddBlock(&Point(1.f, 0.f, 5.f), scene);
+	PreAddBlock(&Point(5.f, 0.f, 5.f), scene);
+	PreAddBlock(&Point(5.f, 0.f, 1.f), scene);
+
 }
 
 void LaunchInitBuilder(Builder** builder) {
@@ -126,6 +125,14 @@ void LaunchInitBuilder(Builder** builder) {
 
 __global__ void InitBuilder(Builder** builder) {
 	*builder = new Builder();
+}
+
+void LaunchRepositionCamera(Camera* cam) {
+	RepositionCamera<<<1,1>>>(cam);
+}
+
+__global__ void RepositionCamera(Camera* cam) {
+	cam->Reposition();
 }
 
 void LaunchAddBlock(const Camera* cam, Scene* scene, Builder* builder) {
@@ -195,7 +202,7 @@ void LaunchBuilderIncrease(Builder* builder)  {
 }
 
 __global__ void BuilderIncrease(Builder* builder)  {
-	builder->IncreaseAorI(0.1f);
+	builder->IncreaseAorI(1.f);
 }
 
 void LaunchBuilderDecrease(Builder* builder)  {
@@ -203,9 +210,24 @@ void LaunchBuilderDecrease(Builder* builder)  {
 }
 
 __global__ void BuilderDecrease(Builder* builder) {
-	builder->DecreaseAorI(0.1f);
+	builder->DecreaseAorI(1.f);
 }
 
+void LaunchIncreaseDayLight(Scene* scene) {
+	IncreaseDayLight<<<1,1>>>(scene);
+}
+
+__global__ void IncreaseDayLight(Scene* scene) {
+	scene->IncreaseDayLight(.1f);
+}
+
+void LaunchDecreaseDayLight(Scene* scene) {
+	DecreaseDayLight<<<1,1>>>(scene);
+} 
+
+__global__ void DecreaseDayLight(Scene* scene) {
+	scene->DecreaseDayLight(.1f);
+}
 
 void LaunchInitResult(Color* result, unsigned width, unsigned height, unsigned tileSize) {
 	dim3 grid(width / tileSize, height / tileSize);
@@ -230,13 +252,8 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 	const unsigned x = blockIdx.x * blockDim.x + threadIdx.x;
 	const unsigned y = blockIdx.y * blockDim.y + threadIdx.y;
 	const unsigned i = y * width + x;
-	__shared__ Color black;
-	__shared__ Color env;
-	if(threadIdx.x == 0) {
-		black = Color();
-		env = Color(0.2f, 0.2f, 0.3f);
-	}
-	__syncthreads();
+	Color black = Color();
+	Color env = scene->GetDayLight();
 
 	Ray ray = cam->GetJitteredRay(x, y, rng);
 	//const unsigned maxDepth = 4;

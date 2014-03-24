@@ -9,6 +9,7 @@
 #include "lambertmaterial.h"
 #include "octree.h"
 #include "plane.h"
+#include "color.h"
 
 #define MAX_PRIMITIVES	1024
 #define MAX_OBJECTS	1024
@@ -25,6 +26,9 @@ public:
 	// Adds object to the octree of the scene
 	__device__ void AddObject(Object* object);
 	__device__ void RemoveObject(Object* object);
+	__device__ void IncreaseDayLight(float amount);
+	__device__ void DecreaseDayLight(float amount);
+	__device__ const Color GetDayLight() const;
 	__device__ bool	Intersect(const Ray& ray, IntRec& intRec) const;
 	__device__ bool	IntersectOctree(const Ray& ray, IntRec& intRec, bool& intersected) const;
 
@@ -40,4 +44,5 @@ private:
 	Object**	objects;
 	int			nextId;
 	Node		octree;
+	Color		dayLight;
 };

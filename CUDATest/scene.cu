@@ -6,7 +6,8 @@ __device__ Scene::Scene() : primCounter(0), lightCounter(0), objectCounter(0), p
 	objects = new Object*[MAX_OBJECTS];
 	lights = new Light*[MAX_LIGHTS];
 	planes = new Primitive*[MAX_PLANES];
-	octree = (*new Node(Point(0,0,0), Point(16,16,16), nextId++));
+	octree = (*new Node(Point(0,0,0), Point(63,63,63), nextId++));
+	dayLight = Color(.5f, .5f, .5f);
 }
 
 __device__ Scene::~Scene() {
@@ -41,6 +42,22 @@ __device__ void Scene::AddObject(Object* object) {
 // Removes an object from the octree of the scene
 __device__ void Scene::RemoveObject(Object* object) {
 	octree.Remove(object);
+}
+
+__device__ void Scene::IncreaseDayLight(float amount) {
+	if(dayLight.r < 1.f) dayLight.r += amount;
+	if(dayLight.g < 1.f) dayLight.g += amount;
+	if(dayLight.b < 1.f) dayLight.b += amount;
+}
+
+__device__ void Scene::DecreaseDayLight(float amount) {
+	if(dayLight.r > 0.f) dayLight.r -= amount;
+	if(dayLight.g > 0.f) dayLight.g -= amount;
+	if(dayLight.b > 0.f) dayLight.b -= amount;
+}
+
+__device__ const Color Scene::GetDayLight() const {
+	return dayLight;
 }
 
 __device__ bool Scene::Intersect(const Ray& ray, IntRec& intRec) const {

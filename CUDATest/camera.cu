@@ -57,6 +57,12 @@ __device__ Ray Camera::GetJitteredRay(unsigned x, unsigned y, curandState* rng) 
 	return Ray(pos, Normalize(vx + vy + dir));
 }
 
+void Camera::Reposition() {
+	pos = Point(0.f, 1.5f, 0.f);
+	dir = Vector(1.f, 0.f, 1.f);
+	CalcUV();
+}
+
 void Camera::Walk(float x)
 {
 	pos.x += x*dir.x;

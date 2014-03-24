@@ -29,6 +29,7 @@ public:
 	__host__ __device__ void RotateCameraU(float angle);
 	__host__ __device__ void RotateCameraV(float angle);
 	__host__ __device__ void CalcUV();
+	__host__ __device__ void Reposition();
 
 private:
 	Point		pos;	// Position

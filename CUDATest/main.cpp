@@ -29,7 +29,7 @@ int main() {
 
 	std::cout << "Allocating memory..." << std::endl;
 
-	Camera* cam = new Camera(Point(5.5f, 1.5f, 1.2f), Normalize(Vector(0.f, 0.f, 1.f)), Vector(0.f, 1.f, 0.f), WIDTH, HEIGHT, 60.f);
+	Camera* cam = new Camera(Point(0.f, 4.f, 0.f), Normalize(Vector(1.f, -1.f, 1.f)), Vector(0.f, 1.f, 0.f), WIDTH, HEIGHT, 60.f);
 	Color* result = new Color[NR_PIXELS];
 	unsigned char* pixelData = new unsigned char[NR_PIXELS * 4];
 	Camera* d_cam; cudaMalloc(&d_cam, sizeof(Camera));
@@ -136,9 +136,23 @@ bool HandleEvents(Builder* d_builder, Scene* scene, sf::RenderWindow& window, Ca
 			if (event.key.code == sf::Keyboard::L) LaunchBuilderNextBuildType(d_builder);
 			if (event.key.code == sf::Keyboard::M) LaunchBuilderNextMaterialType(d_builder);
 			if (event.key.code == sf::Keyboard::C) LaunchBuilderNextColor(d_builder);
-			if (event.key.code == sf::Keyboard::Add) LaunchBuilderIncrease(d_builder);
-			if (event.key.code == sf::Keyboard::Subtract) LaunchBuilderDecrease(d_builder);
 			if (event.key.code == sf::Keyboard::F) freeze = !freeze;
+			if (event.key.code == sf::Keyboard::R) {
+				cam->Reposition();
+				cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+				resetCamera(iteration, d_result, width, height, tileSize);
+			}
+			if (event.key.code == sf::Keyboard::X) LaunchBuilderIncrease(d_builder);
+			if (event.key.code == sf::Keyboard::Z) LaunchBuilderDecrease(d_builder);
+
+			if (event.key.code == sf::Keyboard::Add) {
+				LaunchIncreaseDayLight(scene);
+				resetCamera(iteration, d_result, width, height, tileSize);
+			}
+			if (event.key.code == sf::Keyboard::Subtract) {
+				LaunchDecreaseDayLight(scene);
+				resetCamera(iteration, d_result, width, height, tileSize);
+			}
 		}
 		if (event.type == sf::Event::MouseButtonPressed) {
 			if (event.key.code == sf::Mouse::Left) {
