@@ -28,12 +28,6 @@ public:
 	__device__ bool	Intersect(const Ray& ray, IntRec& intRec) const;
 	__device__ bool	IntersectOctree(const Ray& ray, IntRec& intRec, bool& intersected) const;
 
-	bool		nextLight;
-	float		nextR;
-	float		nextG;
-	float		nextB;
-	float		nextE;
-
 private:
 	unsigned	primCounter;
 	unsigned	lightCounter;

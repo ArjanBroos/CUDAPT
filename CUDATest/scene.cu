@@ -1,7 +1,7 @@
 #include "scene.h"
 #include "math.h"
 
-__device__ Scene::Scene() : primCounter(0), lightCounter(0), objectCounter(0), planeCounter(0), nextId(0), nextLight(false), nextR(1.f), nextG(0.f), nextB(0.f), nextE(5.f) {
+__device__ Scene::Scene() : primCounter(0), lightCounter(0), objectCounter(0), planeCounter(0), nextId(0) {
 	primitives = new Primitive*[MAX_PRIMITIVES];
 	objects = new Object*[MAX_OBJECTS];
 	lights = new Light*[MAX_LIGHTS];

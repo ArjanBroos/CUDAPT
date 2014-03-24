@@ -1,8 +1,6 @@
 #include "colorpicker.h"
 
-__device__ ColorPicker::ColorPicker() {
-	colorIndex = 0;
-
+__device__ ColorPicker::ColorPicker() : colorIndex(0) {
 	colors[0] = Color(1.f, 0.f, 0.f);	// Red
 	colors[1] = Color(0.f, 1.f, 0.f);	// Green
 	colors[2] = Color(0.f, 0.f, 1.f);	// Blue

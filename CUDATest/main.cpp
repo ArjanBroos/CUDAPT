@@ -13,7 +13,7 @@
 #include "sphere.h"
 
 void SetTitle(sf::RenderWindow& window, unsigned iteration);
-bool HandleEvents(Scene* pScene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
+bool HandleEvents(Builder* d_builder, Scene* pScene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 void resetCamera(unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 
@@ -50,6 +50,12 @@ int main() {
 	cudaMemcpy(pScene, d_pScene, sizeof(Scene*), cudaMemcpyDeviceToHost);
 	// We can now use *pScene on the host as a pointer to the Scene allocated on the device
 
+	Builder** pBuilder = new Builder*;
+	Builder** d_pBuilder; cudaMalloc(&d_pBuilder, sizeof(Builder*));
+	LaunchInitBuilder(d_pBuilder);
+	cudaMemcpy(pBuilder, d_pBuilder, sizeof(Builder*), cudaMemcpyDeviceToHost);
+
+
 	cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
 
 	std::cout << "Done" << std::endl;
@@ -76,7 +82,7 @@ int main() {
 
 	bool running = true;
 	unsigned iteration = 1;
-	while (HandleEvents(*pScene, window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
+	while (HandleEvents(*pBuilder, *pScene, window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
 		if(!freeze)
 			pollKeyboard(cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
@@ -121,18 +127,18 @@ void resetCamera(unsigned& iteration, Color* d_result, unsigned width, unsigned 
 	LaunchInitResult(d_result, width, height, tileSize);
 }
 
-bool HandleEvents(Scene* scene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize) {
+bool HandleEvents(Builder* d_builder, Scene* scene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize) {
 	sf::Event event;
 	while (window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) return false;
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) return false;
-			if (event.key.code == sf::Keyboard::L) LaunchChangeLight(scene);
+			if (event.key.code == sf::Keyboard::L) LaunchBuilderNextBuildType(d_builder);
 			if (event.key.code == sf::Keyboard::F) freeze = !freeze;
 		}
 		if (event.type == sf::Event::MouseButtonPressed) {
 			if (event.key.code == sf::Mouse::Left) {
-				LaunchAddBlock(d_cam, scene);
+				LaunchAddBlock(d_cam, scene, d_builder);
 				resetCamera(iteration, d_result, width, height, tileSize);
 			}
 			if (event.key.code == sf::Mouse::Right) {
@@ -199,4 +205,8 @@ void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_resu
 		cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
 		resetCamera(iteration, d_result, width, height, tileSize);
 	}
+}
+
+void UploadBuilder(Builder* builder, Builder* d_builder) {
+	cudaMemcpy(d_builder, builder, sizeof(Builder), cudaMemcpyHostToDevice);
 }

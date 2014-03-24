@@ -1,8 +1,6 @@
 #include "materialpicker.h"
 
-__device__ MaterialPicker::MaterialPicker() {
-	type = MT_START;
-	albedo = 1.f;
+__device__ MaterialPicker::MaterialPicker() : type(MT_START), albedo(1.f) {
 }
 
 __device__ Material* MaterialPicker::GetMaterial(const Color& color) const {

@@ -138,16 +138,17 @@
     <CudaCompile Include="octree.cu">
       <Filter>Source Files\octree</Filter>
     </CudaCompile>
-    <CudaCompile Include="materialpicker.cu">
-      <Filter>Source Files\materials</Filter>
+    <CudaCompile Include="object.cu" />
+    <CudaCompile Include="builder.cu">
+      <Filter>Source Files\builder</Filter>
     </CudaCompile>
-    <CudaCompile Include="colorpicker.cu">
-      <Filter>Source Files\color</Filter>
+    <CudaCompile Include="materialpicker.cu">
+      <Filter>Source Files\builder</Filter>
     </CudaCompile>
     <CudaCompile Include="lightpicker.cu">
-      <Filter>Source Files\lights</Filter>
+      <Filter>Source Files\builder</Filter>
     </CudaCompile>
-    <CudaCompile Include="builder.cu">
+    <CudaCompile Include="colorpicker.cu">
       <Filter>Source Files\builder</Filter>
     </CudaCompile>
   </ItemGroup>
@@ -221,16 +222,19 @@
     <ClInclude Include="octree.h">
       <Filter>Header Files\octree</Filter>
     </ClInclude>
-    <ClInclude Include="materialpicker.h">
-      <Filter>Header Files\materials</Filter>
-    </ClInclude>
-    <ClInclude Include="lightpicker.h">
-      <Filter>Header Files\lights</Filter>
-    </ClInclude>
-    <ClInclude Include="colorpicker.h">
-      <Filter>Header Files\color</Filter>
+    <ClInclude Include="object.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="builder.h">
+      <Filter>Header Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="colorpicker.h">
+      <Filter>Header Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="lightpicker.h">
+      <Filter>Header Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="materialpicker.h">
       <Filter>Header Files\builder</Filter>
     </ClInclude>
   </ItemGroup>
