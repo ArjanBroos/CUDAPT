@@ -36,6 +36,14 @@ __global__ void BuilderIncrease(Builder* builder);
 void LaunchBuilderDecrease(Builder* builder);
 __global__ void BuilderDecrease(Builder* builder);
 
+void LaunchIncreaseDayLight(Scene* scene);
+__global__ void IncreaseDayLight(Scene* scene);
+void LaunchDecreaseDayLight(Scene* scene);
+__global__ void DecreaseDayLight(Scene* scene);
+
+void LaunchRepositionCamera(Camera* cam);
+__global__ void RepositionCamera(Camera* cam);
+
 void LaunchConvert(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width, unsigned height, unsigned tileSize);
 __global__ void Convert(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width);
 void LaunchDestroyScene(Scene* scene);
