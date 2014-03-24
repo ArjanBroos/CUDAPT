@@ -12,7 +12,7 @@ __device__ Shape* Builder::GetShape(const Point& location) const {
 __device__ Point* Builder::GetPosition(AreaLight* neighbor, const Point& isct) const {
 	Vector n = neighbor->GetShape()->GetNormal(isct);
 	Point* nl = neighbor->loc;
-	return new Point(*nl + n + Vector(0.5f, 0.5f, 0.5f));
+	return new Point((int)(nl->x + n.x + .5f), (int)(nl->y + n.y + .5f), (int)(nl->z + n.z + .5f));
 }
 
 __device__ Point* Builder::GetPosition(Primitive* neighbor, const Point& isct) const {
@@ -20,7 +20,7 @@ __device__ Point* Builder::GetPosition(Primitive* neighbor, const Point& isct) c
 		return new Point(floor(isct.x), floor(isct.y), floor(isct.z));
 	Vector n = neighbor->GetShape()->GetNormal(isct);
 	Point* nl = neighbor->loc;
-	return new Point(*nl + n + Vector(0.5f, 0.5f, 0.5f));
+	return new Point((int)(nl->x + n.x + .5f), (int)(nl->y + n.y + .5f), (int)(nl->z + n.z + .5f));
 }
 
 __device__ Object* Builder::GetObject(Shape* shape, Point* location) const {

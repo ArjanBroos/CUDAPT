@@ -41,6 +41,9 @@ __device__ Node::Node(Point bounda, Point boundb, int octant, Node* parent, int 
 __device__ int Node::Insert(Object* object, int &id)
 {
 	Point loc = (*object->loc);
+	if(loc.x > bounds[1].x - 1 || loc.y > bounds[1].y - 1 || loc.z > bounds[1].z - 1) {
+		return -1;
+	}
 	Node* currentNode = this;
 	while( ! ( (fabsf(currentNode->bounds[1].x - currentNode->bounds[0].x - 1) < 1e-5f) 
 		&& (fabsf(currentNode->bounds[1].y - currentNode->bounds[0].y - 1) < 1e-5f) 
