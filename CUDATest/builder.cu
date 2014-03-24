@@ -53,14 +53,14 @@ __device__ void Builder::NextMaterialType() {
 
 __device__ void Builder::IncreaseAorI(float step) {
 	if (buildType == BT_PRIMITIVE)
-		materialPicker.IncreaseAlbedo(step);
+		materialPicker.IncreaseAlbedo(step/10.f);
 	if (buildType == BT_LIGHT)
 		lightPicker.IncreaseIntensity(step);
 }
 
 __device__ void Builder::DecreaseAorI(float step) {
 	if (buildType == BT_PRIMITIVE)
-		materialPicker.DecreaseAlbedo(step);
+		materialPicker.DecreaseAlbedo(step/10.f);
 	if (buildType == BT_LIGHT)
 		lightPicker.DecreaseIntensity(step);
 }

@@ -22,14 +22,14 @@ bool freeze = false;
 int main() {
 	std::cout << "CUDA path tracing tests" << std::endl;
 
-	const unsigned WIDTH = 640;
-	const unsigned HEIGHT = 480;
+	const unsigned WIDTH = 1680;
+	const unsigned HEIGHT = 1050;
 	const unsigned NR_PIXELS = WIDTH * HEIGHT;
 	const unsigned TILE_SIZE = 8;
 
 	std::cout << "Allocating memory..." << std::endl;
 
-	Camera* cam = new Camera(Point(0.f, 4.f, 0.f), Normalize(Vector(1.f, -1.f, 1.f)), Vector(0.f, 1.f, 0.f), WIDTH, HEIGHT, 60.f);
+	Camera* cam = new Camera(Point(2.f, 5.f, 10.f), Normalize(Vector(1.f, -.7f, -.7f)), Vector(0.f, 1.f, 0.f), WIDTH, HEIGHT, 60.f);
 	Color* result = new Color[NR_PIXELS];
 	unsigned char* pixelData = new unsigned char[NR_PIXELS * 4];
 	Camera* d_cam; cudaMalloc(&d_cam, sizeof(Camera));
@@ -154,16 +154,17 @@ bool HandleEvents(Builder* d_builder, Scene* scene, sf::RenderWindow& window, Ca
 				resetCamera(iteration, d_result, width, height, tileSize);
 			}
 		}
-		if (event.type == sf::Event::MouseButtonPressed) {
-			if (event.key.code == sf::Mouse::Left) {
-				LaunchAddBlock(d_cam, scene, d_builder);
-				resetCamera(iteration, d_result, width, height, tileSize);
+		if(!freeze)
+			if (event.type == sf::Event::MouseButtonPressed) {
+				if (event.key.code == sf::Mouse::Left) {
+					LaunchAddBlock(d_cam, scene, d_builder);
+					resetCamera(iteration, d_result, width, height, tileSize);
+				}
+				if (event.key.code == sf::Mouse::Right) {
+					LaunchRemoveBlock(d_cam, scene);
+					resetCamera(iteration, d_result, width, height, tileSize);
+				}
 			}
-			if (event.key.code == sf::Mouse::Right) {
-				LaunchRemoveBlock(d_cam, scene);
-				resetCamera(iteration, d_result, width, height, tileSize);
-			}
-		}
 	}
 	return true;
 }

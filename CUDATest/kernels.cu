@@ -27,77 +27,130 @@ void LaunchInitScene(Scene** pScene) {
 	InitScene<<<1,1>>>(pScene);
 }
 
-__device__ void PreAddBlock(Point* loc, Scene* scene) {
-	Box*				sphereShape1	= new Box(*loc);
-	LambertMaterial*	sphereMat1		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
-	Primitive*			spherePrim1		= new Primitive(sphereShape1, sphereMat1, &sphereShape1->bounds[0]);
-	spherePrim1->type = PRIMITIVE;
-	scene->AddObject(spherePrim1);
+__device__ void PreAddBlock(Point* loc, Scene* scene, int type) {
+	if(type == 0) {
+		Box*				boxShape	= new Box(*loc);
+		LambertMaterial*	boxMat		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
+		Primitive*			boxPrim		= new Primitive(boxShape, boxMat, &boxShape->bounds[0]);
+		boxPrim->type = PRIMITIVE;
+		scene->AddObject(boxPrim);
+	}
+	if(type == 1) {
+		Box*				boxShape	= new Box(*loc);
+		AreaLight*			boxLight	= new AreaLight(boxShape,Color(1.f,1.f,1.f),5.f,loc);
+		boxLight->type = LIGHT;
+		scene->AddObject(boxLight);
+	}
+	if(type == 2) {
+		Box*				boxShape	= new Box(*loc);
+		MirrorMaterial*		boxMat		= new MirrorMaterial(Color(1.f, 1.f, 1.f), .9f);
+		Primitive*			boxPrim		= new Primitive(boxShape, boxMat, &boxShape->bounds[0]);
+		boxPrim->type = PRIMITIVE;
+		scene->AddObject(boxPrim);
+	}
 }
 
 __device__ void CreateRoomScene(Scene* scene) {
-	//Onderste rand
-	PreAddBlock(&Point(6.f,0.f,1.f), scene);
-	PreAddBlock(&Point(4.f,0.f,1.f), scene);
-	PreAddBlock(&Point(3.f,0.f,2.f), scene);
-	PreAddBlock(&Point(2.f,0.f,3.f), scene);
-	PreAddBlock(&Point(1.f,0.f,4.f), scene);
-	PreAddBlock(&Point(1.f,0.f,5.f), scene);
-	PreAddBlock(&Point(1.f,0.f,6.f), scene);
-	PreAddBlock(&Point(2.f,0.f,7.f), scene);
-	PreAddBlock(&Point(3.f,0.f,8.f), scene);
-	PreAddBlock(&Point(4.f,0.f,9.f), scene);
-	PreAddBlock(&Point(5.f,0.f,9.f), scene);
-	PreAddBlock(&Point(6.f,0.f,9.f), scene);
-	PreAddBlock(&Point(7.f,0.f,8.f), scene);
-	PreAddBlock(&Point(8.f,0.f,7.f), scene);
-	PreAddBlock(&Point(9.f,0.f,6.f), scene);
-	PreAddBlock(&Point(9.f,0.f,5.f), scene);
-	PreAddBlock(&Point(9.f,0.f,4.f), scene);
-	PreAddBlock(&Point(8.f,0.f,3.f), scene);
-	PreAddBlock(&Point(7.f,0.f,2.f), scene);
+	// Onderste rand
+	PreAddBlock(&Point(1.f,0.f,1.f), scene, 0);
+	PreAddBlock(&Point(1.f,0.f,2.f), scene, 0);
+	PreAddBlock(&Point(1.f,0.f,3.f), scene, 0);
+	PreAddBlock(&Point(1.f,0.f,4.f), scene, 0);
+	PreAddBlock(&Point(1.f,0.f,5.f), scene, 0);
+	PreAddBlock(&Point(1.f,0.f,6.f), scene, 0);
+	PreAddBlock(&Point(2.f,0.f,6.f), scene, 0);
+	PreAddBlock(&Point(2.f,0.f,1.f), scene, 0);
+	PreAddBlock(&Point(3.f,0.f,1.f), scene, 0);
+	PreAddBlock(&Point(4.f,0.f,1.f), scene, 0);
+	PreAddBlock(&Point(5.f,0.f,1.f), scene, 0);
+	PreAddBlock(&Point(6.f,0.f,1.f), scene, 0);
+	PreAddBlock(&Point(6.f,0.f,2.f), scene, 0);
+	PreAddBlock(&Point(6.f,0.f,3.f), scene, 0);
 
-	//Middelste rand
-	PreAddBlock(&Point(6.f,1.f,1.f), scene);
-	PreAddBlock(&Point(4.f,1.f,1.f), scene);
-	PreAddBlock(&Point(3.f,1.f,2.f), scene);
-	PreAddBlock(&Point(2.f,1.f,3.f), scene);
-	PreAddBlock(&Point(1.f,1.f,4.f), scene);
-	PreAddBlock(&Point(1.f,1.f,5.f), scene);
-	PreAddBlock(&Point(1.f,1.f,6.f), scene);
-	PreAddBlock(&Point(2.f,1.f,7.f), scene);
-	PreAddBlock(&Point(3.f,1.f,8.f), scene);
-	PreAddBlock(&Point(4.f,1.f,9.f), scene);
-	PreAddBlock(&Point(5.f,1.f,9.f), scene);
-	PreAddBlock(&Point(6.f,1.f,9.f), scene);
-	PreAddBlock(&Point(7.f,1.f,8.f), scene);
-	PreAddBlock(&Point(8.f,1.f,7.f), scene);
-	PreAddBlock(&Point(9.f,1.f,6.f), scene);
-	PreAddBlock(&Point(9.f,1.f,5.f), scene);
-	PreAddBlock(&Point(9.f,1.f,4.f), scene);
-	PreAddBlock(&Point(8.f,1.f,3.f), scene);
-	PreAddBlock(&Point(7.f,1.f,2.f), scene);
+	// Middelste rand
+	PreAddBlock(&Point(1.f,1.f,1.f), scene, 0);
+	PreAddBlock(&Point(1.f,1.f,2.f), scene, 0);
+	PreAddBlock(&Point(1.f,1.f,3.f), scene, 0);
+	PreAddBlock(&Point(1.f,1.f,4.f), scene, 0);
+	PreAddBlock(&Point(1.f,1.f,5.f), scene, 0);
+	PreAddBlock(&Point(1.f,1.f,6.f), scene, 0);
+	PreAddBlock(&Point(2.f,1.f,6.f), scene, 0);
+	PreAddBlock(&Point(2.f,1.f,1.f), scene, 0);
+	PreAddBlock(&Point(3.f,1.f,1.f), scene, 0);
+	PreAddBlock(&Point(4.f,1.f,1.f), scene, 0);
+	PreAddBlock(&Point(5.f,1.f,1.f), scene, 0);
+	PreAddBlock(&Point(6.f,1.f,1.f), scene, 0);
+	PreAddBlock(&Point(6.f,1.f,2.f), scene, 0);
+	PreAddBlock(&Point(6.f,1.f,3.f), scene, 0);
 
-	//Bovenste rand
-	PreAddBlock(&Point(6.f,2.f,1.f), scene);
-	PreAddBlock(&Point(4.f,2.f,1.f), scene);
-	PreAddBlock(&Point(3.f,2.f,2.f), scene);
-	PreAddBlock(&Point(2.f,2.f,3.f), scene);
-	PreAddBlock(&Point(1.f,2.f,4.f), scene);
-	PreAddBlock(&Point(1.f,2.f,5.f), scene);
-	PreAddBlock(&Point(1.f,2.f,6.f), scene);
-	PreAddBlock(&Point(2.f,2.f,7.f), scene);
-	PreAddBlock(&Point(3.f,2.f,8.f), scene);
-	PreAddBlock(&Point(4.f,2.f,9.f), scene);
-	PreAddBlock(&Point(5.f,2.f,9.f), scene);
-	PreAddBlock(&Point(6.f,2.f,9.f), scene);
-	PreAddBlock(&Point(7.f,2.f,8.f), scene);
-	PreAddBlock(&Point(8.f,2.f,7.f), scene);
-	PreAddBlock(&Point(9.f,2.f,6.f), scene);
-	PreAddBlock(&Point(9.f,2.f,5.f), scene);
-	PreAddBlock(&Point(9.f,2.f,4.f), scene);
-	PreAddBlock(&Point(8.f,2.f,3.f), scene);
-	PreAddBlock(&Point(7.f,2.f,2.f), scene);
+	// Bovenste rand
+	PreAddBlock(&Point(1.f,2.f,1.f), scene, 0);
+	PreAddBlock(&Point(1.f,2.f,2.f), scene, 0);
+	PreAddBlock(&Point(1.f,2.f,3.f), scene, 0);
+	PreAddBlock(&Point(1.f,2.f,4.f), scene, 0);
+	PreAddBlock(&Point(1.f,2.f,5.f), scene, 0);
+	PreAddBlock(&Point(1.f,2.f,6.f), scene, 0);
+	PreAddBlock(&Point(2.f,2.f,6.f), scene, 0);
+	PreAddBlock(&Point(2.f,2.f,1.f), scene, 0);
+	PreAddBlock(&Point(3.f,2.f,1.f), scene, 0);
+	PreAddBlock(&Point(4.f,2.f,1.f), scene, 0);
+	PreAddBlock(&Point(5.f,2.f,1.f), scene, 0);
+	PreAddBlock(&Point(6.f,2.f,1.f), scene, 0);
+	PreAddBlock(&Point(6.f,2.f,2.f), scene, 0);
+	PreAddBlock(&Point(6.f,2.f,3.f), scene, 0);
+
+	// Plafond
+	PreAddBlock(&Point(2.f,2.f,5.f), scene, 0);
+	PreAddBlock(&Point(2.f,2.f,4.f), scene, 0);
+
+	PreAddBlock(&Point(5.f,2.f,3.f), scene, 0);
+	PreAddBlock(&Point(4.f,2.f,3.f), scene, 0);
+	PreAddBlock(&Point(3.f,2.f,3.f), scene, 0);
+	PreAddBlock(&Point(2.f,2.f,3.f), scene, 0);
+
+	PreAddBlock(&Point(5.f,2.f,2.f), scene, 0);
+	PreAddBlock(&Point(4.f,2.f,2.f), scene, 0);
+	PreAddBlock(&Point(3.f,2.f,2.f), scene, 0);
+	PreAddBlock(&Point(2.f,2.f,2.f), scene, 0);
+
+	// Lampjes
+	PreAddBlock(&Point(2.f,0.f,2.f), scene, 1);
+	PreAddBlock(&Point(2.f,0.f,3.f), scene, 1);
+	PreAddBlock(&Point(3.f,0.f,2.f), scene, 1);
+	PreAddBlock(&Point(2.f,1.f,2.f), scene, 1);
+	PreAddBlock(&Point(2.f,1.f,3.f), scene, 1);
+	PreAddBlock(&Point(3.f,1.f,2.f), scene, 1);
+
+	// Schaduw blok
+	PreAddBlock(&Point(4.f,0.f,4.f), scene, 0);
+
+	// Mirror wall
+	PreAddBlock(&Point(10.f,0.f,3.f), scene, 2);
+	PreAddBlock(&Point(10.f,0.f,4.f), scene, 2);
+	PreAddBlock(&Point(10.f,0.f,5.f), scene, 2);
+	PreAddBlock(&Point(10.f,0.f,6.f), scene, 2);
+	PreAddBlock(&Point(10.f,0.f,7.f), scene, 2);
+	PreAddBlock(&Point(10.f,1.f,3.f), scene, 2);
+	PreAddBlock(&Point(10.f,1.f,4.f), scene, 2);
+	PreAddBlock(&Point(10.f,1.f,5.f), scene, 2);
+	PreAddBlock(&Point(10.f,1.f,6.f), scene, 2);
+	PreAddBlock(&Point(10.f,1.f,7.f), scene, 2);
+	PreAddBlock(&Point(10.f,2.f,3.f), scene, 2);
+	PreAddBlock(&Point(10.f,2.f,4.f), scene, 2);
+	PreAddBlock(&Point(10.f,2.f,5.f), scene, 2);
+	PreAddBlock(&Point(10.f,2.f,6.f), scene, 2);
+	PreAddBlock(&Point(10.f,2.f,7.f), scene, 2);
+	PreAddBlock(&Point(10.f,3.f,3.f), scene, 2);
+	PreAddBlock(&Point(10.f,3.f,4.f), scene, 2);
+	PreAddBlock(&Point(10.f,3.f,5.f), scene, 2);
+	PreAddBlock(&Point(10.f,3.f,6.f), scene, 2);
+	PreAddBlock(&Point(10.f,3.f,7.f), scene, 2);
+	PreAddBlock(&Point(10.f,4.f,3.f), scene, 2);
+	PreAddBlock(&Point(10.f,4.f,4.f), scene, 2);
+	PreAddBlock(&Point(10.f,4.f,5.f), scene, 2);
+	PreAddBlock(&Point(10.f,4.f,6.f), scene, 2);
+	PreAddBlock(&Point(10.f,4.f,7.f), scene, 2);
+	PreAddBlock(&Point(9.f,0.f,4.f), scene, 0);
 }
 
 __global__ void InitScene(Scene** pScene) {
@@ -105,18 +158,12 @@ __global__ void InitScene(Scene** pScene) {
 	Scene* scene = *pScene;
 
 	Plane*				planeShape		= new Plane(Point(0,0,0), Vector(0.f, 1.f, 0.f));
-	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 1.f), .9f);
+	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 1.f), .95f);
 	Primitive*			plane			= new Primitive(planeShape, planeMat, &planeShape->p);
 	plane->type = PLANE;
 	scene->AddPlane(plane);
 
-	//CreateRoomScene(scene);
-
-	PreAddBlock(&Point(1.f, 0.f, 1.f), scene);
-	PreAddBlock(&Point(1.f, 0.f, 5.f), scene);
-	PreAddBlock(&Point(5.f, 0.f, 5.f), scene);
-	PreAddBlock(&Point(5.f, 0.f, 1.f), scene);
-
+	CreateRoomScene(scene);
 }
 
 void LaunchInitBuilder(Builder** builder) {
