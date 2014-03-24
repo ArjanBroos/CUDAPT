@@ -134,6 +134,10 @@ bool HandleEvents(Builder* d_builder, Scene* scene, sf::RenderWindow& window, Ca
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) return false;
 			if (event.key.code == sf::Keyboard::L) LaunchBuilderNextBuildType(d_builder);
+			if (event.key.code == sf::Keyboard::M) LaunchBuilderNextMaterialType(d_builder);
+			if (event.key.code == sf::Keyboard::C) LaunchBuilderNextColor(d_builder);
+			if (event.key.code == sf::Keyboard::Add) LaunchBuilderIncrease(d_builder);
+			if (event.key.code == sf::Keyboard::Subtract) LaunchBuilderDecrease(d_builder);
 			if (event.key.code == sf::Keyboard::F) freeze = !freeze;
 		}
 		if (event.type == sf::Event::MouseButtonPressed) {
