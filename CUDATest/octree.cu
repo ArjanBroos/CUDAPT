@@ -138,18 +138,16 @@ __device__ bool Node::Intersect(const Ray &ray, IntRec& intRec) const {
 	bool intersect = false;
 	Node* current = NextNode(this, ray, intRec.t);
 	while(current) {
-		if(current->NodeIntersect(ray) < intRec.t) {
-			if(current->object) {
-				if(current->object->Intersect(ray, temp) && temp < intRec.t) {
-					intRec.t = temp;
-					intersect = true;
-					if(current->object->type == PRIMITIVE) {
-						intRec.prim = (Primitive*) current->object;
-						intRec.light = NULL;
-					} else {
-						intRec.prim = NULL;
-						intRec.light = (Light*) current->object;
-					}
+		if(current->object) {
+			if(current->object->Intersect(ray, temp) && temp < intRec.t) {
+				intRec.t = temp;
+				intersect = true;
+				if(current->object->type == PRIMITIVE) {
+					intRec.prim = (Primitive*) current->object;
+					intRec.light = NULL;
+				} else {
+					intRec.prim = NULL;
+					intRec.light = (Light*) current->object;
 				}
 			}
 		}
