@@ -99,7 +99,7 @@ int main() {
 				cam->RotateCameraV( (float)dy / -400.f );
 				cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
 				resetCamera(iteration, d_result, WIDTH, HEIGHT, TILE_SIZE);
-				sf::Mouse::setPosition(sf::Vector2i(WIDTH/2, HEIGHT/2), window);
+				sf::Mouse::setPosition(midScreen);
 			}
 		}
 
