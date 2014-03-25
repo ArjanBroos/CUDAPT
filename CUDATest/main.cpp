@@ -18,6 +18,7 @@ void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_resu
 void resetCamera(unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 
 bool freeze = false;
+sf::Vector2i midScreen;
 
 int main() {
 	std::cout << "CUDA path tracing tests" << std::endl;
@@ -61,6 +62,10 @@ int main() {
 	std::cout << "Done" << std::endl;
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "CUDA Path tracer");
 	window.setVerticalSyncEnabled(false);
+	window.setMouseCursorVisible(false);
+	sf::Mouse::setPosition(sf::Vector2i(WIDTH/2, HEIGHT/2), window);
+	midScreen = sf::Mouse::getPosition();
+
 
 	std::cout << "Calculating rays" << std::endl << std::flush;
 
@@ -83,8 +88,21 @@ int main() {
 	bool running = true;
 	unsigned iteration = 1;
 	while (HandleEvents(*pBuilder, *pScene, window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
-		if(!freeze)
+		if(!freeze) {
 			pollKeyboard(cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE);
+			sf::Vector2i newMousePos = sf::Mouse::getPosition();
+			int dx = newMousePos.x - midScreen.x;
+			int dy = newMousePos.y - midScreen.y;
+
+			if (dx != 0 || dy != 0) {
+				cam->RotateCameraU( (float)dx / -400.f );
+				cam->RotateCameraV( (float)dy / -400.f );
+				cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+				resetCamera(iteration, d_result, WIDTH, HEIGHT, TILE_SIZE);
+				sf::Mouse::setPosition(sf::Vector2i(WIDTH/2, HEIGHT/2), window);
+			}
+		}
+
 		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchConvert(d_result, d_pixelData, iteration, WIDTH, HEIGHT, TILE_SIZE);
 		cudaMemcpy(pixelData, d_pixelData, NR_PIXELS * 4 * sizeof(unsigned char), cudaMemcpyDeviceToHost);

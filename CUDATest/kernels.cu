@@ -249,7 +249,7 @@ void LaunchBuilderIncrease(Builder* builder)  {
 }
 
 __global__ void BuilderIncrease(Builder* builder)  {
-	builder->IncreaseAorI(1.f);
+	builder->IncreaseAorI(0.2f);
 }
 
 void LaunchBuilderDecrease(Builder* builder)  {
@@ -257,7 +257,7 @@ void LaunchBuilderDecrease(Builder* builder)  {
 }
 
 __global__ void BuilderDecrease(Builder* builder) {
-	builder->DecreaseAorI(1.f);
+	builder->DecreaseAorI(0.2f);
 }
 
 void LaunchIncreaseDayLight(Scene* scene) {
