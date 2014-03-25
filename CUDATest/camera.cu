@@ -58,8 +58,8 @@ __device__ Ray Camera::GetJitteredRay(unsigned x, unsigned y, curandState* rng) 
 }
 
 void Camera::Reposition() {
-	pos = Point(0.f, 1.5f, 0.f);
-	dir = Vector(1.f, 0.f, 1.f);
+	pos = Point(0.f, 4.f, 0.f);
+	dir = Vector(1.f, -1.f, 1.f);
 	CalcUV();
 }
 
