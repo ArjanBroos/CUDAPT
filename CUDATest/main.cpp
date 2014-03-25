@@ -63,8 +63,9 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "CUDA Path tracer");
 	window.setVerticalSyncEnabled(false);
 	window.setMouseCursorVisible(false);
-	sf::Mouse::setPosition(sf::Vector2i(WIDTH/2, HEIGHT/2), window);
-	midScreen = sf::Mouse::getPosition();
+	midScreen.x = window.getPosition().x + window.getSize().x / 2;
+	midScreen.y = window.getPosition().y + window.getSize().y / 2;
+	sf::Mouse::setPosition(midScreen);
 
 
 	std::cout << "Calculating rays" << std::endl << std::flush;
@@ -102,6 +103,8 @@ int main() {
 				sf::Mouse::setPosition(midScreen);
 			}
 		}
+		midScreen.x = window.getPosition().x + window.getSize().x / 2;
+		midScreen.y = window.getPosition().y + window.getSize().y / 2;
 
 		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchConvert(d_result, d_pixelData, iteration, WIDTH, HEIGHT, TILE_SIZE);
