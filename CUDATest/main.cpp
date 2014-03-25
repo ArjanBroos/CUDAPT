@@ -246,7 +246,3 @@ void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_resu
 		resetCamera(iteration, d_result, width, height, tileSize);
 	}
 }
-
-void UploadBuilder(Builder* builder, Builder* d_builder) {
-	cudaMemcpy(d_builder, builder, sizeof(Builder), cudaMemcpyHostToDevice);
-}
