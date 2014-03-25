@@ -37,7 +37,7 @@ __device__ void PreAddBlock(Point* loc, Scene* scene, int type) {
 	}
 	if(type == 1) {
 		Box*				boxShape	= new Box(*loc);
-		AreaLight*			boxLight	= new AreaLight(boxShape,Color(1.f,1.f,1.f),5.f,loc);
+		AreaLight*			boxLight	= new AreaLight(boxShape,Color(1.f,1.f,1.f),10.f,loc);
 		boxLight->type = LIGHT;
 		scene->AddObject(boxLight);
 	}
@@ -158,7 +158,7 @@ __global__ void InitScene(Scene** pScene) {
 	Scene* scene = *pScene;
 
 	Plane*				planeShape		= new Plane(Point(0,0,0), Vector(0.f, 1.f, 0.f));
-	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 1.f), .95f);
+	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 1.f), .9f);
 	Primitive*			plane			= new Primitive(planeShape, planeMat, &planeShape->p);
 	plane->type = PLANE;
 	scene->AddPlane(plane);
