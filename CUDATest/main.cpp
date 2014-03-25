@@ -23,8 +23,8 @@ sf::Vector2i midScreen;
 int main() {
 	std::cout << "CUDA path tracing tests" << std::endl;
 
-	const unsigned WIDTH = 1680;
-	const unsigned HEIGHT = 1050;
+	const unsigned WIDTH = 640;
+	const unsigned HEIGHT = 480;
 	const unsigned NR_PIXELS = WIDTH * HEIGHT;
 	const unsigned TILE_SIZE = 8;
 
