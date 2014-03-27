@@ -43,8 +43,8 @@ __device__ void Builder::NextBuildType() {
 	if (buildType == BT_END) buildType = BT_START;
 }
 
-__device__ void Builder::NextColor() {
-	colorPicker.NextColor();
+__device__ void Builder::SetPresetColor(unsigned index) {
+	colorPicker.SetColor(index);
 }
 
 __device__ void Builder::NextMaterialType() {

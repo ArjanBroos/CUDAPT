@@ -11,9 +11,10 @@
 #include "camera.h"
 #include "geometry.h"
 #include "sphere.h"
+#include "interface.h"
 
 void SetTitle(sf::RenderWindow& window, unsigned iteration);
-bool HandleEvents(Builder* d_builder, Scene* pScene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
+bool HandleEvents(Interface& interface, Builder* d_builder, Scene* pScene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 void resetCamera(unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 
@@ -60,13 +61,16 @@ int main() {
 	cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
 
 	std::cout << "Done" << std::endl;
+
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "CUDA Path tracer");
 	window.setVerticalSyncEnabled(false);
+
 	window.setMouseCursorVisible(false);
 	midScreen.x = window.getPosition().x + window.getSize().x / 2;
 	midScreen.y = window.getPosition().y + window.getSize().y / 2;
 	sf::Mouse::setPosition(midScreen);
 
+	Interface interface;
 
 	std::cout << "Calculating rays" << std::endl << std::flush;
 
@@ -75,20 +79,9 @@ int main() {
 	sf::Texture texture;
 	sf::Sprite sprite;
 
-	// Interface
-	sf::Texture diffBlockTex, mirrBlockTex, glassBlockTex, crosshairTex;
-	sf::Sprite diffBlockSpr, mirrBlockSpr, glassBlockSpr, crosshairSpr;
-	diffBlockTex.loadFromFile("diffuseblock.png"); mirrBlockTex.loadFromFile("mirrorblock.png");
-	glassBlockTex.loadFromFile("glassblock.png"); crosshairTex.loadFromFile("crosshair.png");
-	diffBlockSpr.setTexture(diffBlockTex); mirrBlockSpr.setTexture(mirrBlockTex);
-	glassBlockSpr.setTexture(glassBlockTex); crosshairSpr.setTexture(crosshairTex);
-	diffBlockSpr.setPosition(20.f, 20.f); mirrBlockSpr.setPosition(67.f, 20.f);
-	glassBlockSpr.setPosition(114.f, 20.f); crosshairSpr.setPosition(WIDTH / 2.f - 16.f, HEIGHT / 2.f - 16.f);
-	diffBlockSpr.setScale(0.5f, 0.5f); mirrBlockSpr.setScale(0.5f, 0.5f); glassBlockSpr.setScale(0.5f, 0.5f);
-
 	bool running = true;
 	unsigned iteration = 1;
-	while (HandleEvents(*pBuilder, *pScene, window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
+	while (HandleEvents(interface, *pBuilder, *pScene, window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
 		if(!freeze) {
 			pollKeyboard(cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE);
 			sf::Vector2i newMousePos = sf::Mouse::getPosition();
@@ -114,10 +107,8 @@ int main() {
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
 		window.draw(sprite);
-		window.draw(diffBlockSpr);
-		window.draw(mirrBlockSpr);
-		window.draw(glassBlockSpr);
-		window.draw(crosshairSpr);
+		window.draw(interface.GetBuildIcon());
+		window.draw(interface.GetCrosshair());
 		window.display();
 
 		SetTitle(window, iteration);
@@ -148,16 +139,56 @@ void resetCamera(unsigned& iteration, Color* d_result, unsigned width, unsigned 
 	LaunchInitResult(d_result, width, height, tileSize);
 }
 
-bool HandleEvents(Builder* d_builder, Scene* scene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize) {
+bool HandleEvents(Interface& interface, Builder* d_builder, Scene* scene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize) {
 	sf::Event event;
 	while (window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) return false;
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) return false;
-			if (event.key.code == sf::Keyboard::L) LaunchBuilderNextBuildType(d_builder);
-			if (event.key.code == sf::Keyboard::M) LaunchBuilderNextMaterialType(d_builder);
-			if (event.key.code == sf::Keyboard::C) LaunchBuilderNextColor(d_builder);
-			if (event.key.code == sf::Keyboard::F) freeze = !freeze;
+			if (event.key.code == sf::Keyboard::L) {
+				LaunchBuilderNextBuildType(d_builder);
+				interface.NextBuildType();
+			}
+			if (event.key.code == sf::Keyboard::M) {
+				LaunchBuilderNextMaterialType(d_builder);
+				interface.NextMaterialType();
+			}
+			if (event.key.code == sf::Keyboard::Num1) {
+				LaunchBuilderSetPresetColor(d_builder, 0);
+				interface.SetPresetColor(0);
+			}
+			if (event.key.code == sf::Keyboard::Num2) {
+				LaunchBuilderSetPresetColor(d_builder, 1);
+				interface.SetPresetColor(1);
+			}
+			if (event.key.code == sf::Keyboard::Num3) {
+				LaunchBuilderSetPresetColor(d_builder, 2);
+				interface.SetPresetColor(2);
+			}
+			if (event.key.code == sf::Keyboard::Num4) {
+				LaunchBuilderSetPresetColor(d_builder, 3);
+				interface.SetPresetColor(3);
+			}
+			if (event.key.code == sf::Keyboard::Num5) {
+				LaunchBuilderSetPresetColor(d_builder, 4);
+				interface.SetPresetColor(4);
+			}
+			if (event.key.code == sf::Keyboard::Num6) {
+				LaunchBuilderSetPresetColor(d_builder, 5);
+				interface.SetPresetColor(5);
+			}
+			if (event.key.code == sf::Keyboard::Num7) {
+				LaunchBuilderSetPresetColor(d_builder, 6);
+				interface.SetPresetColor(6);
+			}
+			if (event.key.code == sf::Keyboard::Num8) {
+				LaunchBuilderSetPresetColor(d_builder, 7);
+				interface.SetPresetColor(7);
+			}
+			if (event.key.code == sf::Keyboard::F) {
+				freeze = !freeze;
+				window.setMouseCursorVisible(freeze);
+			}
 			if (event.key.code == sf::Keyboard::R) {
 				cam->Reposition();
 				cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);

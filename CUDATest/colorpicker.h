@@ -10,6 +10,7 @@ public:
 
 	__device__ Color	GetColor() const;
 	__device__ void		NextColor();
+	__device__ void		SetColor(unsigned index);
 
 private:
 	Color				colors[NR_COLORS];

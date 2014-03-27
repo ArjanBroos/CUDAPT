@@ -19,3 +19,7 @@ __device__ void ColorPicker::NextColor() {
 	colorIndex++;
 	if (colorIndex == NR_COLORS) colorIndex = 0;
 }
+
+__device__ void ColorPicker::SetColor(unsigned index) {
+	colorIndex = index;
+}

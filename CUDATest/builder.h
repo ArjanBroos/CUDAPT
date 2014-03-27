@@ -25,7 +25,7 @@ public:
 	__device__ Object*	GetObject(Shape* shape, Point* location) const;
 
 	__device__ void		NextBuildType();
-	__device__ void		NextColor();
+	__device__ void		SetPresetColor(unsigned colorIndex);
 	__device__ void		NextMaterialType();
 	__device__ void		IncreaseAorI(float step);	// Increase albedo or intensity
 	__device__ void		DecreaseAorI(float step);	// Decrease albedo or intensity
