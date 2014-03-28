@@ -244,7 +244,7 @@
     </ClInclude>
     <ClInclude Include="object.h">
       <Filter>Header Files\octree</Filter>
-	 </ClInclude> 
+    </ClInclude>
     <ClInclude Include="interface.h">
       <Filter>Header Files\interface</Filter>
     </ClInclude>

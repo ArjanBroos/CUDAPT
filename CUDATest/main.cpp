@@ -70,7 +70,7 @@ int main() {
 	midScreen.y = window.getPosition().y + window.getSize().y / 2;
 	sf::Mouse::setPosition(midScreen);
 
-	Interface interface;
+	Interface interface(WIDTH, HEIGHT);
 
 	std::cout << "Calculating rays" << std::endl << std::flush;
 

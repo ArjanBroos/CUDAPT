@@ -7,7 +7,7 @@
 // Handles builder interface visualization
 class Interface {
 public:
-	Interface();
+	Interface(const unsigned WIDTH, const unsigned HEIGHT);
 
 	const sf::Sprite&	GetBuildIcon() const;
 	const sf::Sprite&	GetCrosshair() const;

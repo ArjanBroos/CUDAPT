@@ -1,6 +1,6 @@
 #include "interface.h"
 
-Interface::Interface() {
+Interface::Interface(const unsigned WIDTH, const unsigned HEIGHT) {
 	buildType = BT_PRIMITIVE;
 	materialType = MT_DIFFUSE;
 	shapeType = ST_CUBE;
@@ -26,7 +26,7 @@ Interface::Interface() {
 	// Set up crosshair sprite
 	crosshairTex.loadFromFile("interface/crosshair.png");
 	crosshairSpr.setTexture(crosshairTex);
-	crosshairSpr.setPosition(320.f, 240.f);
+	crosshairSpr.setPosition((float)WIDTH/2.f-16.f, (float)HEIGHT/2.f-16.f);
 
 	// Initialize first build icon
 	SetBuildIcon();
