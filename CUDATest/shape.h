@@ -2,6 +2,13 @@
 
 #include "geometry.h"
 
+enum ShapeType {
+	ST_START = 0,
+	ST_CUBE = ST_START,
+	ST_SPHERE,
+	ST_END
+};
+
 // The abstract base class for all shapes
 class Shape {
 public:

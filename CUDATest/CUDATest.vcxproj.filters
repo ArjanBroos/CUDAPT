@@ -85,6 +85,12 @@
     <Filter Include="Source Files\builder">
       <UniqueIdentifier>{272398e2-9d09-4c08-96ed-fa8735333af6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\interface">
+      <UniqueIdentifier>{a8a34ea6-ddfd-4c2a-ac19-1c2065b78f50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\interface">
+      <UniqueIdentifier>{73979f07-cc3a-478a-a064-ed91721e8afa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="camera.cu">
@@ -238,11 +244,17 @@
     </ClInclude>
     <ClInclude Include="object.h">
       <Filter>Header Files\octree</Filter>
+	 </ClInclude> 
+    <ClInclude Include="interface.h">
+      <Filter>Header Files\interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="interface.cpp">
+      <Filter>Source Files\interface</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

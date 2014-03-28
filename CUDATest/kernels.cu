@@ -236,12 +236,12 @@ __global__ void BuilderNextMaterialType(Builder* builder) {
 	builder->NextMaterialType();
 }
 
-void LaunchBuilderNextColor(Builder* builder)  {
-	BuilderNextColor<<<1,1>>>(builder);
+void LaunchBuilderSetPresetColor(Builder* builder, unsigned index)  {
+	BuilderSetPresetColor<<<1,1>>>(builder, index);
 }
 
-__global__ void BuilderNextColor(Builder* builder)  {
-	builder->NextColor();
+__global__ void BuilderSetPresetColor(Builder* builder, unsigned index)  {
+	builder->SetPresetColor(index);
 }
 
 void LaunchBuilderIncrease(Builder* builder)  {

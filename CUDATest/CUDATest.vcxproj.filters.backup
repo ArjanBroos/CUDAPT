@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\camera">
+      <UniqueIdentifier>{dbe2762d-e702-4e33-a931-50aa784fcf24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera">
+      <UniqueIdentifier>{17dd14c1-020a-422a-9c35-c4200854fe6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\geometry">
+      <UniqueIdentifier>{a44dbead-4e65-4336-9166-1f5741b52f9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\geometry">
+      <UniqueIdentifier>{bd958b6a-f453-4727-872c-dc58116eb594}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\shapes">
+      <UniqueIdentifier>{1753b367-ea11-44e3-a741-4864fc924812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\shapes">
+      <UniqueIdentifier>{1b8a8284-a4c5-4156-9ec1-a9f546c8bcbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\color">
+      <UniqueIdentifier>{714410ba-718c-498d-b737-bfc0d7d473d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\math">
+      <UniqueIdentifier>{685f8cc6-d3f9-4a0a-a080-2b70567d5372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\main">
+      <UniqueIdentifier>{0b2f828a-6356-46d7-9a3c-a641a9892db3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\main">
+      <UniqueIdentifier>{02845b86-7926-45cc-ad20-19349e0a660b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\scene">
+      <UniqueIdentifier>{9cc4e175-2e35-4af2-abd3-4319c10ce3a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene">
+      <UniqueIdentifier>{417e8ae9-83dc-4092-9a72-c791aaea4e46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\intrec">
+      <UniqueIdentifier>{5518c426-c151-4ae1-81b0-ddbcd060dc72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\materials">
+      <UniqueIdentifier>{2469ecbc-26b9-4671-9795-8b7f424c263e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\materials">
+      <UniqueIdentifier>{e27105ce-01a9-425c-9de7-e1a0e2301036}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\primitives">
+      <UniqueIdentifier>{fa29fa9c-8dbb-40c6-be26-742cbdbba6b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\primitives">
+      <UniqueIdentifier>{67edfb13-7320-43a1-83b7-24f38fe0bf61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lights">
+      <UniqueIdentifier>{57d2f818-6be2-43cd-a5f9-6de52381a02c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\lights">
+      <UniqueIdentifier>{2103e038-cc15-475e-bf8b-93066e6148f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\color">
+      <UniqueIdentifier>{21834ba6-1b1c-48d5-8fe8-3dbc041f7b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\octree">
+      <UniqueIdentifier>{b3baadde-7d07-4cf1-9bdd-752ae91022a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\octree">
+      <UniqueIdentifier>{cf046065-7aee-4f00-a55d-7cdb98e66da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\builder">
+      <UniqueIdentifier>{34d926c0-56c8-4217-9ec9-df97d61dec33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\builder">
+      <UniqueIdentifier>{272398e2-9d09-4c08-96ed-fa8735333af6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\interface">
+      <UniqueIdentifier>{a8a34ea6-ddfd-4c2a-ac19-1c2065b78f50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\interface">
+      <UniqueIdentifier>{73979f07-cc3a-478a-a064-ed91721e8afa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="camera.cu">
+      <Filter>Source Files\camera</Filter>
+    </CudaCompile>
+    <CudaCompile Include="point.cu">
+      <Filter>Source Files\geometry</Filter>
+    </CudaCompile>
+    <CudaCompile Include="vector.cu">
+      <Filter>Source Files\geometry</Filter>
+    </CudaCompile>
+    <CudaCompile Include="ray.cu">
+      <Filter>Source Files\geometry</Filter>
+    </CudaCompile>
+    <CudaCompile Include="sphere.cu">
+      <Filter>Source Files\shapes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="kernels.cu">
+      <Filter>Source Files\main</Filter>
+    </CudaCompile>
+    <CudaCompile Include="scene.cu">
+      <Filter>Source Files\scene</Filter>
+    </CudaCompile>
+    <CudaCompile Include="lambertmaterial.cu">
+      <Filter>Source Files\materials</Filter>
+    </CudaCompile>
+    <CudaCompile Include="primitive.cu">
+      <Filter>Source Files\primitives</Filter>
+    </CudaCompile>
+    <CudaCompile Include="light.cu">
+      <Filter>Source Files\lights</Filter>
+    </CudaCompile>
+    <CudaCompile Include="color.cu">
+      <Filter>Source Files\color</Filter>
+    </CudaCompile>
+    <CudaCompile Include="arealight.cu">
+      <Filter>Source Files\lights</Filter>
+    </CudaCompile>
+    <CudaCompile Include="plane.cu">
+      <Filter>Source Files\shapes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="mirrormaterial.cu">
+      <Filter>Source Files\materials</Filter>
+    </CudaCompile>
+    <CudaCompile Include="box.cu">
+      <Filter>Source Files\shapes</Filter>
+    </CudaCompile>
+    <CudaCompile Include="quaternion.cu">
+      <Filter>Source Files\geometry</Filter>
+    </CudaCompile>
+    <CudaCompile Include="octree.cu">
+      <Filter>Source Files\octree</Filter>
+    </CudaCompile>
+    <CudaCompile Include="builder.cu">
+      <Filter>Source Files\builder</Filter>
+    </CudaCompile>
+    <CudaCompile Include="materialpicker.cu">
+      <Filter>Source Files\builder</Filter>
+    </CudaCompile>
+    <CudaCompile Include="lightpicker.cu">
+      <Filter>Source Files\builder</Filter>
+    </CudaCompile>
+    <CudaCompile Include="colorpicker.cu">
+      <Filter>Source Files\builder</Filter>
+    </CudaCompile>
+    <CudaCompile Include="object.cu">
+      <Filter>Source Files\octree</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="camera.h">
+      <Filter>Header Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="point.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ray.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="sphere.h">
+      <Filter>Header Files\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>Header Files\color</Filter>
+    </ClInclude>
+    <ClInclude Include="cuda_inc.h">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="kernels.h">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
+    <ClInclude Include="math.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="intrec.h">
+      <Filter>Header Files\intrec</Filter>
+    </ClInclude>
+    <ClInclude Include="shape.h">
+      <Filter>Header Files\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>Header Files\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="lambertmaterial.h">
+      <Filter>Header Files\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="primitive.h">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>Header Files\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="arealight.h">
+      <Filter>Header Files\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="plane.h">
+      <Filter>Header Files\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="mirrormaterial.h">
+      <Filter>Header Files\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="box.h">
+      <Filter>Header Files\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="quaternion.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="octree.h">
+      <Filter>Header Files\octree</Filter>
+    </ClInclude>
+    <ClInclude Include="builder.h">
+      <Filter>Header Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="colorpicker.h">
+      <Filter>Header Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="lightpicker.h">
+      <Filter>Header Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="materialpicker.h">
+      <Filter>Header Files\builder</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>Header Files\octree</Filter>
+    <ClInclude Include="interface.h">
+      <Filter>Header Files\interface</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\main</Filter>
+    </ClCompile>
+    <ClCompile Include="interface.cpp">
+      <Filter>Source Files\interface</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
