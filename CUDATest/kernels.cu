@@ -228,6 +228,14 @@ __global__ void BuilderNextBuildType(Builder* builder) {
 	builder->NextBuildType();
 }
 
+void LaunchBuilderNextShapeType(Builder* builder) {
+	BuilderNextShapeType<<<1,1>>>(builder);
+}
+
+__global__ void BuilderNextShapeType(Builder* builder) {
+	builder->NextShapeType();
+}
+
 void LaunchBuilderNextMaterialType(Builder* builder) {
 	BuilderNextMaterialType<<<1,1>>>(builder);
 }

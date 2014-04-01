@@ -153,6 +153,10 @@ bool HandleEvents(Interface& interface, Builder* d_builder, Scene* scene, sf::Re
 				LaunchBuilderNextMaterialType(d_builder);
 				interface.NextMaterialType();
 			}
+			if (event.key.code == sf::Keyboard::N) {
+				LaunchBuilderNextShapeType(d_builder);
+				interface.NextShapeType();
+			}
 			if (event.key.code == sf::Keyboard::Num1) {
 				LaunchBuilderSetPresetColor(d_builder, 0);
 				interface.SetPresetColor(0);

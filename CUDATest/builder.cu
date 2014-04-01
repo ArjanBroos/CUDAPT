@@ -1,12 +1,18 @@
 #include "builder.h"
 #include "primitive.h"
 #include "light.h"
+#include "sphere.h"
 
-__device__ Builder::Builder() : buildType(BT_START) {
+__device__ Builder::Builder() : buildType(BT_START), shapeType(ST_CUBE) {
 }
 
 __device__ Shape* Builder::GetShape(const Point& location) const {
-	return new Box(location);
+	if (shapeType == ST_CUBE)
+		return new Box(location);
+	else if (shapeType == ST_SPHERE)
+		return new Sphere(location);
+	else
+		return NULL;
 }
 
 __device__ Point* Builder::GetPosition(AreaLight* neighbor, const Point& isct) const {
@@ -41,6 +47,11 @@ __device__ Object* Builder::GetObject(Shape* shape, Point* location) const {
 __device__ void Builder::NextBuildType() {
 	buildType = BuildType(buildType + 1);
 	if (buildType == BT_END) buildType = BT_START;
+}
+
+__device__ void Builder::NextShapeType() {
+	shapeType = ShapeType(shapeType + 1);
+	if (shapeType == ST_END) shapeType = ST_START;
 }
 
 __device__ void Builder::SetPresetColor(unsigned index) {

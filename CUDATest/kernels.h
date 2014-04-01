@@ -27,6 +27,8 @@ __global__ void RemoveBlock(const Camera* cam, Scene* scene);
 
 void LaunchBuilderNextBuildType(Builder* builder);
 __global__ void BuilderNextBuildType(Builder* builder);
+void LaunchBuilderNextShapeType(Builder* builder);
+__global__ void BuilderNextShapeType(Builder* builder);
 void LaunchBuilderNextMaterialType(Builder* builder);
 __global__ void BuilderNextMaterialType(Builder* builder);
 void LaunchBuilderSetPresetColor(Builder* builder, unsigned index);
