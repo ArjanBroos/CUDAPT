@@ -53,6 +53,6 @@ __device__ float LambertMaterial::GetAlbedo() const {
 }
 
 // Returns this type of material
-__device__ int LambertMaterial::GetType() const {
+__device__ MaterialType LambertMaterial::GetType() const {
 	return MT_DIFFUSE;
 }

@@ -26,5 +26,5 @@ public:
 	// Returns the albedo of this material
 	__device__ float	GetAlbedo() const;
 	// Returns the type of this material
-	__device__ int		GetType() const;
+	__device__ MaterialType		GetType() const;
 };

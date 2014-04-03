@@ -44,6 +44,6 @@ __device__ float MirrorMaterial::GetAlbedo() const {
 }
 
 // Returns this type of material
-__device__ int MirrorMaterial::GetType() const {
+__device__ MaterialType MirrorMaterial::GetType() const {
 	return MT_MIRROR;
 }

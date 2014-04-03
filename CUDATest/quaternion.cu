@@ -1,6 +1,6 @@
 #include "quaternion.h"
 #include "geometry.h"
-#include <cmath>
+#include "math.h"
 
 Quaternion::Quaternion(Vector& n, float a) {
 	v = n * sin(a/2.f);

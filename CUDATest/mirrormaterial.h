@@ -14,19 +14,19 @@ public:
 	__device__ MirrorMaterial(const Color& c, float albedo);
 
 	// Returns the color of this material
-	__device__ Color	GetColor() const;
+	__device__ Color		GetColor() const;
 	// Bidirectional Reflectance Distribution Function
-	__device__ float	GetBRDF(const Vector& in, const Vector& out, const Vector& normal) const;
+	__device__ float		GetBRDF(const Vector& in, const Vector& out, const Vector& normal) const;
 	// Probability Density Function
-	__device__ float	GetPDF(const Vector& in, const Vector& out, const Vector& normal) const;
+	__device__ float		GetPDF(const Vector& in, const Vector& out, const Vector& normal) const;
 	// Returns a sample out direction, given an in direction and a normal
-	__device__ Vector	GetSample(const Vector& in, const Vector& normal, curandState* rng) const;
+	__device__ Vector		GetSample(const Vector& in, const Vector& normal, curandState* rng) const;
 	// Returns the factor between incoming and outgoing radiance along given rays
-	__device__ float	GetMultiplier(const Vector& in, const Vector& out, const Vector& normal) const;
+	__device__ float		GetMultiplier(const Vector& in, const Vector& out, const Vector& normal) const;
 	// Returns the albedo of this material
-	__device__ float	GetAlbedo() const;
+	__device__ float		GetAlbedo() const;
 	// Returns this type of material
-	__device__ int		GetType() const;
+	__device__ MaterialType	GetType() const;
 
 private:
 	// Returns the in vector reflected about the normal

@@ -20,6 +20,6 @@ __device__ bool Primitive::Intersect(const Ray& ray, float& t) const {
 }
 
 // Returns the type of this object
-__device__ int Primitive::GetType() const {
+__device__ objectType Primitive::GetType() const {
 	return OBJ_PRIMITIVE;
 }

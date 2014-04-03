@@ -24,7 +24,7 @@ public:
 	//Checks if the ray intersects with the shape of the object
 	__device__ virtual bool	Intersect(const Ray& ray, float& t) const = 0;
 	// Returns the type of this object
-	__device__ virtual int GetType() const = 0;
+	__device__ virtual objectType GetType() const = 0;
 };
 
 #endif

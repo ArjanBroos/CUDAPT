@@ -10,6 +10,6 @@ __device__ Color Light::Le() const {
 	return i * c;
 }
 
-__device__ int Light::GetType() const {
+__device__ objectType Light::GetType() const {
 	return OBJ_LIGHT;
 }
