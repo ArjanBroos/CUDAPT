@@ -45,3 +45,11 @@ __device__ Vector GlassMaterial::Transmit(const Vector& in, const Vector& normal
 	if (goingIn) return Normalize(in - normal);
 	else return in;
 }
+
+__device__ float GlassMaterial::GetAlbedo() const {
+	return 1.f;
+}
+
+__device__ MaterialType GlassMaterial::GetType() const {
+	return MT_GLASS;
+}
