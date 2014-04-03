@@ -8,7 +8,7 @@ __device__ AreaLight::AreaLight(Shape* shape) {
 }
 
 // Initializes area light with given shape (cannot be NULL)
-__device__ AreaLight::AreaLight(Shape* shape, Color color, float intensity, Point* loc) : Light(loc) {
+__device__ AreaLight::AreaLight(Shape* shape, Color color, float intensity) {
 	this->shape = shape;
 	c = color;
 	i = intensity;
@@ -23,4 +23,9 @@ __device__ bool AreaLight::Intersect(const Ray& ray, float& t) const {
 // Returns the shape of the areaLight
 __device__ Shape* AreaLight::GetShape() const {
 	return shape;
+}
+
+// Return the corner point of object
+__device__ const Point*		AreaLight::GetCornerPoint() const {
+	return shape->GetCornerPoint();
 }

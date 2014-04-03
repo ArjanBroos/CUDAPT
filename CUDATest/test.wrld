@@ -1,0 +1,72 @@
+NewObject
+Location: 8 0 3
+Color: 1 0 0
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 1
+ObjectType: 0
+NewObject
+Location: 8 0 4
+Color: 1 0 0
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 1
+ObjectType: 0
+NewObject
+Location: 8 0 5
+Color: 0 1 0
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 1
+ObjectType: 0
+NewObject
+Location: 8 0 6
+Color: 0 0 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 1
+ObjectType: 0
+NewObject
+Location: 11 0 3
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 0 4
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 11 0 5
+Color: 1 0 0
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 8 0 7
+Color: 1 1 0
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 1
+ObjectType: 0
+NewObject
+Location: 16 0 0
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1

@@ -30,18 +30,18 @@ __device__ void PreAddBlock(Point* loc, Scene* scene, int type) {
 	if(type == 0) {
 		Box*				boxShape	= new Box(*loc);
 		LambertMaterial*	boxMat		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
-		Primitive*			boxPrim		= new Primitive(boxShape, boxMat, &boxShape->bounds[0]);
+		Primitive*			boxPrim		= new Primitive(boxShape, boxMat);
 		scene->AddObject(boxPrim);
 	}
 	if(type == 1) {
 		Box*				boxShape	= new Box(*loc);
-		AreaLight*			boxLight	= new AreaLight(boxShape,Color(1.f,1.f,1.f),10.f,loc);
+		AreaLight*			boxLight	= new AreaLight(boxShape,Color(1.f,1.f,1.f),10.f);
 		scene->AddObject(boxLight);
 	}
 	if(type == 2) {
 		Box*				boxShape	= new Box(*loc);
 		MirrorMaterial*		boxMat		= new MirrorMaterial(Color(1.f, 1.f, 1.f), .9f);
-		Primitive*			boxPrim		= new Primitive(boxShape, boxMat, &boxShape->bounds[0]);
+		Primitive*			boxPrim		= new Primitive(boxShape, boxMat);
 		scene->AddObject(boxPrim);
 	}
 }
@@ -159,7 +159,7 @@ __global__ void InitScene(Scene** pScene) {
 
 	Plane*				planeShape		= new Plane(Point(0,0,0), Vector(0.f, 1.f, 0.f));
 	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 1.f), .9f);
-	Primitive*			plane			= new Primitive(planeShape, planeMat, &planeShape->p);
+	Primitive*			plane			= new Primitive(planeShape, planeMat);
 	scene->AddPlane(plane);
 
 	CreateRoomScene(scene);
@@ -246,7 +246,9 @@ void LaunchSaveBlocks(Scene* scene) {
 	Point *d_loc, loc;
 	Color *d_col, col;
 	float *d_albedo, *d_intensity, albedo, intensity;
-	int	*d_mat, *d_shape, *d_type, mat, shape, type;
+	MaterialType	*d_mat, mat;
+	ShapeType *d_shape, shape;
+	ObjectType *d_type,  type;
 	cudaMalloc(&d_nextNode, sizeof(Node*));
 	cudaMalloc(&d_nBlocks, sizeof(int));
 	cudaMalloc(&d_loc, sizeof(Point));
@@ -310,13 +312,13 @@ __global__ void InitSaveBlocks(Scene* scene, Node* nextNode) {
 	*nextNode = scene->octree;
 }
 
-__global__ void SaveBlock(Scene* scene, Node* nextNode, Point* loc, Color* col, float* albedo, float* intensity, int* mat, int* shape, int* type) {
+__global__ void SaveBlock(Scene* scene, Node* nextNode, Point* loc, Color* col, float* albedo, float* intensity, MaterialType* mat, ShapeType* shape, ObjectType* type) {
 	// Point to the correct next leaf node
 	*nextNode = *scene->octree.NextLeaf(nextNode);
 	const Object* obj = nextNode->object;
 
 	// Fill the variables with the block data
-	*loc = *obj->loc;
+	*loc = nextNode->bounds[0];
 	*type = obj->GetType();
 	if(obj->GetType() == OBJ_PRIMITIVE) {
 		*col = ((Primitive*) obj)->GetMaterial()->GetColor();
@@ -330,7 +332,7 @@ __global__ void SaveBlock(Scene* scene, Node* nextNode, Point* loc, Color* col, 
 		*intensity = ((AreaLight*) obj)->i;
 		*shape = ((AreaLight*) obj)->GetShape()->GetType();
 		*albedo = -1.f;
-		*mat = -1;
+		*mat = (MaterialType) 0;
 	}
 }
 
@@ -343,17 +345,12 @@ void LaunchLoadBlocks(Scene* scene) {
 	std::ifstream readWorldFile(worldName);
 
 	// Declare pointers and allocate device pointers
-	Point *d_loc, loc;
-	Color *d_col, col;
-	float *d_albedo, *d_intensity, albedo, intensity;
-	int	*d_mat, *d_shape, *d_type, mat, shape, type;
-	cudaMalloc(&d_loc, sizeof(Point));
-	cudaMalloc(&d_col, sizeof(Color));
-	cudaMalloc(&d_albedo, sizeof(float));
-	cudaMalloc(&d_intensity, sizeof(float));
-	cudaMalloc(&d_mat, sizeof(int));
-	cudaMalloc(&d_shape, sizeof(int));
-	cudaMalloc(&d_type, sizeof(int));
+	Point loc;
+	Color col;
+	float albedo, intensity;
+	MaterialType mat;
+	ShapeType shape;
+	ObjectType type;
 
 	// Check if world file exists and start load process
 	if(readWorldFile.is_open()) {
@@ -375,7 +372,7 @@ void LaunchLoadBlocks(Scene* scene) {
 			readWorldFile >> x;
 			readWorldFile >> y;
 			readWorldFile >> z;
-			loc = Point(x,y,z);
+			loc = Point((float) x,(float) y, (float) z);
 
 			readWorldFile >> word;
 			if(word != "Color:") {
@@ -407,33 +404,28 @@ void LaunchLoadBlocks(Scene* scene) {
 				std::cout << "The world file is corrupt, world loading process is stopped" << std::endl;
 				break;
 			}
-			readWorldFile >> mat;
+			int i;
+			readWorldFile >> i;
+			mat = (MaterialType) i;
 
 			readWorldFile >> word;
 			if(word != "Shape:") {
 				std::cout << "The world file is corrupt, world loading process is stopped" << std::endl;
 				break;
 			}
-			readWorldFile >> shape;
+			readWorldFile >> i;
+			shape = (ShapeType) i;
 
 			readWorldFile >> word;
 			if(word != "ObjectType:") {
 				std::cout << "The world file is corrupt, world loading process is stopped" << std::endl;
 				break;
 			}
-			readWorldFile >> type;
-
-			// Transfer block data to the device
-			cudaMemcpy(d_loc, &loc, sizeof(Point), cudaMemcpyHostToDevice);
-			cudaMemcpy(d_col, &col, sizeof(Color), cudaMemcpyHostToDevice);
-			cudaMemcpy(d_albedo, &albedo, sizeof(float), cudaMemcpyHostToDevice);
-			cudaMemcpy(d_intensity, &intensity, sizeof(float), cudaMemcpyHostToDevice);
-			cudaMemcpy(d_mat, &mat, sizeof(int), cudaMemcpyHostToDevice);
-			cudaMemcpy(d_shape, &shape, sizeof(int), cudaMemcpyHostToDevice);
-			cudaMemcpy(d_type, &type, sizeof(int), cudaMemcpyHostToDevice);
+			readWorldFile >> i;
+			type = (ObjectType) i;
 
 			// Create the block in the world
-			LoadBlock<<<1,1>>>(scene, d_loc, d_col, d_albedo, d_intensity, d_mat, d_shape, d_type);
+			LoadBlock<<<1,1>>>(scene, loc, col, albedo, intensity, mat, shape, type);
 		}
 
 	}
@@ -441,47 +433,32 @@ void LaunchLoadBlocks(Scene* scene) {
 
 	// Close file and free the device pointers
 	readWorldFile.close();
-	cudaFree(d_type);
-	cudaFree(d_mat);
-	cudaFree(d_shape);
-	cudaFree(d_albedo);
-	cudaFree(d_intensity);
-	cudaFree(d_col);
-	cudaFree(d_loc);
 
 	std::cout << "Done" << std::endl;
 }
-__global__ void LoadBlock(Scene* scene, Point* loc, Color* col, float* albedo, float* intensity, int* mat, int* shape, int* type) {
-	Point* newLoc = new Point(*loc);
-	Color* newCol = new Color(*col);
-	float newAlbedo = *albedo;
-	float newIntensity = *intensity;
-	int newMat = *mat;
-	int newShape = *shape;
-	int newType = *type;
-
+__global__ void LoadBlock(Scene* scene, Point loc, Color col, float albedo, float intensity, MaterialType mat, ShapeType shape, ObjectType type) {
 	Object* newObject;
-	if(newType == OBJ_PRIMITIVE) {
+	if(type == OBJ_PRIMITIVE) {
 		Shape* shapeObj;
-		if(newShape == ST_CUBE)
-			shapeObj = new Box(*newLoc);
-		if(newShape == ST_SPHERE)
-			shapeObj = new Sphere(*newLoc);
+		if(shape == ST_CUBE)
+			shapeObj = new Box(loc);
+		if(shape == ST_SPHERE)
+			shapeObj = new Sphere(loc);
 		Material* matObj;
-		if(newMat == MT_DIFFUSE)
-			matObj = new LambertMaterial(*newCol, newAlbedo);
-		if(newMat == MT_MIRROR)
-			matObj = new MirrorMaterial(*newCol, newAlbedo);
-		newObject = new Primitive(shapeObj, matObj, newLoc);
+		if(mat == MT_DIFFUSE)
+			matObj = new LambertMaterial(col, albedo);
+		if(mat == MT_MIRROR)
+			matObj = new MirrorMaterial(col, albedo);
+		newObject = new Primitive(shapeObj, matObj);
 	}
 
-	if(newType == OBJ_LIGHT) {
+	if(type == OBJ_LIGHT) {
 		Shape* shapeObj;
-		if(newShape == ST_CUBE)
-			shapeObj = new Box(*newLoc);
-		if(newShape == ST_SPHERE)
-			shapeObj = new Sphere(*newLoc);
-		newObject = new AreaLight(shapeObj,*newCol,newIntensity,newLoc);
+		if(shape == ST_CUBE)
+			shapeObj = new Box(loc);
+		if(shape == ST_SPHERE)
+			shapeObj = new Sphere(loc);
+		newObject = new AreaLight(shapeObj,col,intensity);
 	}
 	scene->AddObject(newObject);
 }

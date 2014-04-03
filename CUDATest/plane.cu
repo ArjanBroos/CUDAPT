@@ -30,6 +30,11 @@ __device__ Vector Plane::GetNormal(const Point& p) const {
 }
 
 // Returns the type of this shape
-__device__ int Plane::GetType() const {
+__device__ ShapeType Plane::GetType() const {
 	return ST_PLANE;
+}
+
+// Return the corner point of object
+__device__ const Point*		Plane::GetCornerPoint() const {
+	return &p;
 }

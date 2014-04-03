@@ -2,6 +2,7 @@
 #include "point.h"
 #include "primitive.h"
 #include "light.h"
+#include "arealight.h"
 #include "object.h"
 #include <iostream>
 #include "math.h"
@@ -36,10 +37,14 @@ __device__ Node::Node(Point bounda, Point boundb, int octant, Node* parent) : nO
 		nodes[i] = nullptr;
 }
 
+__device__ Node::~Node() {
+	if(object) delete object;
+}
+
 __device__ int Node::Insert(Object* object)
 {
-	Point loc = (*object->loc);
-	if(loc.x > bounds[1].x - 1 || loc.y > bounds[1].y - 1 || loc.z > bounds[1].z - 1) {
+	const Point *loc = object->GetCornerPoint();
+	if(loc->x > bounds[1].x - 1 || loc->y > bounds[1].y - 1 || loc->z > bounds[1].z - 1) {
 		return -1;
 	}
 	Node* currentNode = this;
@@ -48,15 +53,15 @@ __device__ int Node::Insert(Object* object)
 		&& (fabsf(currentNode->bounds[1].z - currentNode->bounds[0].z - 1) < 1e-5f) ) )
 	{
 		//Is loc in this bounding box?
-		if(loc < currentNode->bounds[0] || loc > currentNode->bounds[1])
+		if(*loc < currentNode->bounds[0] || *loc > currentNode->bounds[1])
 			return 0;
 		//Find leaf node
 		int midx = (int) ((currentNode->bounds[0].x+currentNode->bounds[1].x)/2.0);
 		int midy = (int) ((currentNode->bounds[0].y+currentNode->bounds[1].y)/2.0);
 		int midz = (int) ((currentNode->bounds[0].z+currentNode->bounds[1].z)/2.0);
-		bool east = loc.x >= midx;
-		bool north = loc.y >= midy;
-		bool top = loc.z >= midz;
+		bool east = loc->x >= midx;
+		bool north = loc->y >= midy;
+		bool top = loc->z >= midz;
 		if(east && north && top) {
 			if(currentNode->nodes[NET] == nullptr)
 				currentNode->nodes[NET] = new Node(Point((float)midx, (float)midy, (float)midz), Point(currentNode->bounds[1].x, currentNode->bounds[1].y, currentNode->bounds[1].z), NET, currentNode);
@@ -104,7 +109,7 @@ __device__ int Node::Insert(Object* object)
 		return -1;
 	}
 	currentNode->object = object;
-	object->parent = currentNode;
+	object->SetParent(currentNode);
 
 	//Fix number of objects in parents
 	while(currentNode->parent != nullptr) {
@@ -116,22 +121,24 @@ __device__ int Node::Insert(Object* object)
 }
 
 __device__ void Node::Remove(Object* object) {
+	// Don't delete the floor!
 	if(object->GetType() == OBJ_PRIMITIVE && ((Primitive*)object)->GetShape()->GetType() == ST_PLANE)
 		return;
 	Node* currentNode, *previousNode;
-	currentNode = object->parent;
+	currentNode = object->GetParent();
 	//Fix number of objects in parents
 	while(currentNode->parent != nullptr) {
 		currentNode->nObjects--;
 		previousNode = currentNode;
 		currentNode = currentNode->parent;
 		if(previousNode->nObjects == 0) {
-			delete currentNode->nodes[previousNode->octant];
-			currentNode->nodes[previousNode->octant] = NULL;
+			int octant = previousNode->octant;
+			delete previousNode;
+			currentNode->nodes[octant] = NULL;
 		}
 	}
+	// Fix root node
 	currentNode->nObjects--;
-	delete object;
 }
 
 __device__ bool Node::Intersect(const Ray &ray, IntRec& intRec) const {

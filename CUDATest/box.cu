@@ -79,6 +79,11 @@ __device__ Vector	Box::GetNormal(const Point& p) const
 }
 
 // Returns the type of this shape
-__device__ int Box::GetType() const {
+__device__ ShapeType Box::GetType() const {
 	return ST_CUBE;
+}
+
+// Return the corner point of object
+__device__ const Point*		Box::GetCornerPoint() const {
+	return &bounds[0];
 }

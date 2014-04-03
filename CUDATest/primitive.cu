@@ -1,7 +1,7 @@
 #include "primitive.h"
 
 // Initializes this primitive with a shape and a material
-__device__ Primitive::Primitive(Shape* shape, Material* material, Point* loc) : Object(loc), shape(shape), material(material) {
+__device__ Primitive::Primitive(Shape* shape, Material* material) : shape(shape), material(material) {
 }
 
 // Returns a pointer to the shape
@@ -20,6 +20,11 @@ __device__ bool Primitive::Intersect(const Ray& ray, float& t) const {
 }
 
 // Returns the type of this object
-__device__ objectType Primitive::GetType() const {
+__device__ ObjectType Primitive::GetType() const {
 	return OBJ_PRIMITIVE;
+}
+
+// Return the corner point of object
+__device__ const Point*		Primitive::GetCornerPoint() const {
+	return shape->GetCornerPoint();
 }

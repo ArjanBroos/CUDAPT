@@ -10,7 +10,7 @@
 #include "primitive.h"
 #include "intrec.h"
 
-enum subNodes{NEB, NWB, SWB, SEB, NET, NWT, SWT, SET};
+enum SubNodes{NEB, NWB, SWB, SEB, NET, NWT, SWT, SET};
 
 class Object;
 class Node {
@@ -18,6 +18,7 @@ public:
 	__device__ Node();
 	__device__ Node(Point boundmin, Point boundmax);
 	__device__ Node(Point boundmin, Point boundmax, int octant, Node* parent);
+	__device__ ~Node();
 	Node* parent;
 	int octant;
 	Node* nodes[8];

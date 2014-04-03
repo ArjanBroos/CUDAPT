@@ -2,6 +2,7 @@
 #include "primitive.h"
 #include "light.h"
 #include "sphere.h"
+#include "octree.h"
 
 __device__ Builder::Builder() : buildType(BT_START), shapeType(ST_CUBE) {
 }
@@ -17,7 +18,7 @@ __device__ Shape* Builder::GetShape(const Point& location) const {
 
 __device__ Point* Builder::GetPosition(AreaLight* neighbor, const Point& isct) const {
 	Vector n = neighbor->GetShape()->GetNormal(isct);
-	Point* nl = neighbor->loc;
+	Point *nl = &neighbor->GetParent()->bounds[0];
 	return new Point((int)(nl->x + n.x + .5f), (int)(nl->y + n.y + .5f), (int)(nl->z + n.z + .5f));
 }
 
@@ -25,20 +26,16 @@ __device__ Point* Builder::GetPosition(Primitive* neighbor, const Point& isct) c
 	if (neighbor->GetShape()->GetType() == ST_PLANE)
 		return new Point(floor(isct.x), floor(isct.y), floor(isct.z));
 	Vector n = neighbor->GetShape()->GetNormal(isct);
-	Point* nl = neighbor->loc;
+	Point *nl = &neighbor->GetParent()->bounds[0];
 	return new Point((int)(nl->x + n.x + .5f), (int)(nl->y + n.y + .5f), (int)(nl->z + n.z + .5f));
 }
 
 __device__ Object* Builder::GetObject(Shape* shape, Point* location) const {
 	if (buildType == BT_PRIMITIVE) {
-		//Object* newPrim = new Primitive(shape, materialPicker.GetMaterial(colorPicker.GetColor()), location);
-		//newPrim->type = PRIMITIVE;
-		return new Primitive(shape, materialPicker.GetMaterial(colorPicker.GetColor()), location);
+		return new Primitive(shape, materialPicker.GetMaterial(colorPicker.GetColor()));
 	}
 	if (buildType == BT_LIGHT) {
-		//Object* newLight = lightPicker.GetLight(shape, colorPicker.GetColor(), location);
-		//newLight->type = LIGHT;
-		return lightPicker.GetLight(shape, colorPicker.GetColor(), location);
+		return lightPicker.GetLight(shape, colorPicker.GetColor());
 	}
 	
 	return NULL;

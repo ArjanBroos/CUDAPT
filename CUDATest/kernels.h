@@ -26,12 +26,12 @@ void LaunchRemoveBlock(const Camera* cam, Scene* scene);
 __global__ void RemoveBlock(const Camera* cam, Scene* scene);
 
 void LaunchSaveBlocks(Scene* scene);
-__global__ void SaveBlock(Scene* scene, Node* nextNode, Point* loc, Color* col, float* albedo, float* intensity, int* mat, int* shape, int* type);
+__global__ void SaveBlock(Scene* scene, Node* nextNode, Point* loc, Color* col, float* albedo, float* intensity, MaterialType* mat, ShapeType* shape, ObjectType* type);
 __global__ void InitSaveBlocks(Scene* scene, Node* nextNode);
 __global__ void NumberOfBlocks(Scene* scene, int* nObjects);
 
 void LaunchLoadBlocks(Scene* scene);
-__global__ void LoadBlock(Scene* scene, Point* loc, Color* col, float* albedo, float* intensity, int* mat, int* shape, int* type);
+__global__ void LoadBlock(Scene* scene, Point loc, Color col, float albedo, float intensity, MaterialType mat, ShapeType shape, ObjectType type);
 
 void LaunchBuilderNextBuildType(Builder* builder);
 __global__ void BuilderNextBuildType(Builder* builder);

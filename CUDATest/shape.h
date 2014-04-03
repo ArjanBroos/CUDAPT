@@ -21,5 +21,8 @@ public:
 	__device__ virtual Vector	GetNormal(const Point& p) const = 0;
 
 	// Returns the type of this shape
-	__device__ virtual int GetType() const = 0;
+	__device__ virtual ShapeType GetType() const = 0;
+
+	// Return the corner point of object
+	__device__ virtual const Point*		GetCornerPoint() const = 0;
 };

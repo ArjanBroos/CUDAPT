@@ -12,6 +12,7 @@ __device__ Sphere::Sphere(const Point& c, float r = .5f) : c(c), r(r) {
 
 // Initializes a sphere at c with radius r
 __device__ Sphere::Sphere(const Point& c) : r(.5f) {
+	p = c;
 	this->c = c + Point(.5f, .5f, .5f);
 }
 
@@ -51,6 +52,11 @@ __device__ Vector Sphere::GetNormal(const Point& p) const {
 }
 
 // Returns the type of this shape
-__device__ int Sphere::GetType() const {
+__device__ ShapeType Sphere::GetType() const {
 	return ST_SPHERE;
+}
+
+// Return the corner point of object
+__device__ const Point*		Sphere::GetCornerPoint() const {
+	return &p;
 }
