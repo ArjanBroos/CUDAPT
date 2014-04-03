@@ -6,7 +6,7 @@
 class MirrorMaterial : public Material {
 public:
 	Color	c;		// Color
-	float	albedo;	// Percentage reflected instead of absorbed
+	float	albedo;	// Proportion reflected instead of absorbed
 
 	// Initializes a perfect mirror material
 	__device__ MirrorMaterial();

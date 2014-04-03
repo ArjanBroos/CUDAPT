@@ -13,6 +13,7 @@ public:
 	Vector		d;	// Direction
 	Vector		inv;
 	int			sign[3];
+	float		ior; // Index of refraction of the medium through which the ray is currently traveling
 
 	// The ray is clamped between o + mint * d and o + maxt * d
 	// To prevent intersection with a surface that this ray originated from
@@ -20,7 +21,7 @@ public:
 	float		maxt; // Maximum distance along ray for intersection checks
 
 	// Initializes a ray with origin o and direction d. mint and maxt are optional
-	__host__ __device__ Ray(const Point& o, const Vector& d, float mint = 5e-4f, float maxt = INFINITY);
+	__host__ __device__ Ray(const Point& o, const Vector& d, float ior = 1.f, float mint = 5e-4f, float maxt = INFINITY);
 
 	// Returns o + t*d
 	__host__ __device__ Point		operator()(float t) const;

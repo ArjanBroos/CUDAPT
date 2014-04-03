@@ -8,6 +8,7 @@ enum MaterialType {
 	MT_START = 0,
 	MT_DIFFUSE = MT_START,
 	MT_MIRROR,
+	MT_GLASS,
 	MT_END,
 };
 

@@ -2,6 +2,7 @@
 
 #include "lambertmaterial.h"
 #include "mirrormaterial.h"
+#include "glassmaterial.h"
 
 #define NR_COLORS 8
 

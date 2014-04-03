@@ -156,8 +156,8 @@
     <CudaCompile Include="colorpicker.cu">
       <Filter>Source Files\builder</Filter>
     </CudaCompile>
-    <CudaCompile Include="object.cu">
-      <Filter>Source Files\octree</Filter>
+    <CudaCompile Include="glassmaterial.cu">
+      <Filter>Source Files\materials</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,11 +242,11 @@
     <ClInclude Include="materialpicker.h">
       <Filter>Header Files\builder</Filter>
     </ClInclude>
-    <ClInclude Include="object.h">
-      <Filter>Header Files\octree</Filter>
-    </ClInclude>
     <ClInclude Include="interface.h">
       <Filter>Header Files\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="glassmaterial.h">
+      <Filter>Header Files\materials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

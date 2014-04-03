@@ -60,3 +60,14 @@ Vector& Vector::operator/=(float s) {
 	z /= s;
 	return *this;
 }
+
+Vector Vector::operator-(const Vector& v) const {
+	return Vector(x - v.x, y - v.y, z - v.z);
+}
+
+Vector& Vector::operator-=(const Vector& v) {
+	x -= v.x;
+	y -= v.y;
+	z -= v.z;
+	return *this;
+}

@@ -8,6 +8,8 @@ __device__ Material* MaterialPicker::GetMaterial(const Color& color) const {
 		return new LambertMaterial(color, albedo);
 	if (type == MT_MIRROR)
 		return new MirrorMaterial(color, albedo);
+	if (type == MT_GLASS)
+		return new GlassMaterial(color, 0.f, 1.f, 1.5f);
 
 	return NULL;
 }

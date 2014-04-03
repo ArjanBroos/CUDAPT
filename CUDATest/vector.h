@@ -29,6 +29,8 @@ public:
 	__host__ __device__ Vector& operator*=(float s);
 	__host__ __device__ Vector operator/(float s) const;
 	__host__ __device__ Vector& operator/=(float s);
+	__host__ __device__ Vector operator-(const Vector& v) const;
+	__host__ __device__ Vector& operator-=(const Vector& v);
 };
 
 // Arithmetic operators

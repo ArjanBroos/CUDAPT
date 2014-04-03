@@ -7,7 +7,7 @@
 #include "scene.h"
 #include "curand_kernel.h"
 #include "builder.h"
-#define	 MAX_DEPTH 4
+#define	 MAX_DEPTH 8
 
 void LaunchInitRNG(curandState* state, unsigned long seed, unsigned width, unsigned height, unsigned tileSize);
 __global__ void InitRNG(curandState* state, unsigned long seed, unsigned width);

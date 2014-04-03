@@ -5,7 +5,7 @@
 // Represents a Lambertian material
 class LambertMaterial : public Material {
 public:
-	float	albedo;	// Percentage of light reflected instead of absorbed
+	float	albedo;	// Proportion of light reflected instead of absorbed
 	Color	color;	// Color of the material
 
 	// Initializes a white material with an albedo of 1
