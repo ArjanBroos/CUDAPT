@@ -26,129 +26,6 @@ __global__ void InitRNG(curandState* state, unsigned long seed, unsigned width) 
 	curand_init(seed - i*x, 0, 0, &state[i]);
 }
 
-__device__ void PreAddBlock(Point* loc, Scene* scene, int type) {
-	if(type == 0) {
-		Box*				boxShape	= new Box(*loc);
-		LambertMaterial*	boxMat		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
-		Primitive*			boxPrim		= new Primitive(boxShape, boxMat);
-		scene->AddObject(boxPrim);
-	}
-	if(type == 1) {
-		Box*				boxShape	= new Box(*loc);
-		AreaLight*			boxLight	= new AreaLight(boxShape,Color(1.f,1.f,1.f),10.f);
-		scene->AddObject(boxLight);
-	}
-	if(type == 2) {
-		Box*				boxShape	= new Box(*loc);
-		MirrorMaterial*		boxMat		= new MirrorMaterial(Color(1.f, 1.f, 1.f), .9f);
-		Primitive*			boxPrim		= new Primitive(boxShape, boxMat);
-		scene->AddObject(boxPrim);
-	}
-}
-
-__device__ void CreateRoomScene(Scene* scene) {
-	//// Onderste rand
-	//PreAddBlock(&Point(1.f,0.f,1.f), scene, 0);
-	//PreAddBlock(&Point(1.f,0.f,2.f), scene, 0);
-	//PreAddBlock(&Point(1.f,0.f,3.f), scene, 0);
-	//PreAddBlock(&Point(1.f,0.f,4.f), scene, 0);
-	//PreAddBlock(&Point(1.f,0.f,5.f), scene, 0);
-	//PreAddBlock(&Point(1.f,0.f,6.f), scene, 0);
-	//PreAddBlock(&Point(2.f,0.f,6.f), scene, 0);
-	//PreAddBlock(&Point(2.f,0.f,1.f), scene, 0);
-	//PreAddBlock(&Point(3.f,0.f,1.f), scene, 0);
-	//PreAddBlock(&Point(4.f,0.f,1.f), scene, 0);
-	//PreAddBlock(&Point(5.f,0.f,1.f), scene, 0);
-	//PreAddBlock(&Point(6.f,0.f,1.f), scene, 0);
-	//PreAddBlock(&Point(6.f,0.f,2.f), scene, 0);
-	//PreAddBlock(&Point(6.f,0.f,3.f), scene, 0);
-
-	//// Middelste rand
-	//PreAddBlock(&Point(1.f,1.f,1.f), scene, 0);
-	//PreAddBlock(&Point(1.f,1.f,2.f), scene, 0);
-	//PreAddBlock(&Point(1.f,1.f,3.f), scene, 0);
-	//PreAddBlock(&Point(1.f,1.f,4.f), scene, 0);
-	//PreAddBlock(&Point(1.f,1.f,5.f), scene, 0);
-	//PreAddBlock(&Point(1.f,1.f,6.f), scene, 0);
-	//PreAddBlock(&Point(2.f,1.f,6.f), scene, 0);
-	//PreAddBlock(&Point(2.f,1.f,1.f), scene, 0);
-	//PreAddBlock(&Point(3.f,1.f,1.f), scene, 0);
-	//PreAddBlock(&Point(4.f,1.f,1.f), scene, 0);
-	//PreAddBlock(&Point(5.f,1.f,1.f), scene, 0);
-	//PreAddBlock(&Point(6.f,1.f,1.f), scene, 0);
-	//PreAddBlock(&Point(6.f,1.f,2.f), scene, 0);
-	//PreAddBlock(&Point(6.f,1.f,3.f), scene, 0);
-
-	//// Bovenste rand
-	//PreAddBlock(&Point(1.f,2.f,1.f), scene, 0);
-	//PreAddBlock(&Point(1.f,2.f,2.f), scene, 0);
-	//PreAddBlock(&Point(1.f,2.f,3.f), scene, 0);
-	//PreAddBlock(&Point(1.f,2.f,4.f), scene, 0);
-	//PreAddBlock(&Point(1.f,2.f,5.f), scene, 0);
-	//PreAddBlock(&Point(1.f,2.f,6.f), scene, 0);
-	//PreAddBlock(&Point(2.f,2.f,6.f), scene, 0);
-	//PreAddBlock(&Point(2.f,2.f,1.f), scene, 0);
-	//PreAddBlock(&Point(3.f,2.f,1.f), scene, 0);
-	//PreAddBlock(&Point(4.f,2.f,1.f), scene, 0);
-	//PreAddBlock(&Point(5.f,2.f,1.f), scene, 0);
-	//PreAddBlock(&Point(6.f,2.f,1.f), scene, 0);
-	//PreAddBlock(&Point(6.f,2.f,2.f), scene, 0);
-	//PreAddBlock(&Point(6.f,2.f,3.f), scene, 0);
-
-	//// Plafond
-	//PreAddBlock(&Point(2.f,2.f,5.f), scene, 0);
-	//PreAddBlock(&Point(2.f,2.f,4.f), scene, 0);
-
-	//PreAddBlock(&Point(5.f,2.f,3.f), scene, 0);
-	//PreAddBlock(&Point(4.f,2.f,3.f), scene, 0);
-	//PreAddBlock(&Point(3.f,2.f,3.f), scene, 0);
-	//PreAddBlock(&Point(2.f,2.f,3.f), scene, 0);
-
-	//PreAddBlock(&Point(5.f,2.f,2.f), scene, 0);
-	//PreAddBlock(&Point(4.f,2.f,2.f), scene, 0);
-	//PreAddBlock(&Point(3.f,2.f,2.f), scene, 0);
-	//PreAddBlock(&Point(2.f,2.f,2.f), scene, 0);
-
-	//// Lampjes
-	//PreAddBlock(&Point(2.f,0.f,2.f), scene, 1);
-	//PreAddBlock(&Point(2.f,0.f,3.f), scene, 1);
-	//PreAddBlock(&Point(3.f,0.f,2.f), scene, 1);
-	//PreAddBlock(&Point(2.f,1.f,2.f), scene, 1);
-	//PreAddBlock(&Point(2.f,1.f,3.f), scene, 1);
-	//PreAddBlock(&Point(3.f,1.f,2.f), scene, 1);
-
-	//// Schaduw blok
-	//PreAddBlock(&Point(4.f,0.f,4.f), scene, 0);
-
-	//// Mirror wall
-	//PreAddBlock(&Point(10.f,0.f,3.f), scene, 2);
-	//PreAddBlock(&Point(10.f,0.f,4.f), scene, 2);
-	//PreAddBlock(&Point(10.f,0.f,5.f), scene, 2);
-	//PreAddBlock(&Point(10.f,0.f,6.f), scene, 2);
-	//PreAddBlock(&Point(10.f,0.f,7.f), scene, 2);
-	//PreAddBlock(&Point(10.f,1.f,3.f), scene, 2);
-	//PreAddBlock(&Point(10.f,1.f,4.f), scene, 2);
-	//PreAddBlock(&Point(10.f,1.f,5.f), scene, 2);
-	//PreAddBlock(&Point(10.f,1.f,6.f), scene, 2);
-	//PreAddBlock(&Point(10.f,1.f,7.f), scene, 2);
-	//PreAddBlock(&Point(10.f,2.f,3.f), scene, 2);
-	//PreAddBlock(&Point(10.f,2.f,4.f), scene, 2);
-	//PreAddBlock(&Point(10.f,2.f,5.f), scene, 2);
-	//PreAddBlock(&Point(10.f,2.f,6.f), scene, 2);
-	//PreAddBlock(&Point(10.f,2.f,7.f), scene, 2);
-	//PreAddBlock(&Point(10.f,3.f,3.f), scene, 2);
-	//PreAddBlock(&Point(10.f,3.f,4.f), scene, 2);
-	//PreAddBlock(&Point(10.f,3.f,5.f), scene, 2);
-	//PreAddBlock(&Point(10.f,3.f,6.f), scene, 2);
-	//PreAddBlock(&Point(10.f,3.f,7.f), scene, 2);
-	//PreAddBlock(&Point(10.f,4.f,3.f), scene, 2);
-	//PreAddBlock(&Point(10.f,4.f,4.f), scene, 2);
-	//PreAddBlock(&Point(10.f,4.f,5.f), scene, 2);
-	//PreAddBlock(&Point(10.f,4.f,6.f), scene, 2);
-	//PreAddBlock(&Point(10.f,4.f,7.f), scene, 2);
-	//PreAddBlock(&Point(9.f,0.f,4.f), scene, 0);
-}
-
 void LaunchInitScene(Scene** pScene) {
 	InitScene<<<1,1>>>(pScene);
 }
@@ -161,8 +38,6 @@ __global__ void InitScene(Scene** pScene) {
 	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 1.f), .9f);
 	Primitive*			plane			= new Primitive(planeShape, planeMat);
 	scene->AddPlane(plane);
-
-	CreateRoomScene(scene);
 }
 
 void LaunchInitBuilder(Builder** builder) {
@@ -309,12 +184,12 @@ void LaunchSaveBlocks(Scene* scene) {
 	std::cout << "Done" << std::endl; 
 }
 __global__ void InitSaveBlocks(Scene* scene, Node* nextNode) {
-	*nextNode = scene->octree;
+	nextNode = scene->octree;
 }
 
 __global__ void SaveBlock(Scene* scene, Node* nextNode, Point* loc, Color* col, float* albedo, float* intensity, MaterialType* mat, ShapeType* shape, ObjectType* type) {
 	// Point to the correct next leaf node
-	*nextNode = *scene->octree.NextLeaf(nextNode);
+	nextNode = scene->octree->NextLeaf(nextNode);
 	const Object* obj = nextNode->object;
 
 	// Fill the variables with the block data
@@ -343,6 +218,9 @@ void LaunchLoadBlocks(Scene* scene) {
 	std::getline(std::cin, worldName);
 	worldName += ".wrld";
 	std::ifstream readWorldFile(worldName);
+
+	// Delete old scene
+	EmptyScene<<<1,1>>>(scene);
 
 	// Declare pointers and allocate device pointers
 	Point loc;
@@ -436,6 +314,12 @@ void LaunchLoadBlocks(Scene* scene) {
 
 	std::cout << "Done" << std::endl;
 }
+
+__global__ void EmptyScene(Scene* scene) {
+	delete scene->octree;
+	scene->octree = new Node(Point(0,0,0), Point(scene->size-1,scene->size-1,scene->size-1));
+}
+
 __global__ void LoadBlock(Scene* scene, Point loc, Color col, float albedo, float intensity, MaterialType mat, ShapeType shape, ObjectType type) {
 	Object* newObject;
 	if(type == OBJ_PRIMITIVE) {

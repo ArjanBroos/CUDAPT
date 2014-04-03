@@ -32,7 +32,8 @@ public:
 	__device__ bool	Intersect(const Ray& ray, IntRec& intRec) const;
 	__device__ bool	IntersectOctree(const Ray& ray, IntRec& intRec, bool& intersected) const;
 	__device__ int GetNumberOfObjects() const;
-	Node		octree;
+	int			size;
+	Node*		octree;
 
 private:
 	unsigned	primCounter;

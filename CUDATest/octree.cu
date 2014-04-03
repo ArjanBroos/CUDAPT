@@ -38,6 +38,9 @@ __device__ Node::Node(Point bounda, Point boundb, int octant, Node* parent) : nO
 }
 
 __device__ Node::~Node() {
+	for(int i = NEB; i <= SET; i++) {
+		if(nodes[i]) delete nodes[i];
+	}
 	if(object) delete object;
 }
 

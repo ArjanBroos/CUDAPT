@@ -31,6 +31,7 @@ __global__ void InitSaveBlocks(Scene* scene, Node* nextNode);
 __global__ void NumberOfBlocks(Scene* scene, int* nObjects);
 
 void LaunchLoadBlocks(Scene* scene);
+__global__ void EmptyScene(Scene* scene);
 __global__ void LoadBlock(Scene* scene, Point loc, Color col, float albedo, float intensity, MaterialType mat, ShapeType shape, ObjectType type);
 
 void LaunchBuilderNextBuildType(Builder* builder);

@@ -1,12 +1,12 @@
 #include "scene.h"
 #include "math.h"
 
-__device__ Scene::Scene() : primCounter(0), lightCounter(0), objectCounter(0), planeCounter(0) {
+__device__ Scene::Scene() : primCounter(0), lightCounter(0), objectCounter(0), planeCounter(0), size(128) {
 	primitives = new Primitive*[MAX_PRIMITIVES];
 	objects = new Object*[MAX_OBJECTS];
 	lights = new Light*[MAX_LIGHTS];
 	planes = new Primitive*[MAX_PLANES];
-	octree = (*new Node(Point(0,0,0), Point(127,127,127)));
+	octree = new Node(Point(0,0,0), Point(size-1,size-1,size-1));
 	dayLight = Color(.1f, .1f, .1f);
 }
 
@@ -36,12 +36,12 @@ __device__ void Scene::AddLight(Light* light) {
 
 // Adds an object to the octree of the scene
 __device__ void Scene::AddObject(Object* object) {
-	octree.Insert(object);
+	octree->Insert(object);
 }
 
 // Removes an object from the octree of the scene
 __device__ void Scene::RemoveObject(Object* object) {
-	octree.Remove(object);
+	octree->Remove(object);
 }
 
 __device__ void Scene::IncreaseDayLight(float amount) {
@@ -92,23 +92,20 @@ __device__ bool Scene::Intersect(const Ray& ray, IntRec& intRec) const {
 		}
 	}
 
-	if(octree.Intersect(ray, intRec))
+	if(octree->Intersect(ray, intRec))
 		intersected = true;
 
 	return intersected;
 }
 
 __device__ bool Scene::IntersectOctree(const Ray& ray, IntRec& intRec, bool& intersected) const {
-	//bool intersect = false;
-	//intRec.t = INFINITY;
-
 	// Query the octree for intersection
-	if(octree.Intersect(ray, intRec))
+	if(octree->Intersect(ray, intRec))
 		intersected = true;
 
 	return intersected;
 }
 
 __device__ int Scene::GetNumberOfObjects() const {
-	return octree.GetNumberOfObjects();
+	return octree->GetNumberOfObjects();
 }
