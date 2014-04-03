@@ -9,7 +9,7 @@
 __device__ Node::Node() {
 }
 
-__device__ Node::Node(Point bounda, Point boundb, int id) : nObjects(0), object(nullptr), id(id), octant(-1), parent(nullptr)
+__device__ Node::Node(Point bounda, Point boundb) : nObjects(0), object(nullptr), octant(-1), parent(nullptr)
 {
 	if(bounda < boundb) {
 		bounds[0] = bounda;
@@ -22,9 +22,7 @@ __device__ Node::Node(Point bounda, Point boundb, int id) : nObjects(0), object(
 		nodes[i] = nullptr;
 }
 
-int Node::nextId = 0;
-
-__device__ Node::Node(Point bounda, Point boundb, int octant, Node* parent, int id) : nObjects(0), object(nullptr), id(id), octant(octant), parent(parent)
+__device__ Node::Node(Point bounda, Point boundb, int octant, Node* parent) : nObjects(0), object(nullptr), octant(octant), parent(parent)
 {
 
 	if(bounda < boundb) {
@@ -38,7 +36,7 @@ __device__ Node::Node(Point bounda, Point boundb, int octant, Node* parent, int 
 		nodes[i] = nullptr;
 }
 
-__device__ int Node::Insert(Object* object, int &id)
+__device__ int Node::Insert(Object* object)
 {
 	Point loc = (*object->loc);
 	if(loc.x > bounds[1].x - 1 || loc.y > bounds[1].y - 1 || loc.z > bounds[1].z - 1) {
@@ -61,42 +59,42 @@ __device__ int Node::Insert(Object* object, int &id)
 		bool top = loc.z >= midz;
 		if(east && north && top) {
 			if(currentNode->nodes[NET] == nullptr)
-				currentNode->nodes[NET] = new Node(Point((float)midx, (float)midy, (float)midz), Point(currentNode->bounds[1].x, currentNode->bounds[1].y, currentNode->bounds[1].z), NET, currentNode, id++);
+				currentNode->nodes[NET] = new Node(Point((float)midx, (float)midy, (float)midz), Point(currentNode->bounds[1].x, currentNode->bounds[1].y, currentNode->bounds[1].z), NET, currentNode);
 			currentNode = currentNode->nodes[NET];
 		}
 		if(!east && north && top) {
 			if(currentNode->nodes[NWT] == nullptr)
-				currentNode->nodes[NWT] = new Node(Point(currentNode->bounds[0].x, (float)midy, (float)midz), Point((float)midx, currentNode->bounds[1].y, currentNode->bounds[1].z), NWT, currentNode, id++);
+				currentNode->nodes[NWT] = new Node(Point(currentNode->bounds[0].x, (float)midy, (float)midz), Point((float)midx, currentNode->bounds[1].y, currentNode->bounds[1].z), NWT, currentNode);
 			currentNode = currentNode->nodes[NWT];
 		}
 		if(east && !north && top) {
 			if(currentNode->nodes[SET] == nullptr)
-				currentNode->nodes[SET] = new Node(Point((float)midx, currentNode->bounds[0].y, (float)midz), Point(currentNode->bounds[1].x, (float)midy, currentNode->bounds[1].z), SET, currentNode, id++);
+				currentNode->nodes[SET] = new Node(Point((float)midx, currentNode->bounds[0].y, (float)midz), Point(currentNode->bounds[1].x, (float)midy, currentNode->bounds[1].z), SET, currentNode);
 			currentNode = currentNode->nodes[SET];
 		}
 		if(!east && !north && top) {
 			if(currentNode->nodes[SWT] == nullptr)
-				currentNode->nodes[SWT] = new Node(Point(currentNode->bounds[0].x, currentNode->bounds[0].y, (float)midz), Point((float)midx, (float)midy, currentNode->bounds[1].z), SWT, currentNode, id++);
+				currentNode->nodes[SWT] = new Node(Point(currentNode->bounds[0].x, currentNode->bounds[0].y, (float)midz), Point((float)midx, (float)midy, currentNode->bounds[1].z), SWT, currentNode);
 			currentNode = currentNode->nodes[SWT];
 		}
 		if(east && north && !top) {
 			if(currentNode->nodes[NEB] == nullptr)
-				currentNode->nodes[NEB] = new Node(Point((float)midx, (float)midy, currentNode->bounds[0].z), Point(currentNode->bounds[1].x, currentNode->bounds[1].y, (float)midz), NEB, currentNode, id++);
+				currentNode->nodes[NEB] = new Node(Point((float)midx, (float)midy, currentNode->bounds[0].z), Point(currentNode->bounds[1].x, currentNode->bounds[1].y, (float)midz), NEB, currentNode);
 			currentNode = currentNode->nodes[NEB];
 		}
 		if(!east && north && !top) {
 			if(currentNode->nodes[NWB] == nullptr)
-				currentNode->nodes[NWB] = new Node(Point(currentNode->bounds[0].x, (float)midy, currentNode->bounds[0].z), Point((float)midx, currentNode->bounds[1].y, (float)midz), NWB, currentNode, id++);
+				currentNode->nodes[NWB] = new Node(Point(currentNode->bounds[0].x, (float)midy, currentNode->bounds[0].z), Point((float)midx, currentNode->bounds[1].y, (float)midz), NWB, currentNode);
 			currentNode = currentNode->nodes[NWB];
 		}
 		if(east && !north && !top) {
 			if(currentNode->nodes[SEB] == nullptr)
-				currentNode->nodes[SEB] = new Node(Point((float)midx, currentNode->bounds[0].y, currentNode->bounds[0].z), Point(currentNode->bounds[1].x, (float)midy, (float)midz), SEB, currentNode, id++);
+				currentNode->nodes[SEB] = new Node(Point((float)midx, currentNode->bounds[0].y, currentNode->bounds[0].z), Point(currentNode->bounds[1].x, (float)midy, (float)midz), SEB, currentNode);
 			currentNode = currentNode->nodes[SEB];
 		}
 		if(!east && !north && !top) {
 			if(currentNode->nodes[SWB] == nullptr)
-				currentNode->nodes[SWB] = new Node(Point(currentNode->bounds[0].x, currentNode->bounds[0].y, currentNode->bounds[0].z), Point((float)midx, (float)midy, (float)midz), SWB, currentNode, id++);
+				currentNode->nodes[SWB] = new Node(Point(currentNode->bounds[0].x, currentNode->bounds[0].y, currentNode->bounds[0].z), Point((float)midx, (float)midy, (float)midz), SWB, currentNode);
 			currentNode = currentNode->nodes[SWB];
 		}
 	}
@@ -118,6 +116,8 @@ __device__ int Node::Insert(Object* object, int &id)
 }
 
 __device__ void Node::Remove(Object* object) {
+	if(object->GetType() == OBJ_PRIMITIVE && ((Primitive*)object)->GetShape()->GetType() == ST_PLANE)
+		return;
 	Node* currentNode, *previousNode;
 	currentNode = object->parent;
 	//Fix number of objects in parents
@@ -130,6 +130,7 @@ __device__ void Node::Remove(Object* object) {
 			currentNode->nodes[previousNode->octant] = NULL;
 		}
 	}
+	currentNode->nObjects--;
 	delete object;
 }
 
@@ -142,10 +143,11 @@ __device__ bool Node::Intersect(const Ray &ray, IntRec& intRec) const {
 			if(current->object->Intersect(ray, temp) && temp < intRec.t) {
 				intRec.t = temp;
 				intersect = true;
-				if(current->object->type == PRIMITIVE) {
+				if(current->object->GetType() == OBJ_PRIMITIVE) {
 					intRec.prim = (Primitive*) current->object;
 					intRec.light = NULL;
-				} else {
+				}
+				if(current->object->GetType() == OBJ_LIGHT) {
 					intRec.prim = NULL;
 					intRec.light = (Light*) current->object;
 				}
@@ -176,6 +178,41 @@ __device__ Node* Node::NextNode(const Node* current, const Ray &ray, float &clos
 			}
 		}
 		current = current->parent;
+	}
+	return nullptr;
+}
+
+__device__ Node* Node::NextNode(const Node* current) const {
+	// Return the left most child node that intersects with the ray
+	Node* node;
+	for(int i = NEB; i <= SET; i++) {
+		node = current->nodes[i];
+		if(node) {
+			return node;
+		}
+	}
+
+	// If it's a leaf node, find the next sibling or ascend and repeat
+	while(current->parent) {
+		node = current->parent;
+		for(int i = current->octant + 1; i <= SET; i++) {
+			Node* node2 = node->nodes[i];
+			if(node2) {
+				return node2;
+			}
+		}
+		current = current->parent;
+	}
+	return nullptr;
+}
+
+__device__ Node* Node::NextLeaf(Node* current) const {
+	current = NextNode(current);
+	while(current) {
+		if(current->object) {
+			return current;
+		}
+		current = NextNode(current);
 	}
 	return nullptr;
 }
@@ -211,4 +248,8 @@ __device__ float Node::NodeIntersect(const Ray &ray) const {
 		return tmin;
 	}
 	return INFINITY;
+}
+
+__device__ int Node::GetNumberOfObjects() const {
+	return nObjects;
 }

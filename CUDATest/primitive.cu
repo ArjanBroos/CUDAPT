@@ -18,3 +18,8 @@ __device__ const Material* Primitive::GetMaterial() const {
 __device__ bool Primitive::Intersect(const Ray& ray, float& t) const {
 	return shape->Intersect(ray, t);
 }
+
+// Returns the type of this object
+__device__ int Primitive::GetType() const {
+	return OBJ_PRIMITIVE;
+}

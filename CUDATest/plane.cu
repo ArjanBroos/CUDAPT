@@ -28,3 +28,8 @@ __device__ bool Plane::Intersect(const Ray& ray, float& t) const {
 __device__ Vector Plane::GetNormal(const Point& p) const {
 	return n;
 }
+
+// Returns the type of this shape
+__device__ int Plane::GetType() const {
+	return ST_PLANE;
+}

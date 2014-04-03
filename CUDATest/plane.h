@@ -20,4 +20,7 @@ public:
 	
 	// Returns the normal of this shape at point p
 	__device__ Vector	GetNormal(const Point& p) const;
+
+	// Returns the type of this shape
+	__device__ int GetType() const;
 };

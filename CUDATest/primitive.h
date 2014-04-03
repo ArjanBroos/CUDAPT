@@ -18,6 +18,8 @@ public:
 	__device__ const Material*	GetMaterial() const;
 	// Checks if the shape of the primitive intersects with a ray and store the distance in t
 	__device__ bool	Intersect(const Ray& ray, float& t) const;
+	// Returns the type of this object
+	__device__ int GetType() const;
 
 private:
 	Shape*			shape;		// Shape of the object

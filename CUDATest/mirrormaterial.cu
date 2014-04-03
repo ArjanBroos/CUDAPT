@@ -38,3 +38,12 @@ __device__ Vector MirrorMaterial::Reflect(const Vector& in, const Vector& normal
 	return -2.f * Dot(in, normal) * normal + in;
 }
 
+// Returns the albedo of this material
+__device__ float MirrorMaterial::GetAlbedo() const {
+	return albedo;
+}
+
+// Returns this type of material
+__device__ int MirrorMaterial::GetType() const {
+	return MT_MIRROR;
+}

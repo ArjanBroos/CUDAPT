@@ -17,6 +17,7 @@ public:
 	// If so, output parameter t becomes the distance along ray to the closest intersection
 	__device__ bool		Intersect(const Ray& ray, float& t) const;
 
+	// Returns the shape of this arealight
 	__device__ Shape*	GetShape() const;
 
 private:

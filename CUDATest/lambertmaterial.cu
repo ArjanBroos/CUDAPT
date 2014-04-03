@@ -2,7 +2,7 @@
 #include "math.h"
 
 // Initializes a white material with an albedo of 1
-__device__ LambertMaterial::LambertMaterial() : color(Color(1.f, 1.f, 1.f)), albedo(1.f) {
+__device__ LambertMaterial::LambertMaterial() : color(Color(1.f, 1.f, 1.f)), albedo(1.f){
 }
 
 // Initializes a material with given color and albedo
@@ -45,4 +45,14 @@ __device__ Vector LambertMaterial::GetSample(const Vector& in, const Vector& nor
 // Returns the factor between incoming and outgoing radiance along given rays
 __device__ float LambertMaterial::GetMultiplier(const Vector& in, const Vector& out, const Vector& normal) const {
 	return albedo;
+}
+
+// Returns the albedo of this material
+__device__ float LambertMaterial::GetAlbedo() const {
+	return albedo;
+}
+
+// Returns this type of material
+__device__ int LambertMaterial::GetType() const {
+	return MT_DIFFUSE;
 }

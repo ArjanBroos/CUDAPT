@@ -22,7 +22,7 @@ __device__ Point* Builder::GetPosition(AreaLight* neighbor, const Point& isct) c
 }
 
 __device__ Point* Builder::GetPosition(Primitive* neighbor, const Point& isct) const {
-	if (neighbor->type == PLANE)
+	if (neighbor->GetShape()->GetType() == ST_PLANE)
 		return new Point(floor(isct.x), floor(isct.y), floor(isct.z));
 	Vector n = neighbor->GetShape()->GetNormal(isct);
 	Point* nl = neighbor->loc;
@@ -31,14 +31,14 @@ __device__ Point* Builder::GetPosition(Primitive* neighbor, const Point& isct) c
 
 __device__ Object* Builder::GetObject(Shape* shape, Point* location) const {
 	if (buildType == BT_PRIMITIVE) {
-		Object* newPrim = new Primitive(shape, materialPicker.GetMaterial(colorPicker.GetColor()), location);
-		newPrim->type = PRIMITIVE;
-		return newPrim;
+		//Object* newPrim = new Primitive(shape, materialPicker.GetMaterial(colorPicker.GetColor()), location);
+		//newPrim->type = PRIMITIVE;
+		return new Primitive(shape, materialPicker.GetMaterial(colorPicker.GetColor()), location);
 	}
 	if (buildType == BT_LIGHT) {
-		Object* newLight = lightPicker.GetLight(shape, colorPicker.GetColor(), location);
-		newLight->type = LIGHT;
-		return newLight;
+		//Object* newLight = lightPicker.GetLight(shape, colorPicker.GetColor(), location);
+		//newLight->type = LIGHT;
+		return lightPicker.GetLight(shape, colorPicker.GetColor(), location);
 	}
 	
 	return NULL;

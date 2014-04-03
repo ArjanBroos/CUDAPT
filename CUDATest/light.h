@@ -17,6 +17,8 @@ public:
 	// Returns true when this light intersects ray
 	// If so, output parameter t becomes the distance along ray to the closest intersection
 	__device__ virtual bool	Intersect(const Ray& ray, float& t) const = 0;
+	// Returns the type of this object
+	__device__ int GetType() const;
 
 	// Returns the emitted light
 	__device__ Color		Le() const;

@@ -9,6 +9,9 @@
 #include "point.h"
 #include "cuda_runtime.h"
 #include "device_functions.h"
+#include <iostream>
+#include <string>
+#include <fstream>
 
 void LaunchInitRNG(curandState* state, unsigned long seed, unsigned width, unsigned height, unsigned tileSize) {
 	dim3 grid(width / tileSize, height / tileSize);
@@ -23,134 +26,131 @@ __global__ void InitRNG(curandState* state, unsigned long seed, unsigned width) 
 	curand_init(seed - i*x, 0, 0, &state[i]);
 }
 
-void LaunchInitScene(Scene** pScene) {
-	InitScene<<<1,1>>>(pScene);
-}
-
 __device__ void PreAddBlock(Point* loc, Scene* scene, int type) {
 	if(type == 0) {
 		Box*				boxShape	= new Box(*loc);
 		LambertMaterial*	boxMat		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
 		Primitive*			boxPrim		= new Primitive(boxShape, boxMat, &boxShape->bounds[0]);
-		boxPrim->type = PRIMITIVE;
 		scene->AddObject(boxPrim);
 	}
 	if(type == 1) {
 		Box*				boxShape	= new Box(*loc);
 		AreaLight*			boxLight	= new AreaLight(boxShape,Color(1.f,1.f,1.f),10.f,loc);
-		boxLight->type = LIGHT;
 		scene->AddObject(boxLight);
 	}
 	if(type == 2) {
 		Box*				boxShape	= new Box(*loc);
 		MirrorMaterial*		boxMat		= new MirrorMaterial(Color(1.f, 1.f, 1.f), .9f);
 		Primitive*			boxPrim		= new Primitive(boxShape, boxMat, &boxShape->bounds[0]);
-		boxPrim->type = PRIMITIVE;
 		scene->AddObject(boxPrim);
 	}
 }
 
 __device__ void CreateRoomScene(Scene* scene) {
-	// Onderste rand
-	PreAddBlock(&Point(1.f,0.f,1.f), scene, 0);
-	PreAddBlock(&Point(1.f,0.f,2.f), scene, 0);
-	PreAddBlock(&Point(1.f,0.f,3.f), scene, 0);
-	PreAddBlock(&Point(1.f,0.f,4.f), scene, 0);
-	PreAddBlock(&Point(1.f,0.f,5.f), scene, 0);
-	PreAddBlock(&Point(1.f,0.f,6.f), scene, 0);
-	PreAddBlock(&Point(2.f,0.f,6.f), scene, 0);
-	PreAddBlock(&Point(2.f,0.f,1.f), scene, 0);
-	PreAddBlock(&Point(3.f,0.f,1.f), scene, 0);
-	PreAddBlock(&Point(4.f,0.f,1.f), scene, 0);
-	PreAddBlock(&Point(5.f,0.f,1.f), scene, 0);
-	PreAddBlock(&Point(6.f,0.f,1.f), scene, 0);
-	PreAddBlock(&Point(6.f,0.f,2.f), scene, 0);
-	PreAddBlock(&Point(6.f,0.f,3.f), scene, 0);
+	//// Onderste rand
+	//PreAddBlock(&Point(1.f,0.f,1.f), scene, 0);
+	//PreAddBlock(&Point(1.f,0.f,2.f), scene, 0);
+	//PreAddBlock(&Point(1.f,0.f,3.f), scene, 0);
+	//PreAddBlock(&Point(1.f,0.f,4.f), scene, 0);
+	//PreAddBlock(&Point(1.f,0.f,5.f), scene, 0);
+	//PreAddBlock(&Point(1.f,0.f,6.f), scene, 0);
+	//PreAddBlock(&Point(2.f,0.f,6.f), scene, 0);
+	//PreAddBlock(&Point(2.f,0.f,1.f), scene, 0);
+	//PreAddBlock(&Point(3.f,0.f,1.f), scene, 0);
+	//PreAddBlock(&Point(4.f,0.f,1.f), scene, 0);
+	//PreAddBlock(&Point(5.f,0.f,1.f), scene, 0);
+	//PreAddBlock(&Point(6.f,0.f,1.f), scene, 0);
+	//PreAddBlock(&Point(6.f,0.f,2.f), scene, 0);
+	//PreAddBlock(&Point(6.f,0.f,3.f), scene, 0);
 
-	// Middelste rand
-	PreAddBlock(&Point(1.f,1.f,1.f), scene, 0);
-	PreAddBlock(&Point(1.f,1.f,2.f), scene, 0);
-	PreAddBlock(&Point(1.f,1.f,3.f), scene, 0);
-	PreAddBlock(&Point(1.f,1.f,4.f), scene, 0);
-	PreAddBlock(&Point(1.f,1.f,5.f), scene, 0);
-	PreAddBlock(&Point(1.f,1.f,6.f), scene, 0);
-	PreAddBlock(&Point(2.f,1.f,6.f), scene, 0);
-	PreAddBlock(&Point(2.f,1.f,1.f), scene, 0);
-	PreAddBlock(&Point(3.f,1.f,1.f), scene, 0);
-	PreAddBlock(&Point(4.f,1.f,1.f), scene, 0);
-	PreAddBlock(&Point(5.f,1.f,1.f), scene, 0);
-	PreAddBlock(&Point(6.f,1.f,1.f), scene, 0);
-	PreAddBlock(&Point(6.f,1.f,2.f), scene, 0);
-	PreAddBlock(&Point(6.f,1.f,3.f), scene, 0);
+	//// Middelste rand
+	//PreAddBlock(&Point(1.f,1.f,1.f), scene, 0);
+	//PreAddBlock(&Point(1.f,1.f,2.f), scene, 0);
+	//PreAddBlock(&Point(1.f,1.f,3.f), scene, 0);
+	//PreAddBlock(&Point(1.f,1.f,4.f), scene, 0);
+	//PreAddBlock(&Point(1.f,1.f,5.f), scene, 0);
+	//PreAddBlock(&Point(1.f,1.f,6.f), scene, 0);
+	//PreAddBlock(&Point(2.f,1.f,6.f), scene, 0);
+	//PreAddBlock(&Point(2.f,1.f,1.f), scene, 0);
+	//PreAddBlock(&Point(3.f,1.f,1.f), scene, 0);
+	//PreAddBlock(&Point(4.f,1.f,1.f), scene, 0);
+	//PreAddBlock(&Point(5.f,1.f,1.f), scene, 0);
+	//PreAddBlock(&Point(6.f,1.f,1.f), scene, 0);
+	//PreAddBlock(&Point(6.f,1.f,2.f), scene, 0);
+	//PreAddBlock(&Point(6.f,1.f,3.f), scene, 0);
 
-	// Bovenste rand
-	PreAddBlock(&Point(1.f,2.f,1.f), scene, 0);
-	PreAddBlock(&Point(1.f,2.f,2.f), scene, 0);
-	PreAddBlock(&Point(1.f,2.f,3.f), scene, 0);
-	PreAddBlock(&Point(1.f,2.f,4.f), scene, 0);
-	PreAddBlock(&Point(1.f,2.f,5.f), scene, 0);
-	PreAddBlock(&Point(1.f,2.f,6.f), scene, 0);
-	PreAddBlock(&Point(2.f,2.f,6.f), scene, 0);
-	PreAddBlock(&Point(2.f,2.f,1.f), scene, 0);
-	PreAddBlock(&Point(3.f,2.f,1.f), scene, 0);
-	PreAddBlock(&Point(4.f,2.f,1.f), scene, 0);
-	PreAddBlock(&Point(5.f,2.f,1.f), scene, 0);
-	PreAddBlock(&Point(6.f,2.f,1.f), scene, 0);
-	PreAddBlock(&Point(6.f,2.f,2.f), scene, 0);
-	PreAddBlock(&Point(6.f,2.f,3.f), scene, 0);
+	//// Bovenste rand
+	//PreAddBlock(&Point(1.f,2.f,1.f), scene, 0);
+	//PreAddBlock(&Point(1.f,2.f,2.f), scene, 0);
+	//PreAddBlock(&Point(1.f,2.f,3.f), scene, 0);
+	//PreAddBlock(&Point(1.f,2.f,4.f), scene, 0);
+	//PreAddBlock(&Point(1.f,2.f,5.f), scene, 0);
+	//PreAddBlock(&Point(1.f,2.f,6.f), scene, 0);
+	//PreAddBlock(&Point(2.f,2.f,6.f), scene, 0);
+	//PreAddBlock(&Point(2.f,2.f,1.f), scene, 0);
+	//PreAddBlock(&Point(3.f,2.f,1.f), scene, 0);
+	//PreAddBlock(&Point(4.f,2.f,1.f), scene, 0);
+	//PreAddBlock(&Point(5.f,2.f,1.f), scene, 0);
+	//PreAddBlock(&Point(6.f,2.f,1.f), scene, 0);
+	//PreAddBlock(&Point(6.f,2.f,2.f), scene, 0);
+	//PreAddBlock(&Point(6.f,2.f,3.f), scene, 0);
 
-	// Plafond
-	PreAddBlock(&Point(2.f,2.f,5.f), scene, 0);
-	PreAddBlock(&Point(2.f,2.f,4.f), scene, 0);
+	//// Plafond
+	//PreAddBlock(&Point(2.f,2.f,5.f), scene, 0);
+	//PreAddBlock(&Point(2.f,2.f,4.f), scene, 0);
 
-	PreAddBlock(&Point(5.f,2.f,3.f), scene, 0);
-	PreAddBlock(&Point(4.f,2.f,3.f), scene, 0);
-	PreAddBlock(&Point(3.f,2.f,3.f), scene, 0);
-	PreAddBlock(&Point(2.f,2.f,3.f), scene, 0);
+	//PreAddBlock(&Point(5.f,2.f,3.f), scene, 0);
+	//PreAddBlock(&Point(4.f,2.f,3.f), scene, 0);
+	//PreAddBlock(&Point(3.f,2.f,3.f), scene, 0);
+	//PreAddBlock(&Point(2.f,2.f,3.f), scene, 0);
 
-	PreAddBlock(&Point(5.f,2.f,2.f), scene, 0);
-	PreAddBlock(&Point(4.f,2.f,2.f), scene, 0);
-	PreAddBlock(&Point(3.f,2.f,2.f), scene, 0);
-	PreAddBlock(&Point(2.f,2.f,2.f), scene, 0);
+	//PreAddBlock(&Point(5.f,2.f,2.f), scene, 0);
+	//PreAddBlock(&Point(4.f,2.f,2.f), scene, 0);
+	//PreAddBlock(&Point(3.f,2.f,2.f), scene, 0);
+	//PreAddBlock(&Point(2.f,2.f,2.f), scene, 0);
 
-	// Lampjes
-	PreAddBlock(&Point(2.f,0.f,2.f), scene, 1);
-	PreAddBlock(&Point(2.f,0.f,3.f), scene, 1);
-	PreAddBlock(&Point(3.f,0.f,2.f), scene, 1);
-	PreAddBlock(&Point(2.f,1.f,2.f), scene, 1);
-	PreAddBlock(&Point(2.f,1.f,3.f), scene, 1);
-	PreAddBlock(&Point(3.f,1.f,2.f), scene, 1);
+	//// Lampjes
+	//PreAddBlock(&Point(2.f,0.f,2.f), scene, 1);
+	//PreAddBlock(&Point(2.f,0.f,3.f), scene, 1);
+	//PreAddBlock(&Point(3.f,0.f,2.f), scene, 1);
+	//PreAddBlock(&Point(2.f,1.f,2.f), scene, 1);
+	//PreAddBlock(&Point(2.f,1.f,3.f), scene, 1);
+	//PreAddBlock(&Point(3.f,1.f,2.f), scene, 1);
 
-	// Schaduw blok
-	PreAddBlock(&Point(4.f,0.f,4.f), scene, 0);
+	//// Schaduw blok
+	//PreAddBlock(&Point(4.f,0.f,4.f), scene, 0);
 
-	// Mirror wall
-	PreAddBlock(&Point(10.f,0.f,3.f), scene, 2);
-	PreAddBlock(&Point(10.f,0.f,4.f), scene, 2);
-	PreAddBlock(&Point(10.f,0.f,5.f), scene, 2);
-	PreAddBlock(&Point(10.f,0.f,6.f), scene, 2);
-	PreAddBlock(&Point(10.f,0.f,7.f), scene, 2);
-	PreAddBlock(&Point(10.f,1.f,3.f), scene, 2);
-	PreAddBlock(&Point(10.f,1.f,4.f), scene, 2);
-	PreAddBlock(&Point(10.f,1.f,5.f), scene, 2);
-	PreAddBlock(&Point(10.f,1.f,6.f), scene, 2);
-	PreAddBlock(&Point(10.f,1.f,7.f), scene, 2);
-	PreAddBlock(&Point(10.f,2.f,3.f), scene, 2);
-	PreAddBlock(&Point(10.f,2.f,4.f), scene, 2);
-	PreAddBlock(&Point(10.f,2.f,5.f), scene, 2);
-	PreAddBlock(&Point(10.f,2.f,6.f), scene, 2);
-	PreAddBlock(&Point(10.f,2.f,7.f), scene, 2);
-	PreAddBlock(&Point(10.f,3.f,3.f), scene, 2);
-	PreAddBlock(&Point(10.f,3.f,4.f), scene, 2);
-	PreAddBlock(&Point(10.f,3.f,5.f), scene, 2);
-	PreAddBlock(&Point(10.f,3.f,6.f), scene, 2);
-	PreAddBlock(&Point(10.f,3.f,7.f), scene, 2);
-	PreAddBlock(&Point(10.f,4.f,3.f), scene, 2);
-	PreAddBlock(&Point(10.f,4.f,4.f), scene, 2);
-	PreAddBlock(&Point(10.f,4.f,5.f), scene, 2);
-	PreAddBlock(&Point(10.f,4.f,6.f), scene, 2);
-	PreAddBlock(&Point(10.f,4.f,7.f), scene, 2);
-	PreAddBlock(&Point(9.f,0.f,4.f), scene, 0);
+	//// Mirror wall
+	//PreAddBlock(&Point(10.f,0.f,3.f), scene, 2);
+	//PreAddBlock(&Point(10.f,0.f,4.f), scene, 2);
+	//PreAddBlock(&Point(10.f,0.f,5.f), scene, 2);
+	//PreAddBlock(&Point(10.f,0.f,6.f), scene, 2);
+	//PreAddBlock(&Point(10.f,0.f,7.f), scene, 2);
+	//PreAddBlock(&Point(10.f,1.f,3.f), scene, 2);
+	//PreAddBlock(&Point(10.f,1.f,4.f), scene, 2);
+	//PreAddBlock(&Point(10.f,1.f,5.f), scene, 2);
+	//PreAddBlock(&Point(10.f,1.f,6.f), scene, 2);
+	//PreAddBlock(&Point(10.f,1.f,7.f), scene, 2);
+	//PreAddBlock(&Point(10.f,2.f,3.f), scene, 2);
+	//PreAddBlock(&Point(10.f,2.f,4.f), scene, 2);
+	//PreAddBlock(&Point(10.f,2.f,5.f), scene, 2);
+	//PreAddBlock(&Point(10.f,2.f,6.f), scene, 2);
+	//PreAddBlock(&Point(10.f,2.f,7.f), scene, 2);
+	//PreAddBlock(&Point(10.f,3.f,3.f), scene, 2);
+	//PreAddBlock(&Point(10.f,3.f,4.f), scene, 2);
+	//PreAddBlock(&Point(10.f,3.f,5.f), scene, 2);
+	//PreAddBlock(&Point(10.f,3.f,6.f), scene, 2);
+	//PreAddBlock(&Point(10.f,3.f,7.f), scene, 2);
+	//PreAddBlock(&Point(10.f,4.f,3.f), scene, 2);
+	//PreAddBlock(&Point(10.f,4.f,4.f), scene, 2);
+	//PreAddBlock(&Point(10.f,4.f,5.f), scene, 2);
+	//PreAddBlock(&Point(10.f,4.f,6.f), scene, 2);
+	//PreAddBlock(&Point(10.f,4.f,7.f), scene, 2);
+	//PreAddBlock(&Point(9.f,0.f,4.f), scene, 0);
+}
+
+void LaunchInitScene(Scene** pScene) {
+	InitScene<<<1,1>>>(pScene);
 }
 
 __global__ void InitScene(Scene** pScene) {
@@ -160,7 +160,6 @@ __global__ void InitScene(Scene** pScene) {
 	Plane*				planeShape		= new Plane(Point(0,0,0), Vector(0.f, 1.f, 0.f));
 	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 1.f), .9f);
 	Primitive*			plane			= new Primitive(planeShape, planeMat, &planeShape->p);
-	plane->type = PLANE;
 	scene->AddPlane(plane);
 
 	CreateRoomScene(scene);
@@ -211,13 +210,284 @@ __global__ void RemoveBlock(const Camera* cam, Scene* scene) {
 	Ray ray = cam->GetCenterRay();
 	IntRec intRec;
 	if (scene->Intersect(ray, intRec)) {
-		if(intRec.light) {
-			scene->RemoveObject(intRec.light);
-		}
-		if(intRec.prim && intRec.prim->type == PRIMITIVE) {
-			scene->RemoveObject(intRec.prim);
+		if(intRec.light) scene->RemoveObject(intRec.light);
+		if(intRec.prim) scene->RemoveObject(intRec.prim);
+	}
+}
+
+void LaunchSaveBlocks(Scene* scene) {
+	// Ask user for a world name (for the filename)
+	std::cout << "How would you like to name this world?" << std::endl;
+	std::string worldName;
+	std::getline(std::cin, worldName);
+	worldName += ".wrld";
+	std::ifstream readWorldFile(worldName);
+	// Check existence and ask if overwriting is ok
+	if(readWorldFile.is_open()) {
+		std::cout << "Are you sure you want to overwrite world " << worldName << "? (y/n)" << std::endl;
+		std::string answer;
+		std::getline(std::cin, answer);
+		readWorldFile.close();
+		if(!(answer == "y")) {
+			std::cout << "Save process canceled by the user" << std::endl;
+			return;
 		}
 	}
+	std::ofstream writeWorldFile(worldName);
+
+	std::cout << "Saving the world to file: " << worldName << ", this can take a few minutes" << std::endl;
+
+	// Start saving process
+
+	// Declare pointers and allocate device pointers
+	int h_nBlocks, *d_nBlocks;
+	h_nBlocks = 2;
+	Node* d_nextNode;
+	Point *d_loc, loc;
+	Color *d_col, col;
+	float *d_albedo, *d_intensity, albedo, intensity;
+	int	*d_mat, *d_shape, *d_type, mat, shape, type;
+	cudaMalloc(&d_nextNode, sizeof(Node*));
+	cudaMalloc(&d_nBlocks, sizeof(int));
+	cudaMalloc(&d_loc, sizeof(Point));
+	cudaMalloc(&d_col, sizeof(Color));
+	cudaMalloc(&d_albedo, sizeof(float));
+	cudaMalloc(&d_intensity, sizeof(float));
+	cudaMalloc(&d_mat, sizeof(int));
+	cudaMalloc(&d_shape, sizeof(int));
+	cudaMalloc(&d_type, sizeof(int));
+
+	// Query the number of objects we have to save
+	NumberOfBlocks<<<1,1>>>(scene,d_nBlocks);
+	cudaMemcpy(&h_nBlocks, d_nBlocks, sizeof(int), cudaMemcpyDeviceToHost);
+
+	// Reset d_nextNode to root of the octree
+	InitSaveBlocks<<<1,1>>>(scene, d_nextNode);
+
+	// Save each object into the world file
+	for(int i = 0; i < h_nBlocks; i++) {
+		// Fill the variables with the correct block data
+		SaveBlock<<<1,1>>>(scene, d_nextNode, d_loc, d_col, d_albedo, d_intensity, d_mat, d_shape, d_type);
+		// Copy the data back to the host
+		cudaMemcpy(&loc, d_loc, sizeof(Point), cudaMemcpyDeviceToHost);
+		cudaMemcpy(&col, d_col, sizeof(Color), cudaMemcpyDeviceToHost);
+		cudaMemcpy(&albedo, d_albedo, sizeof(float), cudaMemcpyDeviceToHost);
+		cudaMemcpy(&intensity, d_intensity, sizeof(float), cudaMemcpyDeviceToHost);
+		cudaMemcpy(&mat, d_mat, sizeof(int), cudaMemcpyDeviceToHost);
+		cudaMemcpy(&shape, d_shape, sizeof(int), cudaMemcpyDeviceToHost);
+		cudaMemcpy(&type, d_type, sizeof(int), cudaMemcpyDeviceToHost);
+		// Write the block data in the world file
+		if (writeWorldFile.is_open())
+		{
+			writeWorldFile << "NewObject" << std::endl;
+			writeWorldFile << "Location: " << loc.x << " " << loc.y << " "  << loc.z << std::endl;
+			writeWorldFile << "Color: " << col.r << " " << col.g << " "  << col.b << std::endl;
+			writeWorldFile << "Albedo: " << albedo << std::endl;
+			writeWorldFile << "Intensity: " << intensity << std::endl;
+			writeWorldFile << "Material: " << mat << std::endl;
+			writeWorldFile << "Shape: " << shape << std::endl;
+			writeWorldFile << "ObjectType: " << type << std::endl;
+		}
+		else std::cout << "Unable to open file " << worldName << std::endl;
+	}
+
+	writeWorldFile.close();
+
+	//Free pointers on device
+	cudaFree(d_type);
+	cudaFree(d_mat);
+	cudaFree(d_shape);
+	cudaFree(d_albedo);
+	cudaFree(d_intensity);
+	cudaFree(d_col);
+	cudaFree(d_loc);
+	cudaFree(d_nextNode);
+	cudaFree(d_nBlocks);
+
+	std::cout << "Done" << std::endl; 
+}
+__global__ void InitSaveBlocks(Scene* scene, Node* nextNode) {
+	*nextNode = scene->octree;
+}
+
+__global__ void SaveBlock(Scene* scene, Node* nextNode, Point* loc, Color* col, float* albedo, float* intensity, int* mat, int* shape, int* type) {
+	// Point to the correct next leaf node
+	*nextNode = *scene->octree.NextLeaf(nextNode);
+	const Object* obj = nextNode->object;
+
+	// Fill the variables with the block data
+	*loc = *obj->loc;
+	*type = obj->GetType();
+	if(obj->GetType() == OBJ_PRIMITIVE) {
+		*col = ((Primitive*) obj)->GetMaterial()->GetColor();
+		*albedo = ((Primitive*) obj)->GetMaterial()->GetAlbedo();
+		*mat = ((Primitive*) obj)->GetMaterial()->GetType();
+		*shape = ((Primitive*) obj)->GetShape()->GetType();
+		*intensity = -1.f;
+	}
+	if(obj->GetType() == OBJ_LIGHT) {
+		*col = ((AreaLight*) obj)->c;
+		*intensity = ((AreaLight*) obj)->i;
+		*shape = ((AreaLight*) obj)->GetShape()->GetType();
+		*albedo = -1.f;
+		*mat = -1;
+	}
+}
+
+void LaunchLoadBlocks(Scene* scene) {
+	// Ask user for the world name to load (for the filename)
+	std::cout << "Which world would you like to open?" << std::endl;
+	std::string worldName;
+	std::getline(std::cin, worldName);
+	worldName += ".wrld";
+	std::ifstream readWorldFile(worldName);
+
+	// Declare pointers and allocate device pointers
+	Point *d_loc, loc;
+	Color *d_col, col;
+	float *d_albedo, *d_intensity, albedo, intensity;
+	int	*d_mat, *d_shape, *d_type, mat, shape, type;
+	cudaMalloc(&d_loc, sizeof(Point));
+	cudaMalloc(&d_col, sizeof(Color));
+	cudaMalloc(&d_albedo, sizeof(float));
+	cudaMalloc(&d_intensity, sizeof(float));
+	cudaMalloc(&d_mat, sizeof(int));
+	cudaMalloc(&d_shape, sizeof(int));
+	cudaMalloc(&d_type, sizeof(int));
+
+	// Check if world file exists and start load process
+	if(readWorldFile.is_open()) {
+		std::cout << "Loading world file: " << worldName << ", this can take a few minutes" << std::endl;
+		std::string word;
+		// Start reading the world block by block
+		while( readWorldFile >> word) {
+			if(word != "NewObject") {
+				std::cout << "The world file is corrupt, world loading process is stopped" << std::endl;
+				break;
+			}
+
+			readWorldFile >> word;
+			if(word != "Location:") {
+				std::cout << "The world file is corrupt, world loading process is stopped" << std::endl;
+				break;
+			}
+			int x,y,z;
+			readWorldFile >> x;
+			readWorldFile >> y;
+			readWorldFile >> z;
+			loc = Point(x,y,z);
+
+			readWorldFile >> word;
+			if(word != "Color:") {
+				std::cout << "The world file is corrupt, world loading process is stopped" << std::endl;
+				break;
+			}
+			float r,g,b;
+			readWorldFile >> r;
+			readWorldFile >> g;
+			readWorldFile >> b;
+			col = Color(r,g,b);
+
+			readWorldFile >> word;
+			if(word != "Albedo:") {
+				std::cout << "The world file is corrupt, world loading process is stopped" << std::endl;
+				break;
+			}
+			readWorldFile >> albedo;
+
+			readWorldFile >> word;
+			if(word != "Intensity:") {
+				std::cout << "The world file is corrupt, world loading process is stopped" << std::endl;
+				break;
+			}
+			readWorldFile >> intensity;
+
+			readWorldFile >> word;
+			if(word != "Material:") {
+				std::cout << "The world file is corrupt, world loading process is stopped" << std::endl;
+				break;
+			}
+			readWorldFile >> mat;
+
+			readWorldFile >> word;
+			if(word != "Shape:") {
+				std::cout << "The world file is corrupt, world loading process is stopped" << std::endl;
+				break;
+			}
+			readWorldFile >> shape;
+
+			readWorldFile >> word;
+			if(word != "ObjectType:") {
+				std::cout << "The world file is corrupt, world loading process is stopped" << std::endl;
+				break;
+			}
+			readWorldFile >> type;
+
+			// Transfer block data to the device
+			cudaMemcpy(d_loc, &loc, sizeof(Point), cudaMemcpyHostToDevice);
+			cudaMemcpy(d_col, &col, sizeof(Color), cudaMemcpyHostToDevice);
+			cudaMemcpy(d_albedo, &albedo, sizeof(float), cudaMemcpyHostToDevice);
+			cudaMemcpy(d_intensity, &intensity, sizeof(float), cudaMemcpyHostToDevice);
+			cudaMemcpy(d_mat, &mat, sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy(d_shape, &shape, sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy(d_type, &type, sizeof(int), cudaMemcpyHostToDevice);
+
+			// Create the block in the world
+			LoadBlock<<<1,1>>>(scene, d_loc, d_col, d_albedo, d_intensity, d_mat, d_shape, d_type);
+		}
+
+	}
+	else std::cout << "Unable to open file " << worldName << std::endl;
+
+	// Close file and free the device pointers
+	readWorldFile.close();
+	cudaFree(d_type);
+	cudaFree(d_mat);
+	cudaFree(d_shape);
+	cudaFree(d_albedo);
+	cudaFree(d_intensity);
+	cudaFree(d_col);
+	cudaFree(d_loc);
+
+	std::cout << "Done" << std::endl;
+}
+__global__ void LoadBlock(Scene* scene, Point* loc, Color* col, float* albedo, float* intensity, int* mat, int* shape, int* type) {
+	Point* newLoc = new Point(*loc);
+	Color* newCol = new Color(*col);
+	float newAlbedo = *albedo;
+	float newIntensity = *intensity;
+	int newMat = *mat;
+	int newShape = *shape;
+	int newType = *type;
+
+	Object* newObject;
+	if(newType == OBJ_PRIMITIVE) {
+		Shape* shapeObj;
+		if(newShape == ST_CUBE)
+			shapeObj = new Box(*newLoc);
+		if(newShape == ST_SPHERE)
+			shapeObj = new Sphere(*newLoc);
+		Material* matObj;
+		if(newMat == MT_DIFFUSE)
+			matObj = new LambertMaterial(*newCol, newAlbedo);
+		if(newMat == MT_MIRROR)
+			matObj = new MirrorMaterial(*newCol, newAlbedo);
+		newObject = new Primitive(shapeObj, matObj, newLoc);
+	}
+
+	if(newType == OBJ_LIGHT) {
+		Shape* shapeObj;
+		if(newShape == ST_CUBE)
+			shapeObj = new Box(*newLoc);
+		if(newShape == ST_SPHERE)
+			shapeObj = new Sphere(*newLoc);
+		newObject = new AreaLight(shapeObj,*newCol,newIntensity,newLoc);
+	}
+	scene->AddObject(newObject);
+}
+
+__global__ void NumberOfBlocks(Scene* scene, int* nObjects) {
+	*nObjects = scene->GetNumberOfObjects();
 }
 
 void LaunchBuilderNextBuildType(Builder* builder) {

@@ -20,6 +20,7 @@ __device__ bool AreaLight::Intersect(const Ray& ray, float& t) const {
 	return shape->Intersect(ray, t);
 }
 
+// Returns the shape of the areaLight
 __device__ Shape* AreaLight::GetShape() const {
 	return shape;
 }
