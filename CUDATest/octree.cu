@@ -4,7 +4,7 @@
 #include "light.h"
 #include "object.h"
 #include <iostream>
-#include <cmath>
+#include "math.h"
 
 __device__ Node::Node() {
 }

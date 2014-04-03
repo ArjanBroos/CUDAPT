@@ -1,5 +1,5 @@
 #include "vector.h"
-#include <cmath>
+#include "math.h"
 #include "cuda_inc.h"
 
 // Initialize vector as (0, 0, 0)

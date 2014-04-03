@@ -24,7 +24,7 @@ public:
 	// Returns the factor between incoming and outgoing radiance along given rays
 	__device__ float		GetMultiplier(const Vector& in, const Vector& out, const Vector& normal) const;
 	// Returns the albedo of this material
-	__device__ float	GetAlbedo() const;
+	__device__ float		GetAlbedo() const;
 	// Returns this type of material
 	__device__ MaterialType	GetType() const;
 
