@@ -209,6 +209,13 @@ bool HandleEvents(Interface& interface, Builder* d_builder, Scene* scene, sf::Re
 				LaunchDecreaseDayLight(scene);
 				resetCamera(iteration, d_result, width, height, tileSize);
 			}
+			if (event.key.code == sf::Keyboard::F1) {
+				LaunchSaveBlocks(scene);
+			}
+			if (event.key.code == sf::Keyboard::F2) {
+				LaunchLoadBlocks(scene);
+				resetCamera(iteration, d_result, width, height, tileSize);
+			}
 		}
 		if(!freeze)
 			if (event.type == sf::Event::MouseButtonPressed) {

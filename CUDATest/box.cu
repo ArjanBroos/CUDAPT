@@ -77,3 +77,8 @@ __device__ Vector	Box::GetNormal(const Point& p) const
 
 	return Vector(.0f,.0f,.0f);
 }
+
+// Returns the type of this shape
+__device__ int Box::GetType() const {
+	return ST_CUBE;
+}

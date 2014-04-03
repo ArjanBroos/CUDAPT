@@ -1,0 +1,1152 @@
+NewObject
+Location: 2 0 6
+Color: 0 0 1
+Albedo: -1
+Intensity: 1.4
+Material: -1
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 6 0 3
+Color: 1 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 5 0 3
+Color: 1 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 5 0 4
+Color: 1 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 5 0 6
+Color: 0 1 1
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 7 0 2
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 10 0 2
+Color: 1 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 9 0 2
+Color: 1 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 12 0 0
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 13 0 2
+Color: 0 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 8 0 3
+Color: 1 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 8 0 4
+Color: 1 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 7 0 4
+Color: 1 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 8 0 5
+Color: 1 1 1
+Albedo: -1
+Intensity: 2.2
+Material: -1
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 14 0 3
+Color: 0 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 12 0 5
+Color: 0 0 1
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 0 6
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 1
+ObjectType: 1
+NewObject
+Location: 1 0 7
+Color: 0 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 1 0 8
+Color: 0 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 0 0 9
+Color: 0 0 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 4 0 7
+Color: 0 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 5 0 10
+Color: 0 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 2 0 11
+Color: 0 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 2 0 12
+Color: 0 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 1 0 14
+Color: 0 1 0
+Albedo: -1
+Intensity: 1.2
+Material: -1
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 3 0 11
+Color: 0 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 5 0 12
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 7 0 8
+Color: 1 1 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 10 0 8
+Color: 0 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 1
+ObjectType: 1
+NewObject
+Location: 7 0 11
+Color: 1 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 1
+ObjectType: 1
+NewObject
+Location: 9 0 14
+Color: 1 0 0
+Albedo: -1
+Intensity: 1
+Material: -1
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 11 0 11
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 0 14
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 1
+ObjectType: 1
+NewObject
+Location: 17 0 3
+Color: 1 0 1
+Albedo: -1
+Intensity: 2
+Material: -1
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 16 0 5
+Color: 0 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 17 0 5
+Color: 0 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 1 6
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 1
+ObjectType: 1
+NewObject
+Location: 19 0 6
+Color: 0 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 25 0 2
+Color: 0 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 23 0 3
+Color: 0 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 26 0 5
+Color: 0 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 15 0 9
+Color: 1 1 0
+Albedo: -1
+Intensity: 1.6
+Material: -1
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 20 0 10
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 1
+ObjectType: 1
+NewObject
+Location: 19 3 13
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 4 14
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 3 14
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 4 14
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 3 14
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 0 13
+Color: 0 1 1
+Albedo: -1
+Intensity: 1.8
+Material: -1
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 22 0 13
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 24 0 8
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 24 0 11
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 23 0 13
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 2 0 16
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 6 0 17
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 5 0 18
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 2 0 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 1 0 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 0 0 21
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 1 0 22
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 5 0 19
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 6 0 20
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 3 0 21
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 7 0 15
+Color: 0 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 1
+ObjectType: 1
+NewObject
+Location: 13 1 16
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 0 16
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 13 0 16
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 1 17
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 12 0 18
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 0 17
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 13 0 18
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 3 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 7 0 19
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 7 0 20
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 10 0 22
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 2 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 1 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 2 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 1 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 0 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 12 0 21
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 6 0 23
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 7 0 23
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 11 0 24
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 3 15
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 20 3 15
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 4 15
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 17 4 15
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 3 15
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 15 3 18
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 16 3 18
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 17 3 18
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 2 18
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 17 2 18
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 20 2 15
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 2 15
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 1 15
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 20 1 15
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 1 16
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 20 0 15
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 20 0 16
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 0 16
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 21 0 15
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 1 17
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 1 18
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 0 17
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 15 3 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 16 3 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 2 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 17 2 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 1 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 17 2 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 17 1 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 1 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 16 2 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 15 2 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 16 2 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 15 2 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 15 1 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 16 1 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 16 0 19
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 17 0 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 0 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 1 22
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 15 1 21
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 16 1 21
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 16 0 21
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 15 0 21
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 15 0 22
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 18 0 22
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 17 0 22
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 1 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 20 1 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 0 19
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 20 0 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 19 0 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 22 0 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 21 0 20
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 20 0 22
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 22 0 21
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 21 0 21
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 23 0 18
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 17 0 24
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 17 0 25
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 1
+Shape: 0
+ObjectType: 1

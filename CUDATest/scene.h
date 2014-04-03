@@ -31,6 +31,8 @@ public:
 	__device__ const Color GetDayLight() const;
 	__device__ bool	Intersect(const Ray& ray, IntRec& intRec) const;
 	__device__ bool	IntersectOctree(const Ray& ray, IntRec& intRec, bool& intersected) const;
+	__device__ int GetNumberOfObjects() const;
+	Node		octree;
 
 private:
 	unsigned	primCounter;
@@ -42,7 +44,5 @@ private:
 	unsigned	objectCounter;
 	Primitive**	planes;
 	Object**	objects;
-	int			nextId;
-	Node		octree;
 	Color		dayLight;
 };

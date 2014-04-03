@@ -6,6 +6,7 @@ enum ShapeType {
 	ST_START = 0,
 	ST_CUBE = ST_START,
 	ST_SPHERE,
+	ST_PLANE,
 	ST_END
 };
 
@@ -18,4 +19,7 @@ public:
 	
 	// Returns the normal of this shape at point p
 	__device__ virtual Vector	GetNormal(const Point& p) const = 0;
+
+	// Returns the type of this shape
+	__device__ virtual int GetType() const = 0;
 };

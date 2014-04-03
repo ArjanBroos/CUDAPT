@@ -49,3 +49,8 @@ __device__ bool Sphere::Intersect(const Ray& ray, float& t) const {
 __device__ Vector Sphere::GetNormal(const Point& p) const {
 	return Normalize(p - c);
 }
+
+// Returns the type of this shape
+__device__ int Sphere::GetType() const {
+	return ST_SPHERE;
+}

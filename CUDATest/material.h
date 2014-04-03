@@ -25,4 +25,9 @@ public:
 	__device__ virtual Vector	GetSample(const Vector& in, const Vector& normal, curandState* rng) const = 0;
 	// Returns the factor between incoming and outgoing radiance along given rays
 	__device__ virtual float	GetMultiplier(const Vector& in, const Vector& out, const Vector& normal) const = 0;
+	// Returns the albedo of this material
+	__device__ virtual float	GetAlbedo() const = 0;
+	// Returns the type of material
+	__device__ virtual int		GetType() const = 0;
+protected:
 };

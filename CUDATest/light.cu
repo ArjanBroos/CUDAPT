@@ -9,3 +9,7 @@ __device__ Light::Light(Point* loc) : Object(loc) {}
 __device__ Color Light::Le() const {
 	return i * c;
 }
+
+__device__ int Light::GetType() const {
+	return OBJ_LIGHT;
+}
