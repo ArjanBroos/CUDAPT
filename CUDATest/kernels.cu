@@ -130,9 +130,9 @@ void LaunchSaveBlocks(Scene* scene) {
 	cudaMalloc(&d_col, sizeof(Color));
 	cudaMalloc(&d_albedo, sizeof(float));
 	cudaMalloc(&d_intensity, sizeof(float));
-	cudaMalloc(&d_mat, sizeof(int));
-	cudaMalloc(&d_shape, sizeof(int));
-	cudaMalloc(&d_type, sizeof(int));
+	cudaMalloc(&d_mat, sizeof(MaterialType));
+	cudaMalloc(&d_shape, sizeof(ShapeType));
+	cudaMalloc(&d_type, sizeof(ObjectType));
 
 	// Query the number of objects we have to save
 	NumberOfBlocks<<<1,1>>>(scene,d_nBlocks);
@@ -184,16 +184,16 @@ void LaunchSaveBlocks(Scene* scene) {
 	std::cout << "Done" << std::endl; 
 }
 __global__ void InitSaveBlocks(Scene* scene, Node* nextNode) {
-	nextNode = scene->octree;
+	*nextNode = *scene->octree;
 }
 
 __global__ void SaveBlock(Scene* scene, Node* nextNode, Point* loc, Color* col, float* albedo, float* intensity, MaterialType* mat, ShapeType* shape, ObjectType* type) {
 	// Point to the correct next leaf node
-	nextNode = scene->octree->NextLeaf(nextNode);
+	*nextNode = *scene->octree->NextLeaf(nextNode);
 	const Object* obj = nextNode->object;
 
 	// Fill the variables with the block data
-	*loc = nextNode->bounds[0];
+	*loc = *obj->GetCornerPoint();
 	*type = obj->GetType();
 	if(obj->GetType() == OBJ_PRIMITIVE) {
 		*col = ((Primitive*) obj)->GetMaterial()->GetColor();
@@ -345,6 +345,15 @@ __global__ void LoadBlock(Scene* scene, Point loc, Color col, float albedo, floa
 		newObject = new AreaLight(shapeObj,col,intensity);
 	}
 	scene->AddObject(newObject);
+}
+
+int LaunchCountObjects(Scene* scene) {
+	int h_nBlocks, *d_nBlocks;
+	cudaMalloc(&d_nBlocks, sizeof(int));
+	// Query the number of objects we have to save
+	NumberOfBlocks<<<1,1>>>(scene,d_nBlocks);
+	cudaMemcpy(&h_nBlocks, d_nBlocks, sizeof(int), cudaMemcpyDeviceToHost);
+	return h_nBlocks;
 }
 
 __global__ void NumberOfBlocks(Scene* scene, int* nObjects) {

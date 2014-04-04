@@ -7,7 +7,7 @@
 #include "scene.h"
 #include "curand_kernel.h"
 #include "builder.h"
-#define	 MAX_DEPTH 8
+#define	 MAX_DEPTH 6
 
 void LaunchInitRNG(curandState* state, unsigned long seed, unsigned width, unsigned height, unsigned tileSize);
 __global__ void InitRNG(curandState* state, unsigned long seed, unsigned width);
@@ -28,6 +28,7 @@ __global__ void RemoveBlock(const Camera* cam, Scene* scene);
 void LaunchSaveBlocks(Scene* scene);
 __global__ void SaveBlock(Scene* scene, Node* nextNode, Point* loc, Color* col, float* albedo, float* intensity, MaterialType* mat, ShapeType* shape, ObjectType* type);
 __global__ void InitSaveBlocks(Scene* scene, Node* nextNode);
+int LaunchCountObjects(Scene* scene);
 __global__ void NumberOfBlocks(Scene* scene, int* nObjects);
 
 void LaunchLoadBlocks(Scene* scene);

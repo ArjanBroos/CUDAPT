@@ -24,7 +24,7 @@ sf::Vector2i midScreen;
 int main() {
 	std::cout << "CUDA path tracing tests" << std::endl;
 
-	const unsigned WIDTH = 640;
+	const unsigned WIDTH = 854;
 	const unsigned HEIGHT = 480;
 	const unsigned NR_PIXELS = WIDTH * HEIGHT;
 	const unsigned TILE_SIZE = 8;
@@ -215,6 +215,9 @@ bool HandleEvents(Interface& interface, Builder* d_builder, Scene* scene, sf::Re
 			if (event.key.code == sf::Keyboard::F2) {
 				LaunchLoadBlocks(scene);
 				resetCamera(iteration, d_result, width, height, tileSize);
+			}
+			if (event.key.code == sf::Keyboard::F12) {
+				std::cout << LaunchCountObjects(scene) << std::endl;
 			}
 		}
 		if(!freeze)

@@ -7,7 +7,7 @@ __device__ Scene::Scene() : primCounter(0), lightCounter(0), objectCounter(0), p
 	lights = new Light*[MAX_LIGHTS];
 	planes = new Primitive*[MAX_PLANES];
 	octree = new Node(Point(0,0,0), Point(size-1,size-1,size-1));
-	dayLight = Color(.1f, .1f, .1f);
+	dayLight = Color(1.f, 1.f, 1.f);
 }
 
 __device__ Scene::~Scene() {
