@@ -26,6 +26,14 @@ __global__ void InitRNG(curandState* state, unsigned long seed, unsigned width) 
 	curand_init(seed - i*x, 0, 0, &state[i]);
 }
 
+void LaunchInitDRNG(DRNG** drng, float* rv, unsigned nrv, unsigned width, unsigned height) {
+	InitDRNG<<<1,1>>>(drng, rv, nrv, width, height);
+}
+
+__global__ void InitDRNG(DRNG** drng, float* rv, unsigned nrv, unsigned width, unsigned height) {
+	*drng = new DRNG(rv, width, height, nrv);
+}
+
 void LaunchInitScene(Scene** pScene) {
 	InitScene<<<1,1>>>(pScene);
 }
@@ -437,13 +445,13 @@ __global__ void InitResult(Color* result, unsigned width) {
 	result[i] = Color();
 }
 
-void LaunchTraceRays(const Camera* cam, const Scene* scene, Color* result, curandState* rng, unsigned width, unsigned height, unsigned tileSize) {
+void LaunchTraceRays(const Camera* cam, const Scene* scene, Color* result, DRNG* rng, unsigned width, unsigned height, unsigned tileSize) {
 	dim3 grid(width / tileSize, height / tileSize);
 	dim3 block(tileSize, tileSize);
 	TraceRays<<<grid, block>>>(cam, scene, result, rng, width);
 }
 
-__global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, curandState* rng, unsigned width) {
+__global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, DRNG* rng, unsigned width) {
 	const unsigned x = blockIdx.x * blockDim.x + threadIdx.x;
 	const unsigned y = blockIdx.y * blockDim.y + threadIdx.y;
 	const unsigned i = y * width + x;
@@ -481,7 +489,7 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 		const Vector	n = shape->GetNormal(p);
 
 		//const Vector in = ray.d;
-		const Vector out = mat->GetSample(ray.d, n, &rng[i]);
+		const Vector out = mat->GetSample(ray.d, n, rng, x, y);
 		if (out == ray.d) {
 			black = Color();
 		}
@@ -492,7 +500,7 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 		color *= multiplier;
 
 		// Russian roulette
-		if (curand_uniform(&rng[i]) > rr) {
+		if (rng->Next(x, y) > rr) {
 			color = black;
 			break;
 		}

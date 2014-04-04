@@ -20,7 +20,7 @@ public:
 	// Probability Density Function
 	__device__ float		GetPDF(const Vector& in, const Vector& out, const Vector& normal) const;
 	// Returns a sample out direction, given an in direction and a normal
-	__device__ Vector		GetSample(const Vector& in, const Vector& normal, curandState* rng) const;
+	__device__ Vector		GetSample(const Vector& in, const Vector& normal, DRNG* rng, unsigned x, unsigned y) const;
 	// Returns the factor between incoming and outgoing radiance along given rays
 	__device__ float		GetMultiplier(const Vector& in, const Vector& out, const Vector& normal) const;
 	// Returns the albedo of this material

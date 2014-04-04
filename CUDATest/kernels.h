@@ -7,18 +7,23 @@
 #include "scene.h"
 #include "curand_kernel.h"
 #include "builder.h"
+#include "drng.h"
 #define	 MAX_DEPTH 6
 
 void LaunchInitRNG(curandState* state, unsigned long seed, unsigned width, unsigned height, unsigned tileSize);
 __global__ void InitRNG(curandState* state, unsigned long seed, unsigned width);
+
+void LaunchInitDRNG(DRNG** drng, float* rv, unsigned nrv, unsigned width, unsigned height);
+__global__ void InitDRNG(DRNG** drng, float* rv, unsigned nrv, unsigned width, unsigned height);
+
 void LaunchInitScene(Scene** scene);
 __global__ void InitScene(Scene** scene);
 void LaunchInitBuilder(Builder** builder);
 __global__ void InitBuilder(Builder** builder);
 void LaunchInitResult(Color* result, unsigned width, unsigned height, unsigned tileSize);
 __global__ void InitResult(Color* result, unsigned width);
-void LaunchTraceRays(const Camera* cam, const Scene* scene, Color* result, curandState* rng, unsigned width, unsigned height, unsigned tileSize);
-__global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, curandState* rng, unsigned width);
+void LaunchTraceRays(const Camera* cam, const Scene* scene, Color* result, DRNG* rng, unsigned width, unsigned height, unsigned tileSize);
+__global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, DRNG* rng, unsigned width);
 
 void LaunchAddBlock(const Camera* cam, Scene* scene, Builder* builder);
 __global__ void AddBlock(const Camera* cam, Scene* scene, Builder* builder);

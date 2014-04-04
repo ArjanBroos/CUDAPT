@@ -91,6 +91,12 @@
     <Filter Include="Header Files\interface">
       <UniqueIdentifier>{73979f07-cc3a-478a-a064-ed91721e8afa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\rng">
+      <UniqueIdentifier>{26cd74b4-9efd-4e35-aacc-e61474cd1a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\rng">
+      <UniqueIdentifier>{f520f176-d95a-4ff2-b51b-ea68cf229bb1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="camera.cu">
@@ -156,11 +162,14 @@
     <CudaCompile Include="colorpicker.cu">
       <Filter>Source Files\builder</Filter>
     </CudaCompile>
+    <CudaCompile Include="glassmaterial.cu">
+      <Filter>Source Files\materials</Filter>
+    </CudaCompile>
     <CudaCompile Include="object.cu">
       <Filter>Source Files\octree</Filter>
     </CudaCompile>
-    <CudaCompile Include="glassmaterial.cu">
-      <Filter>Source Files\materials</Filter>
+    <CudaCompile Include="drng.cu">
+      <Filter>Source Files\rng</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
@@ -245,14 +254,20 @@
     <ClInclude Include="materialpicker.h">
       <Filter>Header Files\builder</Filter>
     </ClInclude>
-    <ClInclude Include="object.h">
-      <Filter>Header Files\octree</Filter>
-    </ClInclude>
     <ClInclude Include="interface.h">
       <Filter>Header Files\interface</Filter>
     </ClInclude>
     <ClInclude Include="glassmaterial.h">
       <Filter>Header Files\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>Header Files\octree</Filter>
+    </ClInclude>
+    <ClInclude Include="rng.h">
+      <Filter>Header Files\rng</Filter>
+    </ClInclude>
+    <ClInclude Include="drng.h">
+      <Filter>Header Files\rng</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -261,6 +276,9 @@
     </ClCompile>
     <ClCompile Include="interface.cpp">
       <Filter>Source Files\interface</Filter>
+    </ClCompile>
+    <ClCompile Include="rng.cpp">
+      <Filter>Source Files\rng</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

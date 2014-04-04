@@ -26,7 +26,7 @@ __device__ float GlassMaterial::GetPDF(const Vector& in, const Vector& out, cons
 }
 
 // Cosine weighted sampling on the unit hemisphere
-__device__ Vector GlassMaterial::GetSample(const Vector& in, const Vector& normal, curandState* rng) const {
+__device__ Vector GlassMaterial::GetSample(const Vector& in, const Vector& normal, DRNG* rng, unsigned x, unsigned y) const {
 	return Transmit(in, normal);
 }
 

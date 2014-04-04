@@ -45,12 +45,12 @@ __device__ Ray	Camera::GetCenterRay() const {
 }
 
 // Returns a ray through pixel (x, y), randomly jittered around its center
-__device__ Ray Camera::GetJitteredRay(unsigned x, unsigned y, curandState* rng) const {
+__device__ Ray Camera::GetJitteredRay(unsigned x, unsigned y, DRNG* rng) const {
 	const float pxmin = -1.f + (float)x * dx;		// Pixel x mininum
 	const float pymin = -1.f + (float)y * dy;		// Pixel y minimum
 
-	const float px = pxmin + curand_uniform(rng) * dx;
-	const float py = pymin + curand_uniform(rng) * dy;
+	const float px = pxmin + rng->Next(x, y) * dx;
+	const float py = pymin + rng->Next(x, y) * dy;
 
 	const Vector vx = px * v;
 	const Vector vy = py * u;

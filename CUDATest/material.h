@@ -3,6 +3,7 @@
 #include "color.h"
 #include "geometry.h"
 #include "curand_kernel.h"
+#include "drng.h"
 
 enum MaterialType {
 	MT_START = 0,
@@ -22,7 +23,7 @@ public:
 	// Probability Density Function
 	__device__ virtual float		GetPDF(const Vector& in, const Vector& out, const Vector& normal) const = 0;
 	// Returns a sample out direction, given an in direction and a normal
-	__device__ virtual Vector		GetSample(const Vector& in, const Vector& normal, curandState* rng) const = 0;
+	__device__ virtual Vector		GetSample(const Vector& in, const Vector& normal, DRNG* rng, unsigned x, unsigned y) const = 0;
 	// Returns the factor between incoming and outgoing radiance along given rays
 	__device__ virtual float		GetMultiplier(const Vector& in, const Vector& out, const Vector& normal) const = 0;
 	// Returns the albedo of this material
