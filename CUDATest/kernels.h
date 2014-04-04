@@ -9,10 +9,13 @@
 #include "builder.h"
 #define	 MAX_DEPTH 6
 
+//void LaunchCreateRoomScene2(Scene* scene, curandState* rng);
+__device__ void CreateRoomScene2(Scene* scene, curandState* rng);
+__device__ void PreAddBlock(Point loc, Scene* scene, int type);
 void LaunchInitRNG(curandState* state, unsigned long seed, unsigned width, unsigned height, unsigned tileSize);
 __global__ void InitRNG(curandState* state, unsigned long seed, unsigned width);
-void LaunchInitScene(Scene** scene);
-__global__ void InitScene(Scene** scene);
+void LaunchInitScene(Scene** scene, curandState* rng);
+__global__ void InitScene(Scene** scene, curandState* rng);
 void LaunchInitBuilder(Builder** builder);
 __global__ void InitBuilder(Builder** builder);
 void LaunchInitResult(Color* result, unsigned width, unsigned height, unsigned tileSize);

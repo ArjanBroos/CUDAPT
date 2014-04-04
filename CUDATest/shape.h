@@ -7,7 +7,7 @@ enum ShapeType {
 	ST_CUBE = ST_START,
 	ST_SPHERE,
 	ST_PLANE,
-	ST_END
+	ST_END = ST_PLANE,
 };
 
 // The abstract base class for all shapes
