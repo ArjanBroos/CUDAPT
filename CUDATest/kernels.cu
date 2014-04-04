@@ -13,6 +13,45 @@
 #include <string>
 #include <fstream>
 
+//void LaunchCreateRoomScene2(Scene* scene, curandState* rng) {
+//	CreateRoomScene2<<<1,1>>>(scene, rng);
+//}
+
+__device__ void CreateRoomScene2(Scene* scene, curandState* rng) {
+	int size = 100;
+	for(int i = 0; i < size; i++) {
+		for(int j = 0; j < size; j++) {
+			int x = i;
+			int y = curand_uniform(rng) * 5;
+			int z = j;
+			if(curand_uniform(rng) > .1f)
+				PreAddBlock(Point(x,y,z), scene, 2);
+			else
+				PreAddBlock(Point(x,y,z), scene, 1);
+		}
+	}
+}
+
+__device__ void PreAddBlock(Point loc, Scene* scene, int type) {
+		if(type == 0) {
+			Box*				boxShape	= new Box(loc);
+			LambertMaterial*	boxMat		= new LambertMaterial(Color(1.f, 0.f, 0.f), 1.f);
+			Primitive*			boxPrim		= new Primitive(boxShape, boxMat);
+			scene->AddObject(boxPrim);
+		}
+		if(type == 1) {
+			Box*				boxShape	= new Box(loc);
+			AreaLight*			boxLight	= new AreaLight(boxShape,Color(1.f,1.f,1.f),10.f);
+			scene->AddObject(boxLight);
+		}
+		if(type == 2) {
+			Box*				boxShape	= new Box(loc);
+			MirrorMaterial*		boxMat		= new MirrorMaterial(Color(1.f, 1.f, 1.f), .9f);
+			Primitive*			boxPrim		= new Primitive(boxShape, boxMat);
+			scene->AddObject(boxPrim);
+		}
+	}
+
 void LaunchInitRNG(curandState* state, unsigned long seed, unsigned width, unsigned height, unsigned tileSize) {
 	dim3 grid(width / tileSize, height / tileSize);
 	dim3 block(tileSize, tileSize);
@@ -34,11 +73,11 @@ __global__ void InitDRNG(DRNG** drng, float* rv, unsigned nrv, unsigned width, u
 	*drng = new DRNG(rv, width, height, nrv);
 }
 
-void LaunchInitScene(Scene** pScene) {
-	InitScene<<<1,1>>>(pScene);
+void LaunchInitScene(Scene** pScene, curandState* rng) {
+	InitScene<<<1,1>>>(pScene, rng);
 }
 
-__global__ void InitScene(Scene** pScene) {
+__global__ void InitScene(Scene** pScene, curandState* rng) {
 	*pScene = new Scene();
 	Scene* scene = *pScene;
 
@@ -46,6 +85,7 @@ __global__ void InitScene(Scene** pScene) {
 	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 1.f), .9f);
 	Primitive*			plane			= new Primitive(planeShape, planeMat);
 	scene->AddPlane(plane);
+	//CreateRoomScene2(scene, rng);
 }
 
 void LaunchInitBuilder(Builder** builder) {
@@ -311,6 +351,7 @@ void LaunchLoadBlocks(Scene* scene) {
 			type = (ObjectType) i;
 
 			// Create the block in the world
+			std::cout << "Test" << std::endl;
 			LoadBlock<<<1,1>>>(scene, loc, col, albedo, intensity, mat, shape, type);
 		}
 

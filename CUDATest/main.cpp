@@ -20,20 +20,21 @@ bool HandleEvents(Interface& interface, Builder* d_builder, Scene* pScene, sf::R
 void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 void resetCamera(unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 
-bool freeze = false;
+bool freeze = true;
 sf::Vector2i midScreen;
+clock_t begin, end;
 
 int main() {
 	std::cout << "CUDA path tracing tests" << std::endl;
 
-	const unsigned WIDTH = 854;
-	const unsigned HEIGHT = 480;
+	const unsigned WIDTH = 1280;
+	const unsigned HEIGHT = 720;
 	const unsigned NR_PIXELS = WIDTH * HEIGHT;
 	const unsigned TILE_SIZE = 8;
 
 	std::cout << "Allocating memory..." << std::endl;
 
-	Camera* cam = new Camera(Point(2.f, 5.f, 10.f), Normalize(Vector(1.f, -.7f, -.7f)), Vector(0.f, 1.f, 0.f), WIDTH, HEIGHT, 60.f);
+	Camera* cam = new Camera(Point(50.f, 50.f, -10.f), Normalize(Vector(0.f, -1.f, 1.f)), Vector(0.f, 1.f, 0.f), WIDTH, HEIGHT, 60.f);
 	Color* result = new Color[NR_PIXELS];
 	unsigned char* pixelData = new unsigned char[NR_PIXELS * 4];
 
@@ -56,7 +57,7 @@ int main() {
 	// Allocate memory for device pointer to device pointer to scene
 	Scene** d_pScene; cudaMalloc(&d_pScene, sizeof(Scene*));
 	// This will allocate the scene on the device, d_pScene will now point to the device pointer we need
-	LaunchInitScene(d_pScene);
+	LaunchInitScene(d_pScene, d_rng);
 	// Copy the device pointer from d_pScene to our host pointer
 	cudaMemcpy(pScene, d_pScene, sizeof(Scene*), cudaMemcpyDeviceToHost);
 	// We can now use *pScene on the host as a pointer to the Scene allocated on the device
@@ -116,10 +117,15 @@ int main() {
 	sf::Image image;
 	sf::Texture texture;
 	sf::Sprite sprite;
-
 	bool running = true;
 	unsigned iteration = 1;
+	clock_t begin = clock();
 	while (HandleEvents(interface, *pBuilder, *pScene, window, cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE)) {
+		if(iteration == 301) {
+			end = clock();
+			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+			std::cout << "Time for 300 iterations was: " << elapsed_secs << "s" << std::endl;
+		}
 		if(!freeze) {
 			pollKeyboard(cam, d_cam, iteration, d_result, WIDTH, HEIGHT, TILE_SIZE);
 			sf::Vector2i newMousePos = sf::Mouse::getPosition();
@@ -174,6 +180,7 @@ void SetTitle(sf::RenderWindow& window, unsigned iteration) {
 
 void resetCamera(unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize) {
 	iteration = 1;
+	begin = clock();
 	LaunchInitResult(d_result, width, height, tileSize);
 }
 
@@ -254,7 +261,7 @@ bool HandleEvents(Interface& interface, Builder* d_builder, Scene* scene, sf::Re
 				LaunchLoadBlocks(scene);
 				resetCamera(iteration, d_result, width, height, tileSize);
 			}
-			if (event.key.code == sf::Keyboard::F12) {
+			if (event.key.code == sf::Keyboard::F5) {
 				std::cout << LaunchCountObjects(scene) << std::endl;
 			}
 		}

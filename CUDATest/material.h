@@ -10,7 +10,7 @@ enum MaterialType {
 	MT_DIFFUSE = MT_START,
 	MT_MIRROR,
 	MT_GLASS,
-	MT_END,
+	MT_END = MT_GLASS,
 };
 
 // Represents the base material
