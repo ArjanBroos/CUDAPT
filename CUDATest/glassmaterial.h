@@ -22,7 +22,7 @@ public:
 	// Probability Density Function for Cosine-weighted distribution sampling
 	__device__ float		GetPDF(const Vector& in, const Vector& out, const Vector& normal) const;
 	// Returns a sample according to a Cosine-weighted distribution
-	__device__ Vector		GetSample(const Vector& in, const Vector& normal, DRNG* rng, unsigned x, unsigned y) const;
+	__device__ Vector		GetSample(const Vector& in, const Vector& normal, curandState* rng) const;
 	// Returns the factor between incoming and outgoing radiance along given rays
 	__device__ float		GetMultiplier(const Vector& in, const Vector& out, const Vector& normal) const;
 	__device__ float		GetAlbedo() const;

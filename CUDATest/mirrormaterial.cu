@@ -24,7 +24,7 @@ __device__ float MirrorMaterial::GetPDF(const Vector& in, const Vector& out, con
 }
 
 // Returns a sample out direction, given an in direction and a normal
-__device__ Vector MirrorMaterial::GetSample(const Vector& in, const Vector& normal, DRNG* rng, unsigned x, unsigned y) const {
+__device__ Vector MirrorMaterial::GetSample(const Vector& in, const Vector& normal, curandState* rng) const {
 	return Reflect(in, normal);
 }
 

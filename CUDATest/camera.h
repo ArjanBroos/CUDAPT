@@ -3,7 +3,6 @@
 #include "geometry.h"
 #include "ray.h"
 #include "cuda_inc.h"
-#include "drng.h"
 #include <curand_kernel.h>
 
 // Represents a pinhole camera
@@ -18,7 +17,7 @@ public:
 	// Returns a ray from the viewpoint through the center of pixel (x, y)
 	__device__ Ray			GetRay(unsigned x, unsigned y) const;
 	// Returns a ray through pixel (x, y), randomly jittered around its center
-	__device__ Ray			GetJitteredRay(unsigned x, unsigned y, DRNG* rng) const;
+	__device__ Ray			GetJitteredRay(unsigned x, unsigned y, curandState* rng) const;
 	// Returns a ray from the viewpoint through the center of the film
 	__device__ Ray			GetCenterRay() const;
 

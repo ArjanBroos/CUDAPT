@@ -12,8 +12,6 @@
 #include "geometry.h"
 #include "sphere.h"
 #include "interface.h"
-#include "rng.h"
-#include "drng.h"
 
 void SetTitle(sf::RenderWindow& window, unsigned iteration);
 bool HandleEvents(Interface& interface, Builder* d_builder, Scene* pScene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
@@ -27,8 +25,8 @@ clock_t begin, end;
 int main() {
 	std::cout << "CUDA path tracing tests" << std::endl;
 
-	const unsigned WIDTH = 1280;
-	const unsigned HEIGHT = 720;
+	const unsigned WIDTH = 640;
+	const unsigned HEIGHT = 480;
 	const unsigned NR_PIXELS = WIDTH * HEIGHT;
 	const unsigned TILE_SIZE = 8;
 
@@ -37,20 +35,13 @@ int main() {
 	Camera* cam = new Camera(Point(50.f, 50.f, -10.f), Normalize(Vector(0.f, -1.f, 1.f)), Vector(0.f, 1.f, 0.f), WIDTH, HEIGHT, 60.f);
 	Color* result = new Color[NR_PIXELS];
 	unsigned char* pixelData = new unsigned char[NR_PIXELS * 4];
-
-
 	Camera* d_cam; cudaMalloc(&d_cam, sizeof(Camera));
-	std::cout << "WHAAAAAAAAAAAAAT" << std::endl << std::flush;
 	Color* d_result; cudaMalloc(&d_result, NR_PIXELS * sizeof(Color));
 	unsigned char* d_pixelData; cudaMalloc(&d_pixelData, NR_PIXELS * 4 * sizeof(unsigned char));
 	curandState* d_rng; cudaMalloc(&d_rng, NR_PIXELS * sizeof(curandState));
 
-	std::cout << "LAUNCHING INITRNG" << std::endl << std::flush;
 	LaunchInitRNG(d_rng, (unsigned long)time(NULL), WIDTH, HEIGHT, TILE_SIZE);
 	LaunchInitResult(d_result, WIDTH, HEIGHT, TILE_SIZE);
-	std::cout << "INITED" << std::endl << std::flush;
-
-	std::cout << "Launching Init of Scene" << std::endl << std::flush;
 
 	// This will be a pointer on the host, that points to a device pointer to a scene
 	Scene** pScene = new Scene*;
@@ -62,42 +53,13 @@ int main() {
 	cudaMemcpy(pScene, d_pScene, sizeof(Scene*), cudaMemcpyDeviceToHost);
 	// We can now use *pScene on the host as a pointer to the Scene allocated on the device
 
-	std::cout << "Scene inited" << std::endl << std::flush;
-
-	std::cout << "Starting builder init" << std::endl << std::flush;
-
 	Builder** pBuilder = new Builder*;
 	Builder** d_pBuilder; cudaMalloc(&d_pBuilder, sizeof(Builder*));
 	LaunchInitBuilder(d_pBuilder);
 	cudaMemcpy(pBuilder, d_pBuilder, sizeof(Builder*), cudaMemcpyDeviceToHost);
 
-	std::cout << "Done with builder init" << std::endl << std::flush;
-
 
 	cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-
-	std::cout << "Generating random numbers..." << std::endl << std::flush;
-	
-	// Generate random values
-	const unsigned NRV = 50000000; // Number of generated random values, 5M ~ 19MB of storage
-	RNG rng(NRV);
-	rng.GenerateRandomValues();
-
-	// Copy them to device
-	float* rv = rng.GetRandomValues();
-	float* d_rv;
-	std::cout << "d_rv will be malloced!" << std::endl << std::flush;
-	cudaMalloc(&d_rv, NRV * sizeof(float));
-	std::cout << "d_rv has been malloced! will be memcpyd!" << std::endl << std::flush;
-	cudaMemcpy(d_rv, rv, NRV * sizeof(float), cudaMemcpyHostToDevice);
-	std::cout << "d_rv DONE" << std::endl << std::flush;
-
-	// Set up device random number generator
-	DRNG** drng = new DRNG*;
-	DRNG** d_drng; cudaMalloc(&d_drng, sizeof(DRNG*));
-	LaunchInitDRNG(d_drng, d_rv, NRV, WIDTH, HEIGHT);
-	cudaMemcpy(drng, d_drng, sizeof(DRNG*), cudaMemcpyDeviceToHost);
-	
 
 	std::cout << "Done" << std::endl;
 
@@ -143,7 +105,7 @@ int main() {
 		midScreen.x = window.getPosition().x + window.getSize().x / 2;
 		midScreen.y = window.getPosition().y + window.getSize().y / 2;
 
-		LaunchTraceRays(d_cam, *pScene, d_result, *drng, WIDTH, HEIGHT, TILE_SIZE);
+		LaunchTraceRays(d_cam, *pScene, d_result, d_rng, WIDTH, HEIGHT, TILE_SIZE);
 		LaunchConvert(d_result, d_pixelData, iteration, WIDTH, HEIGHT, TILE_SIZE);
 		cudaMemcpy(pixelData, d_pixelData, NR_PIXELS * 4 * sizeof(unsigned char), cudaMemcpyDeviceToHost);
 

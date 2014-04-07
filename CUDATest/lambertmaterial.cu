@@ -25,21 +25,21 @@ __device__ float LambertMaterial::GetPDF(const Vector& in, const Vector& out, co
 }
 
 // Cosine weighted sampling on the unit hemisphere
-__device__ Vector LambertMaterial::GetSample(const Vector& in, const Vector& normal, DRNG* rng, unsigned x, unsigned y) const {
+__device__ Vector LambertMaterial::GetSample(const Vector& in, const Vector& normal, curandState* rng) const {
 	const Vector u = Normalize(Vector(normal.y, normal.z - normal.x, -normal.y)); // A vector perpendicular to the normal
 	const Vector v = Cross(u, normal); // Another vector perpendicular to both u and the normal
 
-	const float u1 = rng->Next(x, y);
-	const float u2 = rng->Next(x, y);
+	const float u1 = curand_uniform(rng);
+	const float u2 = curand_uniform(rng);
 
 	const float r = sqrtf(u1);
 	const float phi = u2 * 2.f * (float)M_PI;
 
-	const float vx = r * cosf(phi);
-	const float vy = sqrtf(fmaxf(0.f, 1.f - u1));
-	const float vz = r * sinf(phi);
+	const float x = r * cosf(phi);
+	const float y = sqrtf(fmaxf(0.f, 1.f - u1));
+	const float z = r * sinf(phi);
 
-	return u * vx + normal * vy + v * vz;
+	return u * x + normal * y + v * z;
 }
 
 // Returns the factor between incoming and outgoing radiance along given rays
