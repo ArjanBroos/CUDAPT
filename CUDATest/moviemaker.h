@@ -9,6 +9,9 @@
 #include <vector>
 
 struct MMControlPoint {
+	MMControlPoint() : position(Point(0.f, 0.f, 0.f)), direction(Vector(0.f, 0.f, -1.f)) {}
+	MMControlPoint(Point p, Vector d) : position(p), direction(d) {}
+
 	Point	position;
 	Vector	direction;
 };
@@ -17,7 +20,7 @@ struct MMControlPoint {
 class MovieMaker {
 public:
 	// Initialize a movie with given scene (already allocated), frames per second, pixel width, pixel height and samples per pixel
-	MovieMaker(Scene* d_scene, float fps, unsigned width, unsigned height, unsigned spp);
+	MovieMaker(Scene* d_scene, curandState* d_rng, float fps, unsigned width, unsigned height, unsigned spp);
 	~MovieMaker();
 
 	// Add a control point, which is a point and direction for the camera in the movie

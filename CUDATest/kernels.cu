@@ -77,7 +77,10 @@ __global__ void InitScene(Scene** pScene, curandState* rng) {
 	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 1.f), .9f);
 	Primitive*			plane			= new Primitive(planeShape, planeMat);
 	scene->AddPlane(plane);
-	//CreateRoomScene2(scene, rng);
+
+	PreAddBlock(Point(0.f, 0.f, 0.f), scene, 0);
+	PreAddBlock(Point(0.f, 1.f, 0.f), scene, 0);
+	PreAddBlock(Point(1.f, 0.f, 0.f), scene, 0);
 }
 
 void LaunchInitBuilder(Builder** builder) {

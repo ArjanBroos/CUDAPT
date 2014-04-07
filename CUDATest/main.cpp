@@ -12,6 +12,7 @@
 #include "geometry.h"
 #include "sphere.h"
 #include "interface.h"
+#include "moviemaker.h"
 
 void SetTitle(sf::RenderWindow& window, unsigned iteration);
 bool HandleEvents(Interface& interface, Builder* d_builder, Scene* pScene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
@@ -23,6 +24,40 @@ sf::Vector2i midScreen;
 clock_t begin, end;
 
 int main() {
+	const unsigned		WIDTH = 800;
+	const unsigned		HEIGHT = 600;
+	const unsigned		TILE_SIZE = 8;
+	const unsigned		SPP = 100;
+	const unsigned		NR_PIXELS = WIDTH * HEIGHT;
+	const float			FPS = 30.f;
+	const std::string	name = "testmovie";
+
+	std::cout << "Initializing..." << std::endl;
+
+	// Initialize random number generator
+	curandState* d_rng;
+	cudaMalloc(&d_rng, NR_PIXELS * sizeof(curandState));
+	LaunchInitRNG(d_rng, (unsigned long)time(NULL), WIDTH, HEIGHT, TILE_SIZE);
+
+	// Initialize scene
+	Scene** pScene = new Scene*;
+	Scene** d_pScene; cudaMalloc(&d_pScene, sizeof(Scene*));
+	LaunchInitScene(d_pScene, d_rng);
+	cudaMemcpy(pScene, d_pScene, sizeof(Scene*), cudaMemcpyDeviceToHost);
+
+	MovieMaker movie(*pScene, d_rng, FPS, WIDTH, HEIGHT, SPP);
+	// Set up camera path
+	movie.AddControlPoint(MMControlPoint(Point(0.f, 10.f, 10.f), Normalize(Vector(0.f, -1.f, -1.f))));
+	movie.AddInterpolationTime(1.f);
+	movie.AddControlPoint(MMControlPoint(Point(10.f, 5.f, 5.f), Normalize(Vector(-1.f, -.5f, -.5f))));
+	movie.AddInterpolationTime(.5f);
+	movie.AddControlPoint(MMControlPoint(Point(5.f, 10.f, 10.f), Normalize(Vector(0.f, 0.f, -1.f))));
+
+	std::cout << "Rendering movie \"" << name << "\"..." << std::endl;
+	movie.RenderMovie(name);
+}
+
+int main2() {
 	std::cout << "CUDA path tracing tests" << std::endl;
 
 	const unsigned WIDTH = 640;
