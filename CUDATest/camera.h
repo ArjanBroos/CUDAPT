@@ -31,9 +31,10 @@ public:
 	__host__ __device__ void CalcUV();
 	__host__ __device__ void Reposition();
 
-private:
 	Point		pos;	// Position
 	Vector		dir;	// Direction camera is looking at
+
+private:
 	Vector		u;		// Up direction of film plane
 	Vector		v;		// Right direction of film plane
 	Vector		worldUp;

@@ -29,3 +29,7 @@ public:
 	__host__ __device__ bool operator>(const Point &p) const;
 	__host__ __device__ bool operator<(const Point &p) const;
 };
+
+inline Point operator*(float s, const Point& p) {
+	return Point(s * p.x, s * p.y, s* p.z);
+}
