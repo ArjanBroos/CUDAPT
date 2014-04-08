@@ -40,8 +40,12 @@ void MovieMaker::RenderMovie(const std::string& name) {
 
 	std::cout << std::endl;
 	for (unsigned i = 0; i < frames.size(); i++) {
-		std::cout << "\rProgress: " << ((float)i / (float)frames.size()) * 100.f << "%";
+		std::cout << "\rProgress: " << ((float)i / (float)frames.size()) * 100.f << "%            ";
 		RenderFrame(frames[i], name, i);
+		cudaError_t error = cudaGetLastError();
+		if (error != cudaSuccess) {
+			std::cout << cudaGetErrorString(error) << std::endl;
+		}
 	}
 }
 

@@ -14,7 +14,7 @@
 #include "interface.h"
 #include "moviemaker.h"
 
-void SetTitle(sf::RenderWindow& window, unsigned iteration);
+void SetTitle(sf::RenderWindow& window, Camera* cam, unsigned iteration);
 bool HandleEvents(Interface& interface, Builder* d_builder, Scene* pScene, sf::RenderWindow& window, Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 void pollKeyboard(Camera* cam, Camera* d_cam, unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
 void resetCamera(unsigned& iteration, Color* d_result, unsigned width, unsigned height, unsigned tileSize);
@@ -24,10 +24,10 @@ sf::Vector2i midScreen;
 clock_t begin, end;
 
 int main() {
-	const unsigned		WIDTH = 800;
-	const unsigned		HEIGHT = 600;
+	const unsigned		WIDTH = 1280;
+	const unsigned		HEIGHT = 720;
 	const unsigned		TILE_SIZE = 8;
-	const unsigned		SPP = 100;
+	const unsigned		SPP = 150;
 	const unsigned		NR_PIXELS = WIDTH * HEIGHT;
 	const float			FPS = 30.f;
 	const std::string	name = "testmovie";
@@ -45,16 +45,31 @@ int main() {
 	LaunchInitScene(d_pScene, d_rng);
 	cudaMemcpy(pScene, d_pScene, sizeof(Scene*), cudaMemcpyDeviceToHost);
 
+	// Load world
+	LaunchLoadBlocks(*pScene);
+
 	MovieMaker movie(*pScene, d_rng, FPS, WIDTH, HEIGHT, SPP);
 	// Set up camera path
-	movie.AddControlPoint(MMControlPoint(Point(0.f, 10.f, 10.f), Normalize(Vector(0.f, -1.f, -1.f))));
+	movie.AddControlPoint(MMControlPoint(Point(43.f, 23.f, 11.f), Normalize(Vector(-0.70f, -0.63f, 0.33f))));
 	movie.AddInterpolationTime(1.f);
-	movie.AddControlPoint(MMControlPoint(Point(10.f, 5.f, 5.f), Normalize(Vector(-1.f, -.5f, -.5f))));
-	movie.AddInterpolationTime(.5f);
-	movie.AddControlPoint(MMControlPoint(Point(5.f, 10.f, 10.f), Normalize(Vector(0.f, 0.f, -1.f))));
+	movie.AddControlPoint(MMControlPoint(Point(37.f, 10.f, 23.f), Normalize(Vector(-0.86f, -0.49f, 0.02f))));
+	movie.AddInterpolationTime(1.f);
+	movie.AddControlPoint(MMControlPoint(Point(26.f, 7.f, 18.f), Normalize(Vector(-0.55f, -0.32f, -0.77f))));
+	movie.AddInterpolationTime(1.f);
+	movie.AddControlPoint(MMControlPoint(Point(18.f, 7.f, 18.f), Normalize(Vector(0.58f, -0.35f, -0.74f))));
+	movie.AddInterpolationTime(1.f);
+	movie.AddControlPoint(MMControlPoint(Point(15.f, 7.f, 17.f), Normalize(Vector(-0.66f, -0.49f, 0.57f))));
+	movie.AddInterpolationTime(1.f);
+	movie.AddControlPoint(MMControlPoint(Point(25.f, 1.f, 22.f), Normalize(Vector(0.62f, -0.37f, 0.69f))));
+	movie.AddInterpolationTime(1.f);
+	movie.AddControlPoint(MMControlPoint(Point(30.f, 6.f, 24.f), Normalize(Vector(-0.39f, -0.75f, 0.53f))));
+	movie.AddInterpolationTime(1.f);
+	movie.AddControlPoint(MMControlPoint(Point(49.f, 20.f, 46.f), Normalize(Vector(-0.70f, -0.31f, -0.63f))));
 
 	std::cout << "Rendering movie \"" << name << "\"..." << std::endl;
 	movie.RenderMovie(name);
+
+	return 0;
 }
 
 int main2() {
@@ -152,7 +167,7 @@ int main2() {
 		window.draw(interface.GetCrosshair());
 		window.display();
 
-		SetTitle(window, iteration);
+		SetTitle(window, cam, iteration);
 		iteration += 1;
 	}
 
@@ -167,11 +182,13 @@ int main2() {
 	delete cam;
 	delete[] result;
 	delete[] pixelData;
+
+	return 0;
 }
 
-void SetTitle(sf::RenderWindow& window, unsigned iteration) {
+void SetTitle(sf::RenderWindow& window, Camera* cam, unsigned iteration) {
 	std::stringstream ss;
-	ss << "CUDA Path Tracer - Iteration: " << iteration;
+	ss << "CUDA Path Tracer - " << iteration << " - P: " << cam->pos.ToString() << " D: " << cam->dir.ToString();
 	window.setTitle(ss.str());
 }
 

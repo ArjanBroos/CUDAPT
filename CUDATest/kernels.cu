@@ -77,10 +77,6 @@ __global__ void InitScene(Scene** pScene, curandState* rng) {
 	LambertMaterial*	planeMat		= new LambertMaterial(Color(1.f, 1.f, 1.f), .9f);
 	Primitive*			plane			= new Primitive(planeShape, planeMat);
 	scene->AddPlane(plane);
-
-	PreAddBlock(Point(0.f, 0.f, 0.f), scene, 0);
-	PreAddBlock(Point(0.f, 1.f, 0.f), scene, 0);
-	PreAddBlock(Point(1.f, 0.f, 0.f), scene, 0);
 }
 
 void LaunchInitBuilder(Builder** builder) {
@@ -346,7 +342,6 @@ void LaunchLoadBlocks(Scene* scene) {
 			type = (ObjectType) i;
 
 			// Create the block in the world
-			std::cout << "Test" << std::endl;
 			LoadBlock<<<1,1>>>(scene, loc, col, albedo, intensity, mat, shape, type);
 		}
 

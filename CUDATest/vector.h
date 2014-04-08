@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cuda_inc.h"
+#include <string>
 
 // Represents a vector in 3-dimensional space
 class Vector {
@@ -31,6 +32,8 @@ public:
 	__host__ __device__ Vector& operator/=(float s);
 	__host__ __device__ Vector operator-(const Vector& v) const;
 	__host__ __device__ Vector& operator-=(const Vector& v);
+
+	__host__ std::string ToString() const;
 };
 
 // Arithmetic operators

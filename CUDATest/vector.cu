@@ -1,6 +1,7 @@
 #include "vector.h"
 #include "math.h"
 #include "cuda_inc.h"
+#include <sstream>
 
 // Initialize vector as (0, 0, 0)
 Vector::Vector() : x(0.f), y(0.f), z(0.f) {
@@ -70,4 +71,10 @@ Vector& Vector::operator-=(const Vector& v) {
 	y -= v.y;
 	z -= v.z;
 	return *this;
+}
+
+__host__ std::string Vector::ToString() const {
+	std::stringstream ss;
+	ss << "(" << x << ", " << y << ", " << z << ")";
+	return ss.str();
 }

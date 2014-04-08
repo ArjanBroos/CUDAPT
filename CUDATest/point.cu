@@ -1,4 +1,5 @@
 #include "point.h"
+#include <sstream>
 
 // Initialize point as (0, 0, 0)
 Point::Point() : x(0.f), y(0.f), z(0.f) {
@@ -75,4 +76,10 @@ bool Point::operator<(const Point &p) const
 bool Point::operator>(const Point &p) const
 {
 	return ( (x > p.x) || (y > p.y) || (z > p.z) );
+}
+
+__host__ std::string Point::ToString() const {
+	std::stringstream ss;
+	ss << "(" << x << ", " << y << ", " << z << ")";
+	return ss.str();
 }

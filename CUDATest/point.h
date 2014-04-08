@@ -2,6 +2,7 @@
 
 #include "cuda_inc.h"
 #include "vector.h"
+#include <string>
 
 // Represents a 3-dimensional point
 class Point {
@@ -28,6 +29,8 @@ public:
 	__host__ __device__ Point& operator/=(float s);
 	__host__ __device__ bool operator>(const Point &p) const;
 	__host__ __device__ bool operator<(const Point &p) const;
+
+	__host__ std::string ToString() const;
 };
 
 inline Point operator*(float s, const Point& p) {
