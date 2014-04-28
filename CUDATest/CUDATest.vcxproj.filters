@@ -257,6 +257,9 @@
     <ClInclude Include="moviemaker.h">
       <Filter>Header Files\camera</Filter>
     </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>Header Files\main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -267,6 +270,9 @@
     </ClCompile>
     <ClCompile Include="moviemaker.cpp">
       <Filter>Source Files\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="application.cpp">
+      <Filter>Source Files\main</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
