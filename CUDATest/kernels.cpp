@@ -15,8 +15,8 @@ bool checkOverwrite(std::string worldName) {
 			std::cout << "Save process canceled by the user" << std::endl;
 			return true;
 		}
-		return false;
 	}
+	return false;
 }
 
 void writeWorldFile(std::string fileName, std::stringstream &contents) {

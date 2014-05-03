@@ -245,4 +245,3 @@ void Application::UpdateTitle() {
 void Application::UpdateDeviceCamera() {
 	cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
 }
->>>>>>> 5700b2600a0552da93aadb43e28c9267630ae8a2
