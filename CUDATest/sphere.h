@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SPHERE_H
+#define SPHERE_H
 
 #include "geometry.h"
 #include "shape.h"
@@ -30,3 +31,5 @@ public:
 	// Return the corner point of object
 	__device__ const Point*		GetCornerPoint() const;
 };
+
+#endif

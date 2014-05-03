@@ -1,4 +1,5 @@
-#pragma once
+#ifndef AREALIGHT_H
+#define AREALIGHT_H
 
 #include "light.h"
 #include "shape.h"
@@ -25,3 +26,5 @@ public:
 private:
 	Shape*				shape;	// The shape of this area light
 };
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef POINT_H
+#define POINT_H
 
 #include "cuda_inc.h"
 #include "vector.h"
@@ -36,3 +37,5 @@ public:
 inline Point operator*(float s, const Point& p) {
 	return Point(s * p.x, s * p.y, s* p.z);
 }
+
+#endif

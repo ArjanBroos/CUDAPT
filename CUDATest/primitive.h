@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PRIMITIVE_H
+#define PRIMITIVE_H
 
 #include "shape.h"
 #include "material.h"
@@ -27,3 +28,5 @@ private:
 	Shape*			shape;		// Shape of the object
 	Material*		material;	// Material of the object
 };
+
+#endif

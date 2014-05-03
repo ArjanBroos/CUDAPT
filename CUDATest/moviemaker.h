@@ -1,10 +1,11 @@
-#pragma once
+#ifndef MOVIEMAKER_H
+#define MOVIEMAKER_H
 
 #include "kernels.h"
 #include "camera.h"
 #include "scene.h"
 #include "color.h"
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
 
@@ -61,3 +62,5 @@ private:
 
 	static const unsigned		TILE_SIZE = 8;
 };
+
+#endif

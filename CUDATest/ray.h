@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RAY_H
+#define RAY_H
 
 #include "point.h"
 #include "vector.h"
@@ -26,3 +27,5 @@ public:
 	// Returns o + t*d
 	__host__ __device__ Point		operator()(float t) const;
 };
+
+#endif

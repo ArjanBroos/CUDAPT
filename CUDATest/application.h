@@ -1,11 +1,12 @@
-#pragma once
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
 #include "camera.h"
 #include "color.h"
 #include "cuda_inc.h"
 #include "kernels.h"
 #include "interface.h"
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <string>
 
 class Application {
@@ -49,3 +50,5 @@ private:
 
 	bool				frozen;						// Is movement being denied?
 };
+
+#endif

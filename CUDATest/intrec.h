@@ -1,4 +1,5 @@
-#pragma once
+#ifndef INTREC_H
+#define INTREC_H
 
 #include "geometry.h"
 #include "cuda_inc.h"
@@ -14,3 +15,5 @@ public:
 	Primitive*	prim;
 	Light*		light;
 };
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VECTOR_H
+#define VECTOR_H
 
 #include "cuda_inc.h"
 #include <string>
@@ -40,3 +41,5 @@ public:
 __host__ __device__ inline Vector operator*(float s, const Vector& v) {
 	return Vector(s * v.x, s * v.y, s * v.z);
 }
+
+#endif

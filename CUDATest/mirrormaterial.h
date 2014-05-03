@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MIRRORMATERIAL_H
+#define MIRRORMATERIAL_H
 
 #include "material.h"
 
@@ -32,3 +33,5 @@ private:
 	// Returns the in vector reflected about the normal
 	__device__ Vector	Reflect(const Vector& in, const Vector& normal) const;
 };
+
+#endif

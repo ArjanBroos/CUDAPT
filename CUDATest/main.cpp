@@ -1,4 +1,4 @@
-#include "cuda_inc.h"
+//#include "cuda_inc.h"
 #include <iostream>
 #include <fstream>
 #include <SFML/Graphics.hpp>

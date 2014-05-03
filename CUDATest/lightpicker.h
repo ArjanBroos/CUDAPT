@@ -1,3 +1,6 @@
+#ifndef LIGHTPICKER_H
+#define LIGHTPICKER_H
+
 #include "arealight.h"
 
 class LightPicker {
@@ -11,3 +14,5 @@ public:
 private:
 	float							intensity;
 };
+
+#endif

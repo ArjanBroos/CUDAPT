@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COLOR_H
+#define COLOR_H
 
 #include "cuda_inc.h"
 
@@ -22,3 +23,5 @@ public:
 __host__ __device__ inline Color operator*(float s, const Color& c) {
 	return Color(c.r * s, c.g * s, c.b * s);
 }
+
+#endif

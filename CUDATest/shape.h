@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SHAPE_H
+#define SHAPE_H
 
 #include "geometry.h"
 
@@ -26,3 +27,5 @@ public:
 	// Return the corner point of object
 	__device__ virtual const Point*		GetCornerPoint() const = 0;
 };
+
+#endif

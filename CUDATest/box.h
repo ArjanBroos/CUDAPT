@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BOX_H
+#define BOX_H
 
 #include "shape.h"
 
@@ -31,3 +32,5 @@ public:
 	// Return the corner point of object
 	__device__ const Point*		GetCornerPoint() const;
 };
+
+#endif
