@@ -1,8 +1,9 @@
-#pragma once
+#ifndef INTERFACE_H
+#define INTERFACE_H
 
 #include "builder.h"
 #include "colorpicker.h"
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 // Handles builder interface visualization
 class Interface {
@@ -40,3 +41,5 @@ private:
 	unsigned			colorIndex;						// Index of currently selected preset color
 	Color				colors[NR_COLORS];				// Preset colors
 };
+
+#endif

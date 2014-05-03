@@ -1,4 +1,5 @@
-#pragma once
+#ifndef KERNELS_H
+#define KERNELS_H
 
 #include "camera.h"
 #include "cuda_inc.h"
@@ -7,6 +8,7 @@
 #include "scene.h"
 #include "curand_kernel.h"
 #include "builder.h"
+#include <string>
 #define	 MAX_DEPTH 4
 
 //void LaunchCreateRoomScene2(Scene* scene, curandState* rng);
@@ -30,13 +32,17 @@ void LaunchRemoveBlock(const Camera* cam, Scene* scene);
 __global__ void RemoveBlock(const Camera* cam, Scene* scene);
 
 void LaunchSaveBlocks(Scene* scene);
+bool checkOverwrite(std::string worldName);
+void writeWorldFile(std::string worldName, std::stringstream &contents);
 __global__ void SaveBlock(Scene* scene, Node* nextNode, Point* loc, Color* col, float* albedo, float* intensity, MaterialType* mat, ShapeType* shape, ObjectType* type);
 __global__ void InitSaveBlocks(Scene* scene, Node* nextNode);
 int LaunchCountObjects(Scene* scene);
 __global__ void NumberOfBlocks(Scene* scene, int* nObjects);
 
 void LaunchLoadBlocks(Scene* scene);
+void LaunchEmptyScene(Scene* scene);
 __global__ void EmptyScene(Scene* scene);
+void LaunchLoadBlock(Scene* scene, Point loc, Color col, float albedo, float intensity, MaterialType mat, ShapeType shape, ObjectType type);
 __global__ void LoadBlock(Scene* scene, Point loc, Color col, float albedo, float intensity, MaterialType mat, ShapeType shape, ObjectType type);
 
 void LaunchBuilderNextBuildType(Builder* builder);
@@ -66,3 +72,5 @@ void LaunchDestroyScene(Scene* scene);
 __global__ void DestroyScene(Scene* scene);
 
 __device__ unsigned char Clamp255(float s);
+
+#endif

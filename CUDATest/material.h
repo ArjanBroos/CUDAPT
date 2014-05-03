@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MATERIAL_H
+#define MATERIAL_H
 
 #include "color.h"
 #include "geometry.h"
@@ -31,3 +32,5 @@ public:
 	__device__ virtual MaterialType	GetType() const = 0;
 protected:
 };
+
+#endif

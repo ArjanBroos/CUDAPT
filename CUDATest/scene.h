@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SCENE_H
+#define SCENE_H
 
 #include "cuda_inc.h"
 #include "geometry.h"
@@ -47,3 +48,5 @@ private:
 	Object**	objects;
 	Color		dayLight;
 };
+
+#endif

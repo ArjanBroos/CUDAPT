@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BUILDER_H
+#define BUILDER_H
 
 #include "colorpicker.h"
 #include "materialpicker.h"
@@ -38,3 +39,5 @@ private:
 	MaterialPicker		materialPicker;
 	LightPicker			lightPicker;
 };
+
+#endif

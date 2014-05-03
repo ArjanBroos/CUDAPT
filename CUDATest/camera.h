@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CAMERA_H
+#define CAMERA_H
 
 #include "geometry.h"
 #include "ray.h"
@@ -48,3 +49,5 @@ private:
 	float		dx;		// Difference in normalized x-coordinate of pixels on film plane
 	float		dy;		// Difference in normalized y-coordinate of pixels on film plane
 };
+
+#endif

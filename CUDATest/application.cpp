@@ -5,7 +5,7 @@
 
 Application::Application(const std::string& title, unsigned width, unsigned height, unsigned tileSize) :
 	window(sf::VideoMode(width, height), title),
-	interface(width, height)
+	interface(width, height), frozen(false)
 {
 	this->width = width;
 	this->height = height;
@@ -97,10 +97,6 @@ bool Application::HandleEvents() {
 	sf::Event event;
 	while (window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) return false;
-		if (event.type == sf::Event::Resized) {
-			midScreen.x = window.getPosition().x + window.getSize().x / 2;
-			midScreen.y = window.getPosition().y + window.getSize().y / 2;
-		}
 
 		if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) return false;
@@ -181,15 +177,19 @@ bool Application::HandleEvents() {
 		}
 		if(!frozen) {
 			if (event.type == sf::Event::MouseButtonPressed) {
-				if (event.key.code == sf::Mouse::Left) {
-					LaunchAddBlock(d_cam, *scene, *builder);
+				if (event.mouseButton.button == sf::Mouse::Left) {
+					LaunchAddBlock(d_cam, *scene, *builder);			
 					Reset();
 				}
-				if (event.key.code == sf::Mouse::Right) {
+				if (event.mouseButton.button == sf::Mouse::Right) {
 					LaunchRemoveBlock(d_cam, *scene);
 					Reset();
 				}
 			}
+		}
+		if(event.type == sf::Event::GainedFocus) {
+			midScreen.x = window.getPosition().x + window.getSize().x / 2;
+			midScreen.y = window.getPosition().y + window.getSize().y / 2;
 		}
 	}
 

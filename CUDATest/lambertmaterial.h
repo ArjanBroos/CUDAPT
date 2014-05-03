@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LAMBERTMATERIAL_H
+#define LAMBERTMATERIAL_H
 
 #include "material.h"
 
@@ -28,3 +29,5 @@ public:
 	// Returns the type of this material
 	__device__ MaterialType	GetType() const;
 };
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LIGHT_H
+#define LIGHT_H
 
 #include "color.h"
 #include "geometry.h"
@@ -24,3 +25,5 @@ public:
 	// Returns the emitted light
 	__device__ Color		Le() const;
 };
+
+#endif

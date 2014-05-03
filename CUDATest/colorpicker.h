@@ -1,4 +1,5 @@
-#pragma once
+#ifndef COLORPICKER_H
+#define COLORPICKER_H
 
 #include "color.h"
 
@@ -16,3 +17,5 @@ private:
 	Color				colors[NR_COLORS];
 	unsigned			colorIndex;
 };
+
+#endif

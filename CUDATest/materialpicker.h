@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MATERIALPICKER_H
+#define MATERIALPICKER_H
 
 #include "lambertmaterial.h"
 #include "mirrormaterial.h"
@@ -19,3 +20,5 @@ private:
 	MaterialType			type;
 	float					albedo;
 };
+
+#endif

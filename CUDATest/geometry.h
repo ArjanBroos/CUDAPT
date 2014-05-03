@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GEOMETRY_H
+#define GEOMETRY_H
 
 #include "point.h"
 #include "vector.h"
@@ -23,3 +24,5 @@ __host__ __device__ inline Vector Normalize(const Vector& v) {
 	float factor = 1.f / v.Length();
 	return v * factor;
 }
+
+#endif

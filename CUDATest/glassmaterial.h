@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GLASSMATERIAL_H
+#define GLASSMATERIAL_H
 
 #include "material.h"
 
@@ -34,3 +35,5 @@ private:
 	// Returns the in vector transmitted according to the normal and the index of refraction
 	__device__ Vector	Transmit(const Vector& in, const Vector& normal) const;
 };
+
+#endif
