@@ -10,7 +10,7 @@
 // Intersection record
 class IntRec {
 public:
-	__device__ IntRec() : t(INFINITY), prim(nullptr), light(nullptr) {}
+	__device__ IntRec() : t(INFINITY), prim(NULL), light(NULL) {}
 	float		t;
 	Primitive*	prim;
 	Light*		light;

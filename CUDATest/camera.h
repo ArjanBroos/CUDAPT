@@ -34,6 +34,7 @@ public:
 
 	Point		pos;	// Position
 	Vector		dir;	// Direction camera is looking at
+    float       fov;
 
 private:
 	Vector		u;		// Up direction of film plane
@@ -42,7 +43,7 @@ private:
 	float		aspectRatio;
 	unsigned	width;
 	unsigned	height;
-	float		halfWidth;
+    //float		halfWidth;
 
 	float		xmin;	// Minimum normalized x-coordinate on film plane
 	float		ymin;	// Minimum normalized y-coordinate on film plane
