@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <ctime>
+#include <algorithm>
 
 Application::Application(const std::string& title, unsigned width, unsigned height, unsigned tileSize) :
 	window(sf::VideoMode(width, height), title),
@@ -199,7 +200,7 @@ bool Application::HandleEvents() {
 				}
 			}
             if (event.type == sf::Event::MouseWheelMoved) {
-                cam->fov = fmaxf(0.1f*PI, fminf(0.9f*PI, cam->fov + 2.0*PI * (float) - event.mouseWheel.delta / 180.f));
+                cam->fov = std::max(0.1f*PI, std::min(0.9f*PI, cam->fov + 2.0f*PI*(float)(-event.mouseWheel.delta) / 180.f));
                 std::cout << cam->fov << std::endl;
                 cam->CalcUV();
                 UpdateDeviceCamera();
