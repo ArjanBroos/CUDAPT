@@ -185,7 +185,7 @@ bool Application::HandleEvents() {
                 ss.str("");
                 ss << iteration;
                 std::string iterationString = ss.str();
-                image.saveToFile("PrintScreen" + timeString + "_" + iterationString + ".jpg");
+                image.saveToFile("PrintScreen" + timeString + "_" + iterationString + ".png");
             }
 		}
 		if(!frozen) {
