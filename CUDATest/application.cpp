@@ -201,7 +201,6 @@ bool Application::HandleEvents() {
 			}
             if (event.type == sf::Event::MouseWheelMoved) {
                 cam->fov = std::max(0.1f*PI, std::min(0.9f*PI, cam->fov + 2.0f*PI*(float)(-event.mouseWheel.delta) / 180.f));
-                std::cout << cam->fov << std::endl;
                 cam->CalcUV();
                 UpdateDeviceCamera();
                 Reset();
