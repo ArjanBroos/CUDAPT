@@ -2,6 +2,7 @@
 #include <ctime>
 #include <sstream>
 #include <iostream>
+#include <ctime>
 
 Application::Application(const std::string& title, unsigned width, unsigned height, unsigned tileSize) :
 	window(sf::VideoMode(width, height), title),
@@ -14,7 +15,7 @@ Application::Application(const std::string& title, unsigned width, unsigned heig
 	iteration = 1;
 
 	// Set up camera
-	cam = new Camera(Point(-2.f, 4.f, -2.f), Normalize(Vector(2.f, -4.f, 2.f)), Vector(0.f, 1.f, 0.f), width, height, 60.f);
+    cam = new Camera(Point(-2.f, 4.f, -2.f), Normalize(Vector(2.f, -4.f, 2.f)), Vector(0.f, 1.f, 0.f), width, height, 70.f);
 	cudaMalloc(&d_cam, sizeof(Camera));
 	cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
 
@@ -174,6 +175,17 @@ bool Application::HandleEvents() {
 			if (event.key.code == sf::Keyboard::F5) {
 				std::cout << LaunchCountObjects(*scene) << std::endl;
 			}
+            if (event.key.code == sf::Keyboard::P) {
+                time_t now = time(0);
+                std::stringstream ss;
+                ss << now;
+                std::string timeString = ss.str();
+                ss.clear();
+                ss.str("");
+                ss << iteration;
+                std::string iterationString = ss.str();
+                image.saveToFile("PrintScreen" + timeString + "_" + iterationString + ".jpg");
+            }
 		}
 		if(!frozen) {
 			if (event.type == sf::Event::MouseButtonPressed) {
@@ -186,6 +198,13 @@ bool Application::HandleEvents() {
 					Reset();
 				}
 			}
+            if (event.type == sf::Event::MouseWheelMoved) {
+                cam->fov = fmaxf(0.1f*PI, fminf(0.9f*PI, cam->fov + 2.0*PI * (float) - event.mouseWheel.delta / 180.f));
+                std::cout << cam->fov << std::endl;
+                cam->CalcUV();
+                UpdateDeviceCamera();
+                Reset();
+            }
 		}
 		if(event.type == sf::Event::GainedFocus) {
 			midScreen.x = window.getPosition().x + window.getSize().x / 2;

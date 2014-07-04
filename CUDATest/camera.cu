@@ -7,14 +7,14 @@
 // The camera will have given Field of View in degrees
 Camera::Camera(const Point& position, const Vector& direction, const Vector& up,
 			   unsigned filmWidth, unsigned filmHeight, float FoV)
-			   : pos(position) {
+               : pos(position), fov(FoV) {
 				   // Establish coordinate system with u, v and dir
 				   dir = Normalize(direction);
 				   v = Normalize(Cross(dir, up));
 				   u = Cross(dir, v);
 				   worldUp = up;
-				   FoV *= 180.f / PI; // Convert FoV to radians
-				   halfWidth = tanf(FoV/2.f);
+                   fov *= (PI / 180.f); // Convert FoV to radians
+                   float halfWidth = tanf(fov/2.f);
 				   aspectRatio = (float)filmWidth / (float)filmHeight;
 				   u *= halfWidth; // Make u's length half of the film's width
 				   v *= halfWidth * aspectRatio; // Make v's length half of the film's height
@@ -162,6 +162,7 @@ void Camera::CalcUV() {
 	dir = Normalize(dir);
 	v = Normalize(Cross(dir, worldUp));
 	u = Cross(dir, v);
+    float halfWidth = tanf(fov/2.f);
 	u *= halfWidth; // Make u's length half of the film's width
 	v *= halfWidth * aspectRatio; // Make v's length half of the film's height
 }
