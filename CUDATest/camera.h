@@ -15,10 +15,14 @@ public:
 	Camera(const Point& position, const Vector& direction, const Vector& up,
 		unsigned filmWidth, unsigned filmHeight, float FoV);
 
-	// Returns a ray from the viewpoint through the center of pixel (x, y)
-	__device__ Ray			GetRay(unsigned x, unsigned y) const;
-	// Returns a ray through pixel (x, y), randomly jittered around its center
-	__device__ Ray			GetJitteredRay(unsigned x, unsigned y, curandState* rng) const;
+    // Returns a ray normal ray throug (x, y)
+    __device__ Ray			GetNormalRay(unsigned x, unsigned y) const;
+    // Returns a ray ray throug (x, y) with aa and dof enabled
+    __device__ Ray			GetAaDofRay(unsigned x, unsigned y, curandState* rng) const;
+    // Returns a ray ray throug (x, y) with only aa enabled
+    __device__ Ray			GetAaRay(unsigned x, unsigned y, curandState* rng) const;
+    // Returns a ray ray throug (x, y) with only dof enable
+    __device__ Ray			GetDofRay(unsigned x, unsigned y, curandState* rng) const;
 	// Returns a ray from the viewpoint through the center of the film
 	__device__ Ray			GetCenterRay() const;
 
@@ -34,7 +38,15 @@ public:
 
 	Point		pos;	// Position
 	Vector		dir;	// Direction camera is looking at
-    float       fov;
+    float       fov;    // Field Of View Angle
+
+    // Settings Depth of Field
+    bool        dof;
+    float       aperture;
+    float       fpoint;
+
+    // Settings Anti-Aliasing
+    bool        anti;
 
 private:
 	Vector		u;		// Up direction of film plane
@@ -42,13 +54,12 @@ private:
 	Vector		worldUp;
 	float		aspectRatio;
 	unsigned	width;
-	unsigned	height;
-    //float		halfWidth;
+    unsigned	height;
 
 	float		xmin;	// Minimum normalized x-coordinate on film plane
 	float		ymin;	// Minimum normalized y-coordinate on film plane
 	float		dx;		// Difference in normalized x-coordinate of pixels on film plane
-	float		dy;		// Difference in normalized y-coordinate of pixels on film plane
+    float		dy;		// Difference in normalized y-coordinate of pixels on film plane
 };
 
 #endif

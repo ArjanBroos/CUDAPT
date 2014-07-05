@@ -388,8 +388,15 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 	const unsigned i = y * width + x;
 	Color black = Color();
 	Color env = scene->GetDayLight();
-
-	Ray ray = cam->GetJitteredRay(x, y, rng);
+    Ray ray;
+    if(cam->anti && cam->dof)
+        ray = cam->GetAaDofRay(x, y, rng);
+    else if(cam-> anti && !cam->dof)
+        ray = cam->GetAaRay(x,y,rng);
+    else if(!cam-> anti && cam->dof)
+        ray = cam->GetDofRay(x,y,rng);
+    else if(!cam-> anti && !cam->dof)
+        ray = cam->GetNormalRay(x,y);
 	IntRec intRec;
 	Color color(1.f, 1.f, 1.f);
 	float rr = 1.f;
@@ -421,9 +428,7 @@ __global__ void TraceRays(const Camera* cam, const Scene* scene, Color* result, 
 
 		//const Vector in = ray.d;
 		const Vector out = mat->GetSample(ray.d, n, &rng[i]);
-		if (out == ray.d) {
-			black = Color();
-		}
+
 		const float multiplier = mat->GetMultiplier(ray.d, out, n);
 		ray = Ray(p, out);
 

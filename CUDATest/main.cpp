@@ -16,7 +16,7 @@
 #include "application.h"
 
 int main() {
-	Application application("CUDA Path Tracer", 800, 600, 8);
+    Application application("CUDA Path Tracer", 800, 600, 8);
 
 	while (application.HandleEvents()) {
 		application.HandleKeyboard();
