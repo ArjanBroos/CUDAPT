@@ -155,6 +155,16 @@ bool Application::HandleEvents() {
                 UpdateDeviceCamera();
                 Reset();
             }
+			if (event.key.code == sf::Keyboard::F3) {
+				cam->aperture -= 2.f;
+				UpdateDeviceCamera();
+				Reset();
+			}
+			if (event.key.code == sf::Keyboard::F4) {
+				cam->aperture += 2.f;
+				UpdateDeviceCamera();
+				Reset();
+			}
             if (event.key.code == sf::Keyboard::F5) {
                 cam->anti = !cam->anti;
                 UpdateDeviceCamera();
