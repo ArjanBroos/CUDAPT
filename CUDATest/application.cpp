@@ -289,4 +289,5 @@ void Application::UpdateTitle() {
 
 void Application::UpdateDeviceCamera() {
     cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+    LaunchSetFocalPoint(d_cam, *scene);
 }

@@ -65,6 +65,8 @@ __global__ void DecreaseDayLight(Scene* scene);
 
 void LaunchRepositionCamera(Camera* cam);
 __global__ void RepositionCamera(Camera* cam);
+void LaunchSetFocalPoint(Camera* cam, const Scene* scene);
+__global__ void SetFocalPoint(Camera* cam, const Scene* scene);
 
 void LaunchConvert(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width, unsigned height, unsigned tileSize);
 __global__ void Convert(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width);

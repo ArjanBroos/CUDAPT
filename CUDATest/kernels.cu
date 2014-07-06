@@ -117,6 +117,18 @@ __global__ void AddBlock(const Camera* cam, Scene* scene, Builder* builder) {
 	}
 }
 
+void LaunchSetFocalPoint(Camera* cam, const Scene* scene) {
+    SetFocalPoint<<<1,1>>>(cam, scene);
+}
+
+__global__ void SetFocalPoint(Camera* cam, const Scene* scene) {
+    const Ray ray = cam->GetCenterRay();
+    IntRec intRec;
+    if (scene->Intersect(ray, intRec)) {
+        cam->fpoint = max(1.f,intRec.t - 1.f);
+    }
+}
+
 void LaunchRemoveBlock(const Camera* cam, Scene* scene) {
 	RemoveBlock<<<1,1>>>(cam, scene);
 }
