@@ -193,9 +193,6 @@ bool Application::HandleEvents() {
                 LaunchLoadBlocks(*scene);
                 Reset();
             }
-            if (event.key.code == sf::Keyboard::F3) {
-                std::cout << LaunchCountObjects(*scene) << std::endl;
-            }
             if (event.key.code == sf::Keyboard::P) {
                 time_t now = time(0);
                 std::stringstream ss;
