@@ -2,29 +2,22 @@
 #include <sstream>
 #include <iostream>
 
-MovieMaker::MovieMaker(Scene* d_scene, curandState* d_rng, float fps, unsigned width, unsigned height, unsigned spp) {
+MovieMaker::MovieMaker(Scene* d_scene, float fps, unsigned width, unsigned height, unsigned spp) {
 	this->d_scene = d_scene;
 	this->fps = fps;
 	this->width = width;
 	this->height = height;
-	this->spp = spp;
-	this->d_rng = d_rng;
+    this->spp = spp;
 
 	pixelData = new unsigned char[width*height * 4];
 	camera = new Camera(Point(0.f, 0.f, 10.f), Vector(0.f, 0.f, -1.f), Vector(0.f, 1.f, 0.f), width, height, 60.f);
-	cudaMalloc(&d_result, width*height * sizeof(Color));
-	cudaMalloc(&d_pixelData, width*height* 4 * sizeof(unsigned char));
-	cudaMalloc(&d_camera, sizeof(Camera));
 
-	LaunchInitResult(d_result, width, height, TILE_SIZE);
+    LaunchInitResult(d_result, width, height);
 }
 
 MovieMaker::~MovieMaker() {
 	delete[] pixelData;
-	delete camera;
-	cudaFree(d_result);
-	cudaFree(d_pixelData);
-	cudaFree(d_camera);
+    delete camera;
 }
 
 void MovieMaker::AddControlPoint(const MMControlPoint& p) {
@@ -41,11 +34,7 @@ void MovieMaker::RenderMovie(const std::string& name) {
 	std::cout << std::endl;
 	for (unsigned i = 0; i < frames.size(); i++) {
 		std::cout << "\rProgress: " << ((float)i / (float)frames.size()) * 100.f << "%            ";
-		RenderFrame(frames[i], name, i);
-		cudaError_t error = cudaGetLastError();
-		if (error != cudaSuccess) {
-			std::cout << cudaGetErrorString(error) << std::endl;
-		}
+        RenderFrame(frames[i], name, i);
 	}
 }
 
@@ -82,22 +71,20 @@ void MovieMaker::CalculateFrames() {
 void MovieMaker::SetCamera(const MMControlPoint& p) {
 	camera->pos = p.position;
 	camera->dir = p.direction;
-	camera->CalcUV();
-	cudaMemcpy(d_camera, camera, sizeof(Camera), cudaMemcpyHostToDevice);
+    camera->CalcUV();
 }
 
 void MovieMaker::RenderFrame(const MMControlPoint& frame, const std::string& name, unsigned index) {
-	LaunchInitResult(d_result, width, height, TILE_SIZE);	// Reset frame colors
+    LaunchInitResult(d_result, width, height);	// Reset frame colors
 
 	SetCamera(frame);
 
 	// Do path tracing for spp samples per pixel
 	for (unsigned i = 0; i < spp; i++)
-		LaunchTraceRays(d_camera, d_scene, d_result, d_rng, width, height, TILE_SIZE);
+        LaunchTraceRays(d_camera, d_scene, d_result, width, height);
 
 	// Convert data into SFML pixel data and retrieve it from GPU
-	LaunchConvert(d_result, d_pixelData, spp, width, height, TILE_SIZE);
-	cudaMemcpy(pixelData, d_pixelData, width*height* 4 * sizeof(unsigned char), cudaMemcpyDeviceToHost);
+    LaunchConvert(d_result, d_pixelData, spp, width, height);
 
 	image.create(width, height, pixelData);
 	image.saveToFile(FileName(name, index));

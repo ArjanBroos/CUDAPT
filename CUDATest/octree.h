@@ -15,33 +15,34 @@ enum SubNodes{NEB, NWB, SWB, SEB, NET, NWT, SWT, SET};
 class Object;
 class Node {
 public:
-	__device__ Node();
-	__device__ Node(Point boundmin, Point boundmax);
-	__device__ Node(Point boundmin, Point boundmax, int octant, Node* parent);
-	__device__ ~Node();
+    Node();
+    Node(Point boundmin, Point boundmax);
+    Node(Point boundmin, Point boundmax, int octant, Node* parent);
+    ~Node();
+    std::string *name;
 	Node* parent;
 	int octant;
 	Node* nodes[8];
 	Point bounds[2];
 	int nObjects;
-	const Object* object;
+    Object* object;
 
 	// If possible inserts the object in the correct node in the octree
-	__device__ int Insert(Object* object);
+    int Insert(Object* object);
 	// Removes the object in the node of the octree corresponding to the given location
-	__device__ void Remove(Object* object);
+    void Remove(Object* object);
 	// Checks if a ray intersects with an object in the octree
-	__device__ bool Intersect(const Ray &ray, IntRec& intRec) const;
+    bool Intersect(const Ray &ray, IntRec& intRec) const;
 	// Finds the next node in a pre-order stackless tree traversal with pruning via ray
-	__device__ Node* NextNode(const Node* current, const Ray &ray, float &closest) const;
+    Node* NextNode(const Node* current, const Ray &ray, float &closest) const;
 	// Finds the next leaf in a pre-order stackless tree traversal without pruning via ray
-	__device__ Node* NextNode(const Node* current) const;
+    Node* NextNode(const Node* current) const;
 	// Finds the next leaf in a pre-order stackless tree traversal
-	__device__ Node* NextLeaf(Node* current) const;
+    Node* NextLeaf(Node* current) const;
 	// Checks if a ray intersects with an internal node in the octree
-	__device__ float NodeIntersect(const Ray &ray) const;
+    float NodeIntersect(const Ray &ray) const;
 	// Returns the number of objects in the tree
-	__device__ int GetNumberOfObjects() const;
+    int GetNumberOfObjects() const;
 };
 
 #endif

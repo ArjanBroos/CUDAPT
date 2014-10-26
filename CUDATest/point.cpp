@@ -78,7 +78,7 @@ bool Point::operator>(const Point &p) const
 	return ( (x > p.x) || (y > p.y) || (z > p.z) );
 }
 
-__host__ std::string Point::ToString() const {
+std::string Point::ToString() const {
 	std::stringstream ss;
 	ss << "(" << x << ", " << y << ", " << z << ")";
 	return ss.str();

@@ -1,25 +1,25 @@
 #include "box.h"
 #include <cassert>
 
-__device__ Box::Box(const Point& p)
+Box::Box(const Point& p)
 {
 	bounds[0] = p;
 	bounds[1]= Point(p.x+1.f,p.y+1.f,p.z+1.f);
 }
 
-__device__ Box::Box(const Point& p, float s)
+Box::Box(const Point& p, float s)
 {
 	bounds[0] = p;
 	bounds[1]= Point(p.x+s,p.y+s,p.z+s);
 }
 
-__device__ Box::Box(const Point& p, const Point& q)
+Box::Box(const Point& p, const Point& q)
 {
 	bounds[0] = p;
 	bounds[1]= q;
 }
 
-__device__ bool Box::Intersect(const Ray& ray, float& t) const
+bool Box::Intersect(const Ray& ray, float& t) const
 {
 	float tmin, tmax, tminn, tmaxn;
 
@@ -53,7 +53,7 @@ __device__ bool Box::Intersect(const Ray& ray, float& t) const
 }
 
 // Returns the normal of this sphere at point p
-__device__ Vector	Box::GetNormal(const Point& p) const
+Vector	Box::GetNormal(const Point& p) const
 {
 	const float epsilon = 1e-5f;
 	if( fabsf(p.x - bounds[0].x) < epsilon) {
@@ -79,11 +79,11 @@ __device__ Vector	Box::GetNormal(const Point& p) const
 }
 
 // Returns the type of this shape
-__device__ ShapeType Box::GetType() const {
+ShapeType Box::GetType() const {
 	return ST_CUBE;
 }
 
 // Return the corner point of object
-__device__ const Point*		Box::GetCornerPoint() const {
+const Point*		Box::GetCornerPoint() const {
 	return &bounds[0];
 }

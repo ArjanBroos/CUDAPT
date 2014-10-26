@@ -9,20 +9,20 @@
 class Primitive: public Object {
 public:
 	// Default constructor
-	__device__ Primitive() {};
+    Primitive() {};
 	// Initializes this primitive with a shape and a material
-	__device__ Primitive(Shape* shape, Material* material);
+    Primitive(Shape* shape, Material* material);
 
 	// Returns a pointer to the shape
-	__device__ const Shape*	GetShape() const;
+    const Shape*	GetShape() const;
 	// Returns the material
-	__device__ const Material*	GetMaterial() const;
+    const Material*	GetMaterial() const;
 	// Checks if the shape of the primitive intersects with a ray and store the distance in t
-	__device__ bool	Intersect(const Ray& ray, float& t) const;
+    bool	Intersect(const Ray& ray, float& t) const;
 	// Returns the type of this object
-	__device__ ObjectType GetType() const;
+    ObjectType GetType() const;
 	// Return the corner point of object
-	__device__ virtual const Point*		GetCornerPoint() const;
+    virtual const Point*		GetCornerPoint() const;
 
 private:
 	Shape*			shape;		// Shape of the object

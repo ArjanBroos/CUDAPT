@@ -19,20 +19,20 @@
 
 class Scene {
 public:
-	__device__ Scene();
-	__device__ ~Scene();
-	__device__ void	AddPrimitive(Primitive* primitive);
-	__device__ void AddPlane(Primitive* plane);
-	__device__ void AddLight(Light* light);
+    Scene();
+    ~Scene();
+    void AddPrimitive(Primitive* primitive);
+    void AddPlane(Primitive* plane);
+    void AddLight(Light* light);
 	// Adds object to the octree of the scene
-	__device__ void AddObject(Object* object);
-	__device__ void RemoveObject(Object* object);
-	__device__ void IncreaseDayLight(float amount);
-	__device__ void DecreaseDayLight(float amount);
-	__device__ const Color GetDayLight() const;
-	__device__ bool	Intersect(const Ray& ray, IntRec& intRec) const;
-	__device__ bool	IntersectOctree(const Ray& ray, IntRec& intRec, bool& intersected) const;
-	__device__ int GetNumberOfObjects() const;
+    void AddObject(Object* object);
+    void RemoveObject(Object* object);
+    void IncreaseDayLight(float amount);
+    void DecreaseDayLight(float amount);
+    const Color GetDayLight() const;
+    bool	Intersect(const Ray& ray, IntRec& intRec) const;
+    bool	IntersectOctree(const Ray& ray, IntRec& intRec, bool& intersected) const;
+    int GetNumberOfObjects() const;
 	int			size;
 	Node*		octree;
 

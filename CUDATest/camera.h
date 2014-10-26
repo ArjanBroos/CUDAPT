@@ -16,25 +16,25 @@ public:
 		unsigned filmWidth, unsigned filmHeight, float FoV);
 
     // Returns a ray normal ray throug (x, y)
-    __device__ Ray			GetNormalRay(unsigned x, unsigned y) const;
+    Ray			GetNormalRay(unsigned x, unsigned y) const;
     // Returns a ray ray throug (x, y) with aa and dof enabled
-    __device__ Ray			GetAaDofRay(unsigned x, unsigned y, curandState* rng) const;
+    Ray			GetAaDofRay(unsigned x, unsigned y) const;
     // Returns a ray ray throug (x, y) with only aa enabled
-    __device__ Ray			GetAaRay(unsigned x, unsigned y, curandState* rng) const;
+    Ray			GetAaRay(unsigned x, unsigned y) const;
     // Returns a ray ray throug (x, y) with only dof enable
-    __device__ Ray			GetDofRay(unsigned x, unsigned y, curandState* rng) const;
+    Ray			GetDofRay(unsigned x, unsigned y) const;
 	// Returns a ray from the viewpoint through the center of the film
-	__device__ Ray			GetCenterRay() const;
+    Ray			GetCenterRay() const;
 
-	__host__ __device__ void Walk(float x);
-	__host__ __device__ void Strafe(float x);
-	__host__ __device__ void Elevate(float x);
-	__host__ __device__ void Yaw(float r);
-	__host__ __device__ void Pitch(float r);
-	__host__ __device__ void RotateCameraU(float angle);
-	__host__ __device__ void RotateCameraV(float angle);
-	__host__ __device__ void CalcUV();
-	__host__ __device__ void Reposition();
+    void Walk(float x);
+    void Strafe(float x);
+    void Elevate(float x);
+    void Yaw(float r);
+    void Pitch(float r);
+    void RotateCameraU(float angle);
+    void RotateCameraV(float angle);
+    void CalcUV();
+    void Reposition();
 
 	Point		pos;	// Position
 	Vector		dir;	// Direction camera is looking at

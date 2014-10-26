@@ -1,6 +1,6 @@
 CXX := g++
 CC := gcc
-LINK := g++
+LINK := nvcc
 # Includes
 
 # Common flags

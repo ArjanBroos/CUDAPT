@@ -3,22 +3,22 @@
 #include <ctime>
 
 // Initializes a sphere at (0, 0, 0) with radius 1
-__device__ Sphere::Sphere() : c(Point(0.f, 0.f, 0.f)), r(1.f) {
+Sphere::Sphere() : c(Point(0.f, 0.f, 0.f)), r(1.f) {
 }
 
 // Initializes a sphere at c with radius r
-__device__ Sphere::Sphere(const Point& c, float r = .5f) : c(c), r(r) {
+Sphere::Sphere(const Point& c, float r = .5f) : c(c), r(r) {
 }
 
 // Initializes a sphere at c with radius r
-__device__ Sphere::Sphere(const Point& c) : r(.5f) {
+Sphere::Sphere(const Point& c) : r(.5f) {
 	p = c;
 	this->c = c + Point(.5f, .5f, .5f);
 }
 
 // Returns true when this sphere intersects ray
 // If so, output parameter t becomes the distance along ray to the closest intersection
-__device__ bool Sphere::Intersect(const Ray& ray, float& t) const {
+bool Sphere::Intersect(const Ray& ray, float& t) const {
 	// Use abc-formula to solve for the two possible intersection points
 
 	Vector v = ray.o - c;
@@ -47,16 +47,16 @@ __device__ bool Sphere::Intersect(const Ray& ray, float& t) const {
 }
 
 // Returns the normal of this sphere at point p
-__device__ Vector Sphere::GetNormal(const Point& p) const {
+Vector Sphere::GetNormal(const Point& p) const {
 	return Normalize(p - c);
 }
 
 // Returns the type of this shape
-__device__ ShapeType Sphere::GetType() const {
+ShapeType Sphere::GetType() const {
 	return ST_SPHERE;
 }
 
 // Return the corner point of object
-__device__ const Point*		Sphere::GetCornerPoint() const {
+const Point*		Sphere::GetCornerPoint() const {
 	return &p;
 }

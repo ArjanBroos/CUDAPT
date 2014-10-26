@@ -21,7 +21,7 @@ struct MMControlPoint {
 class MovieMaker {
 public:
 	// Initialize a movie with given scene (already allocated), frames per second, pixel width, pixel height and samples per pixel
-	MovieMaker(Scene* d_scene, curandState* d_rng, float fps, unsigned width, unsigned height, unsigned spp);
+    MovieMaker(Scene* d_scene, float fps, unsigned width, unsigned height, unsigned spp);
 	~MovieMaker();
 
 	// Add a control point, which is a point and direction for the camera in the movie
@@ -56,9 +56,7 @@ private:
 	unsigned char*				pixelData;
 	unsigned char*				d_pixelData;
 	unsigned					spp;					// Samples per pixel
-	sf::Image					image;
-
-	curandState*				d_rng;
+    sf::Image					image;
 
 	static const unsigned		TILE_SIZE = 8;
 };

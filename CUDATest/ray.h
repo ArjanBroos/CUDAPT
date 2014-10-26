@@ -9,7 +9,7 @@
 // Represents a ray with an origin and direction through 3-dimensional space
 class Ray {
 public:
-	__device__ Ray() {};
+    Ray() {};
 	Point		o;	// Origin
 	Vector		d;	// Direction
 	Vector		inv;
@@ -22,11 +22,11 @@ public:
 	float		maxt; // Maximum distance along ray for intersection checks
 
 	// Initializes a ray with origin o and direction d. mint and maxt are optional
-    __host__ __device__ Ray(const Point& o, const Vector& d, float ior = 1.f, float mint = 5e-4f, float maxt = INFINITY);
-    //__host__ __device__ Ray(const Point& o, const Vector& d, float ior = 1.f, float mint = 2.f, float maxt = INFINITY);
+    Ray(const Point& o, const Vector& d, float ior = 1.f, float mint = 5e-4f, float maxt = INFINITY);
+    //Ray(const Point& o, const Vector& d, float ior = 1.f, float mint = 2.f, float maxt = INFINITY);
 
 	// Returns o + t*d
-	__host__ __device__ Point		operator()(float t) const;
+    Point		operator()(float t) const;
 };
 
 #endif

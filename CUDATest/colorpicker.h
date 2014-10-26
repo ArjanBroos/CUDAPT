@@ -7,11 +7,11 @@
 
 class ColorPicker {
 public:
-	__device__			ColorPicker();
+    ColorPicker();
 
-	__device__ Color	GetColor() const;
-	__device__ void		NextColor();
-	__device__ void		SetColor(unsigned index);
+    Color	GetColor() const;
+    void		NextColor();
+    void		SetColor(unsigned index);
 
 private:
 	Color				colors[NR_COLORS];

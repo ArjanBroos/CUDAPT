@@ -73,7 +73,7 @@ Vector& Vector::operator-=(const Vector& v) {
 	return *this;
 }
 
-__host__ std::string Vector::ToString() const {
+std::string Vector::ToString() const {
 	std::stringstream ss;
 	ss << "(" << x << ", " << y << ", " << z << ")";
 	return ss.str();

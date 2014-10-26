@@ -16,9 +16,9 @@
 #include "application.h"
 
 int main() {
-    Application application("CUDA Path Tracer", 800, 600, 16);
-
-	while (application.HandleEvents()) {
+    Application application("Cloud Path Tracer", 600, 400);
+    int i = 0;
+	while (application.HandleEvents()) {        
 		application.HandleKeyboard();
 		application.HandleMouse();
 
@@ -29,8 +29,8 @@ int main() {
 }
 
 int main2() {
-	const unsigned		WIDTH = 1280;
-	const unsigned		HEIGHT = 720;
+    const unsigned		WIDTH = 600;
+    const unsigned		HEIGHT = 400;
 	const unsigned		TILE_SIZE = 8;
 	const unsigned		SPP = 200;
 	const unsigned		NR_PIXELS = WIDTH * HEIGHT;
@@ -39,21 +39,14 @@ int main2() {
 
 	std::cout << "Initializing..." << std::endl;
 
-	// Initialize random number generator
-	curandState* d_rng;
-	cudaMalloc(&d_rng, NR_PIXELS * sizeof(curandState));
-	LaunchInitRNG(d_rng, (unsigned long)time(NULL), WIDTH, HEIGHT, TILE_SIZE);
-
 	// Initialize scene
-	Scene** pScene = new Scene*;
-	Scene** d_pScene; cudaMalloc(&d_pScene, sizeof(Scene*));
-	LaunchInitScene(d_pScene, d_rng);
-	cudaMemcpy(pScene, d_pScene, sizeof(Scene*), cudaMemcpyDeviceToHost);
+    Scene* pScene = new Scene();
+    LaunchInitScene(pScene);
 
 	// Load world
-	LaunchLoadBlocks(*pScene);
+    LaunchLoadBlocks(pScene);
 
-	MovieMaker movie(*pScene, d_rng, FPS, WIDTH, HEIGHT, SPP);
+    MovieMaker movie(pScene, FPS, WIDTH, HEIGHT, SPP);
 	// Set up camera path
 	movie.AddControlPoint(MMControlPoint(Point(43.f, 23.f, 11.f), Normalize(Vector(-0.70f, -0.63f, 0.33f))));
 	movie.AddInterpolationTime(1.f);

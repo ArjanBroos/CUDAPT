@@ -1,16 +1,16 @@
 #include "plane.h"
 
 // Initializes a plane through (0, 0, 0) with normal (0, 1, 0)
-__device__ Plane::Plane() : p(Point(0.f, 0.f, 0.f)), n(Vector(0.f, 1.f, 0.f)) {
+Plane::Plane() : p(Point(0.f, 0.f, 0.f)), n(Vector(0.f, 1.f, 0.f)) {
 }
 
 // Initializes a plane through p with normal n
-__device__ Plane::Plane(const Point& p, const Vector& n) : p(p), n(n) {
+Plane::Plane(const Point& p, const Vector& n) : p(p), n(n) {
 }
 
 // Returns true when this shape intersects ray
 // If so, output parameter t becomes the distance along ray to the closest intersection
-__device__ bool Plane::Intersect(const Ray& ray, float& t) const {
+bool Plane::Intersect(const Ray& ray, float& t) const {
 	const float nDotD = Dot(n, ray.d);
 	// If ray and plane are perpendicular
 	if (fabsf(nDotD) < 1e-10f)
@@ -25,16 +25,16 @@ __device__ bool Plane::Intersect(const Ray& ray, float& t) const {
 }
 	
 // Returns the normal of this shape at point p
-__device__ Vector Plane::GetNormal(const Point& p) const {
+Vector Plane::GetNormal(const Point& p) const {
 	return n;
 }
 
 // Returns the type of this shape
-__device__ ShapeType Plane::GetType() const {
+ShapeType Plane::GetType() const {
 	return ST_PLANE;
 }
 
 // Return the corner point of object
-__device__ const Point*		Plane::GetCornerPoint() const {
+const Point*		Plane::GetCornerPoint() const {
 	return &p;
 }

@@ -12,26 +12,26 @@ public:
 	float x, y, z;
 
 	// Initialize point as (0, 0, 0)
-	__host__ __device__ Point();
+    Point();
 	// Initialize point as (x, y, z)
-	__host__ __device__ Point(float x, float y, float z);
+    Point(float x, float y, float z);
 
 	// Arithmetic operators
-	__host__ __device__ Vector operator-(const Point& p) const;
-	__host__ __device__ Point operator+(const Vector& v) const;
-	__host__ __device__ Point& operator+=(const Vector& v);
-	__host__ __device__ Point operator-(const Vector& v) const;
-	__host__ __device__ Point& operator-=(const Vector& v);
-	__host__ __device__ Point operator+(const Point& p) const;
-	__host__ __device__ Point& operator+=(const Point& p);
-	__host__ __device__ Point operator*(float s) const;
-	__host__ __device__ Point& operator*=(float s);
-	__host__ __device__ Point operator/(float s) const;
-	__host__ __device__ Point& operator/=(float s);
-	__host__ __device__ bool operator>(const Point &p) const;
-	__host__ __device__ bool operator<(const Point &p) const;
+    Vector operator-(const Point& p) const;
+    Point operator+(const Vector& v) const;
+    Point& operator+=(const Vector& v);
+    Point operator-(const Vector& v) const;
+    Point& operator-=(const Vector& v);
+    Point operator+(const Point& p) const;
+    Point& operator+=(const Point& p);
+    Point operator*(float s) const;
+    Point& operator*=(float s);
+    Point operator/(float s) const;
+    Point& operator/=(float s);
+    bool operator>(const Point &p) const;
+    bool operator<(const Point &p) const;
 
-	__host__ std::string ToString() const;
+    std::string ToString() const;
 };
 
 inline Point operator*(float s, const Point& p) {

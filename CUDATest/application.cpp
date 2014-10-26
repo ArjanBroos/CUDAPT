@@ -5,45 +5,34 @@
 #include <ctime>
 #include <algorithm>
 
-Application::Application(const std::string& title, unsigned width, unsigned height, unsigned tileSize) :
+Application::Application(const std::string& title, unsigned width, unsigned height) :
     window(sf::VideoMode(width, height), title),
     interface(width, height), frozen(false)
 {
     this->width = width;
     this->height = height;
-    this->tileSize = tileSize;
     const unsigned NR_PIXELS = width * height;
     iteration = 1;
 
     // Set up camera
     cam = new Camera(Point(-2.f, 4.f, -2.f), Normalize(Vector(2.f, -4.f, 2.f)), Vector(0.f, 1.f, 0.f), width, height, 70.f);
-    cudaMalloc(&d_cam, sizeof(Camera));
-    cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
+    //cudaMalloc(&d_cam, sizeof(Camera));
+    //cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
 
     // Set up memory for results
     result = new Color[NR_PIXELS];
-    cudaMalloc(&d_result, NR_PIXELS * sizeof(Color));
-    LaunchInitResult(d_result, width, height, tileSize);
+    //cudaMalloc(&d_result, NR_PIXELS * sizeof(Color));
+    //LaunchInitResult(d_result, width, height, tileSize);
 
     // Set up memory for pixel data
     pixelData = new unsigned char[NR_PIXELS * 4];
-    cudaMalloc(&d_pixelData, NR_PIXELS * 4 * sizeof(unsigned char));
-
-    // Set up RNG states
-    cudaMalloc(&d_rng, NR_PIXELS * sizeof(curandState));
-    LaunchInitRNG(d_rng, (unsigned long)time(NULL), width, height, tileSize);
 
     // Allocate scene on device and make sure we can pass on this pointer via host
-    scene = new Scene*;
-    cudaMalloc(&d_scene, sizeof(Scene*));
-    LaunchInitScene(d_scene, d_rng);
-    cudaMemcpy(scene, d_scene, sizeof(Scene*), cudaMemcpyDeviceToHost);
+    scene = new Scene();
+    LaunchInitScene(scene);
 
     // Allocate builder on device and make sure we can pass on this pointer via host
-    builder = new Builder*;
-    cudaMalloc(&d_builder, sizeof(Builder*));
-    LaunchInitBuilder(d_builder);
-    cudaMemcpy(builder, d_builder, sizeof(Builder*), cudaMemcpyDeviceToHost);
+    builder = new Builder();
 
     // Set up window
     window.setVerticalSyncEnabled(false);
@@ -54,28 +43,27 @@ Application::Application(const std::string& title, unsigned width, unsigned heig
 }
 
 Application::~Application() {
-    cudaFree(*builder);
-    cudaFree(d_builder);
+    //cudaFree(*builder);
+    //cudaFree(d_builder);
 
-    cudaFree(*scene);
-    cudaFree(d_scene);
+    //cudaFree(*scene);
+    //cudaFree(d_scene);
 
-    cudaFree(d_rng);
+    //cudaFree(d_rng);
 
-    cudaFree(d_pixelData);
+    //cudaFree(d_pixelData);
     delete[] pixelData;
 
-    cudaFree(d_result);
+    //cudaFree(d_result);
     delete[] result;
 
-    cudaFree(d_cam);
+    //cudaFree(d_cam);
     delete cam;
 }
 
 void Application::Render() {
-    LaunchTraceRays(d_cam, *scene, d_result, d_rng, width, height, tileSize);
-    LaunchConvert(d_result, d_pixelData, iteration, width, height, tileSize);
-    cudaMemcpy(pixelData, d_pixelData, width*height * 4 * sizeof(unsigned char), cudaMemcpyDeviceToHost);
+    LaunchTraceRays(cam, scene, result, width, height);
+    LaunchConvert(result, pixelData, iteration, width, height);
 
     image.create(width, height, pixelData);
     texture.loadFromImage(image);
@@ -92,7 +80,7 @@ void Application::Render() {
 
 void Application::Reset() {
     iteration = 1;
-    LaunchInitResult(d_result, width, height, tileSize);
+    LaunchInitResult(result, width, height);
 }
 
 bool Application::HandleEvents() {
@@ -103,47 +91,47 @@ bool Application::HandleEvents() {
         if (event.type == sf::Event::KeyPressed) {
             if (event.key.code == sf::Keyboard::Escape) return false;
             if (event.key.code == sf::Keyboard::L) {
-                LaunchBuilderNextBuildType(*builder);
+                LaunchBuilderNextBuildType(builder);
                 interface.NextBuildType();
             }
             if (event.key.code == sf::Keyboard::M) {
-                LaunchBuilderNextMaterialType(*builder);
+                LaunchBuilderNextMaterialType(builder);
                 interface.NextMaterialType();
             }
             if (event.key.code == sf::Keyboard::N) {
-                LaunchBuilderNextShapeType(*builder);
+                LaunchBuilderNextShapeType(builder);
                 interface.NextShapeType();
             }
             if (event.key.code == sf::Keyboard::Num1) {
-                LaunchBuilderSetPresetColor(*builder, 0);
+                LaunchBuilderSetPresetColor(builder, 0);
                 interface.SetPresetColor(0);
             }
             if (event.key.code == sf::Keyboard::Num2) {
-                LaunchBuilderSetPresetColor(*builder, 1);
+                LaunchBuilderSetPresetColor(builder, 1);
                 interface.SetPresetColor(1);
             }
             if (event.key.code == sf::Keyboard::Num3) {
-                LaunchBuilderSetPresetColor(*builder, 2);
+                LaunchBuilderSetPresetColor(builder, 2);
                 interface.SetPresetColor(2);
             }
             if (event.key.code == sf::Keyboard::Num4) {
-                LaunchBuilderSetPresetColor(*builder, 3);
+                LaunchBuilderSetPresetColor(builder, 3);
                 interface.SetPresetColor(3);
             }
             if (event.key.code == sf::Keyboard::Num5) {
-                LaunchBuilderSetPresetColor(*builder, 4);
+                LaunchBuilderSetPresetColor(builder, 4);
                 interface.SetPresetColor(4);
             }
             if (event.key.code == sf::Keyboard::Num6) {
-                LaunchBuilderSetPresetColor(*builder, 5);
+                LaunchBuilderSetPresetColor(builder, 5);
                 interface.SetPresetColor(5);
             }
             if (event.key.code == sf::Keyboard::Num7) {
-                LaunchBuilderSetPresetColor(*builder, 6);
+                LaunchBuilderSetPresetColor(builder, 6);
                 interface.SetPresetColor(6);
             }
             if (event.key.code == sf::Keyboard::Num8) {
-                LaunchBuilderSetPresetColor(*builder, 7);
+                LaunchBuilderSetPresetColor(builder, 7);
                 interface.SetPresetColor(7);
             }
             if (event.key.code == sf::Keyboard::F) {
@@ -156,13 +144,13 @@ bool Application::HandleEvents() {
                 Reset();
             }
 			if (event.key.code == sf::Keyboard::F3) {
-				cam->aperture -= 2.f;
-				UpdateDeviceCamera();
+                cam->aperture -= 2.f;
+                UpdateDeviceCamera();
 				Reset();
 			}
 			if (event.key.code == sf::Keyboard::F4) {
-				cam->aperture += 2.f;
-				UpdateDeviceCamera();
+                cam->aperture += 2.f;
+                UpdateDeviceCamera();
 				Reset();
 			}
             if (event.key.code == sf::Keyboard::F5) {
@@ -175,22 +163,24 @@ bool Application::HandleEvents() {
                 UpdateDeviceCamera();
                 Reset();
             }
-            if (event.key.code == sf::Keyboard::X) LaunchBuilderIncrease(*builder);
-            if (event.key.code == sf::Keyboard::Z) LaunchBuilderDecrease(*builder);
+            if (event.key.code == sf::Keyboard::X) LaunchBuilderIncrease(builder);
+            if (event.key.code == sf::Keyboard::Z) LaunchBuilderDecrease(builder);
 
             if (event.key.code == sf::Keyboard::Add) {
-                LaunchIncreaseDayLight(*scene);
+                LaunchIncreaseDayLight(scene);
                 Reset();
             }
             if (event.key.code == sf::Keyboard::Subtract) {
-                LaunchDecreaseDayLight(*scene);
+                LaunchDecreaseDayLight(scene);
                 Reset();
             }
             if (event.key.code == sf::Keyboard::F1) {
-                LaunchSaveBlocks(*scene);
+                LaunchSaveBlocks(scene);
+                std::cout << "klaar" << std::endl;
+                return true;
             }
             if (event.key.code == sf::Keyboard::F2) {
-                LaunchLoadBlocks(*scene);
+                LaunchLoadBlocks(scene);
                 Reset();
             }
             if (event.key.code == sf::Keyboard::P) {
@@ -208,11 +198,11 @@ bool Application::HandleEvents() {
         if(!frozen) {
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    LaunchAddBlock(d_cam, *scene, *builder);
+                    LaunchAddBlock(cam, scene, builder);
                     Reset();
                 }
                 if (event.mouseButton.button == sf::Mouse::Right) {
-                    LaunchRemoveBlock(d_cam, *scene);
+                    LaunchRemoveBlock(cam, scene);
                     Reset();
                 }
             }
@@ -234,7 +224,6 @@ bool Application::HandleEvents() {
             midScreen.y = window.getPosition().y + window.getSize().y / 2;
         }
     }
-
     return true;
 }
 
@@ -285,6 +274,5 @@ void Application::UpdateTitle() {
 }
 
 void Application::UpdateDeviceCamera() {
-    cudaMemcpy(d_cam, cam, sizeof(Camera), cudaMemcpyHostToDevice);
-    LaunchSetFocalPoint(d_cam, *scene);
+    LaunchSetFocalPoint(cam, scene);
 }

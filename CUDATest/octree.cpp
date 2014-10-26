@@ -7,11 +7,14 @@
 #include <iostream>
 #include "math.h"
 
-__device__ Node::Node() {
+Node::Node() {
+
+    name = new std::string("naam");
 }
 
-__device__ Node::Node(Point bounda, Point boundb) : nObjects(0), object(NULL), octant(-1), parent(NULL)
+Node::Node(Point bounda, Point boundb) : nObjects(0), object(NULL), octant(-1), parent(NULL)
 {
+    name = new std::string("naam");
 	if(bounda < boundb) {
 		bounds[0] = bounda;
 		bounds[1] = boundb;
@@ -23,9 +26,9 @@ __device__ Node::Node(Point bounda, Point boundb) : nObjects(0), object(NULL), o
 		nodes[i] = NULL;
 }
 
-__device__ Node::Node(Point bounda, Point boundb, int octant, Node* parent) : nObjects(0), object(NULL), octant(octant), parent(parent)
+Node::Node(Point bounda, Point boundb, int octant, Node* parent) : nObjects(0), object(NULL), octant(octant), parent(parent)
 {
-
+    name = new std::string("naam");
 	if(bounda < boundb) {
 		bounds[0] = bounda;
 		bounds[1] = boundb;
@@ -37,14 +40,14 @@ __device__ Node::Node(Point bounda, Point boundb, int octant, Node* parent) : nO
 		nodes[i] = NULL;
 }
 
-__device__ Node::~Node() {
+Node::~Node() {
 	for(int i = NEB; i <= SET; i++) {
 		if(nodes[i]) delete nodes[i];
 	}
 	if(object) delete object;
 }
 
-__device__ int Node::Insert(Object* object)
+int Node::Insert(Object* object)
 {
 	const Point *loc = object->GetCornerPoint();
 	if(loc->x > bounds[1].x - 1 || loc->y > bounds[1].y - 1 || loc->z > bounds[1].z - 1) {
@@ -123,7 +126,7 @@ __device__ int Node::Insert(Object* object)
 	return 1;
 }
 
-__device__ void Node::Remove(Object* object) {
+void Node::Remove(Object* object) {
 	// Don't delete the floor!
 	if(object->GetType() == OBJ_PRIMITIVE && ((Primitive*)object)->GetShape()->GetType() == ST_PLANE)
 		return;
@@ -144,7 +147,7 @@ __device__ void Node::Remove(Object* object) {
 	currentNode->nObjects--;
 }
 
-__device__ bool Node::Intersect(const Ray &ray, IntRec& intRec) const {
+bool Node::Intersect(const Ray &ray, IntRec& intRec) const {
 	float temp;
 	bool intersect = false;
 	Node* current = NextNode(this, ray, intRec.t);
@@ -168,7 +171,7 @@ __device__ bool Node::Intersect(const Ray &ray, IntRec& intRec) const {
 	return intersect;
 }
 
-__device__ Node* Node::NextNode(const Node* current, const Ray &ray, float &closest) const{
+Node* Node::NextNode(const Node* current, const Ray &ray, float &closest) const{
 	// Return the left most child node that intersects with the ray
 	Node* node;
 	for(int i = NEB; i <= SET; i++) {
@@ -192,7 +195,7 @@ __device__ Node* Node::NextNode(const Node* current, const Ray &ray, float &clos
 	return NULL;
 }
 
-__device__ Node* Node::NextNode(const Node* current) const {
+Node* Node::NextNode(const Node* current) const {
 	// Return the left most child node that intersects with the ray
 	Node* node;
 	for(int i = NEB; i <= SET; i++) {
@@ -216,7 +219,7 @@ __device__ Node* Node::NextNode(const Node* current) const {
 	return NULL;
 }
 
-__device__ Node* Node::NextLeaf(Node* current) const {
+Node* Node::NextLeaf(Node* current) const {
 	current = NextNode(current);
 	while(current) {
 		if(current->object) {
@@ -227,7 +230,7 @@ __device__ Node* Node::NextLeaf(Node* current) const {
 	return NULL;
 }
 
-__device__ float Node::NodeIntersect(const Ray &ray) const {
+float Node::NodeIntersect(const Ray &ray) const {
 	float tmin, tmax, tminn, tmaxn;
 
 	tmin = (bounds[ray.sign[0]].x - ray.o.x) * ray.inv.x;
@@ -260,6 +263,6 @@ __device__ float Node::NodeIntersect(const Ray &ray) const {
 	return INFINITY;
 }
 
-__device__ int Node::GetNumberOfObjects() const {
+int Node::GetNumberOfObjects() const {
 	return nObjects;
 }

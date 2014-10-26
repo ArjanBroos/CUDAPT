@@ -30,22 +30,22 @@ Camera::Camera(const Point& position, const Vector& direction, const Vector& up,
 				   ymin = -1.f + dy / 2.f;
 }
 
-__device__ Ray Camera::GetNormalRay(unsigned x, unsigned y) const {
+Ray Camera::GetNormalRay(unsigned x, unsigned y) const {
     Vector vx = (xmin + x*dx) * v;
     Vector vy = (ymin + y*dy) * u;
     return Ray(pos, Normalize(vx + vy + dir));
 }
 
 // Returns a ray through pixel (x, y), randomly jittered around its center
-__device__ Ray Camera::GetAaDofRay(unsigned x, unsigned y, curandState* rng) const {
+Ray Camera::GetAaDofRay(unsigned x, unsigned y) const {
     const float pxmin = -1.f + (float)x * dx;		// Pixel x mininum
     const float pymin = -1.f + (float)y * dy;		// Pixel y minimum
 
     // Calculate the ray to the focal point with AA
-    float apx = pxmin + curand_uniform(rng) * dx;
-    float apy = pymin + curand_uniform(rng) * dy;
-    float aperx = -aperture/2.0f*dx + pxmin + curand_uniform(rng) * aperture*dx;
-    float apery = -aperture/2.0f*dy + pymin + curand_uniform(rng) * aperture*dy;
+    float apx = pxmin + ((double) rand() / (RAND_MAX)) * dx;
+    float apy = pymin + ((double) rand() / (RAND_MAX)) * dy;
+    float aperx = -aperture/2.0f*dx + pxmin + ((double) rand() / (RAND_MAX)) * aperture*dx;
+    float apery = -aperture/2.0f*dy + pymin + ((double) rand() / (RAND_MAX)) * aperture*dy;
     Vector vx = apx * v;
     Vector vy = apy * u;
     Vector focalDir = dir+vx+vy + fpoint*Normalize(dir+vx+vy);
@@ -61,13 +61,13 @@ __device__ Ray Camera::GetAaDofRay(unsigned x, unsigned y, curandState* rng) con
 }
 
 // Returns a ray through pixel (x, y), randomly jittered around its center
-__device__ Ray Camera::GetAaRay(unsigned x, unsigned y, curandState* rng) const {
+Ray Camera::GetAaRay(unsigned x, unsigned y) const {
     const float pxmin = -1.f + (float)x * dx;		// Pixel x mininum
     const float pymin = -1.f + (float)y * dy;		// Pixel y minimum
 
     // Calculate aa point
-    float px = pxmin + curand_uniform(rng) * dx;
-    float py = pymin + curand_uniform(rng) * dy;
+    float px = pxmin + ((double) rand() / (RAND_MAX)) * dx;
+    float py = pymin + ((double) rand() / (RAND_MAX)) * dy;
 
     // Calculate the ray to the focal point
     Vector vx = px * v;
@@ -76,13 +76,13 @@ __device__ Ray Camera::GetAaRay(unsigned x, unsigned y, curandState* rng) const 
 }
 
 // Returns a ray through pixel (x, y), randomly jittered around its center
-__device__ Ray Camera::GetDofRay(unsigned x, unsigned y, curandState* rng) const {
+Ray Camera::GetDofRay(unsigned x, unsigned y) const {
     const float pxmin = -1.f + (float)x * dx;		// Pixel x mininum
     const float pymin = -1.f + (float)y * dy;		// Pixel y minimum
 
     // Calculate the aperDir ray
-    float aperx = -aperture/2.0f*dx + pxmin + curand_uniform(rng) * aperture*dx;
-    float apery = -aperture/2.0f*dy + pymin + curand_uniform(rng) * aperture*dy;
+    float aperx = -aperture/2.0f*dx + pxmin + ((double) rand() / (RAND_MAX)) * aperture*dx;
+    float apery = -aperture/2.0f*dy + pymin + ((double) rand() / (RAND_MAX)) * aperture*dy;
     Vector avx = aperx * v;
     Vector avy = apery * u;
     Vector aperDir = dir+avx+avy;
@@ -98,7 +98,7 @@ __device__ Ray Camera::GetDofRay(unsigned x, unsigned y, curandState* rng) const
 }
 
 // Returns a ray from the viewpoint through the center of the film
-__device__ Ray	Camera::GetCenterRay() const {
+Ray	Camera::GetCenterRay() const {
     float x = (float) width / 2.f;
     float y = (float) height / 2.f;
     Vector vx = (xmin + x*dx) * v;

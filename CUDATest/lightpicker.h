@@ -5,11 +5,11 @@
 
 class LightPicker {
 public:
-	__device__				LightPicker();
+    LightPicker();
 
-	__device__ AreaLight*	GetLight(Shape* shape, const Color& color) const;
-	__device__ void		IncreaseIntensity(float step);
-	__device__ void		DecreaseIntensity(float step);
+    AreaLight*	GetLight(Shape* shape, const Color& color) const;
+    void		IncreaseIntensity(float step);
+    void		DecreaseIntensity(float step);
 	
 private:
 	float							intensity;
