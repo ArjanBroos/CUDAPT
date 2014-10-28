@@ -32,6 +32,7 @@ void MovieMaker::RenderFrame() {
         std::cout << "\rSamples progress: "  << sampleProgress << "%              " << std::flush;
         LaunchTraceRays(camera, scene, result, width, height);
     }
+    std::cout << std::endl;
 
     // Convert data into SFML pixel data and retrieve it from GPU
     LaunchConvertRaw(result, pixelData, spp, width, height);
