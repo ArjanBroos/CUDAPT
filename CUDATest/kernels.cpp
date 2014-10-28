@@ -36,13 +36,10 @@ void writeWorldFile(std::string fileName, std::stringstream &contents) {
     else std::cout << "Unable to open file " << fileName << std::endl;
 }
 
-void LaunchLoadBlocks(Scene* scene) {
+void LaunchLoadBlocks(Scene* scene, std::string worldToRender) {
     // Ask user for the world name to load (for the filename)
-    std::cout << "Which world would you like to open?" << std::endl;
-    std::string worldName;
-    std::getline(std::cin, worldName);
-    worldName += ".wrld";
-    std::ifstream readWorldFile(worldName);
+    worldToRender += ".wrld";
+    std::ifstream readWorldFile(worldToRender);
 
     // Delete old scene
     LaunchEmptyScene(scene);
@@ -57,7 +54,7 @@ void LaunchLoadBlocks(Scene* scene) {
 
     // Check if world file exists and start load process
     if(readWorldFile.is_open()) {
-        std::cout << "Loading world file: " << worldName << ", this can take a few minutes" << std::endl;
+        std::cout << "Loading world file: " << worldToRender << ", this can take a few minutes" << std::endl;
         std::string word;
         // Start reading the world block by block
         while( readWorldFile >> word) {
@@ -133,7 +130,7 @@ void LaunchLoadBlocks(Scene* scene) {
         }
 
     }
-    else std::cout << "Unable to open file " << worldName << std::endl;
+    else std::cout << "Unable to open file " << worldToRender << std::endl;
 
     // Close file and free the device pointers
     readWorldFile.close();

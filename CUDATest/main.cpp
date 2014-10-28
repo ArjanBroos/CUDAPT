@@ -12,52 +12,79 @@
 #include "interface.h"
 #include "moviemaker.h"
 #include "application.h"
+#include "task.h"
 
 bool movieMaker = true;
 
 int runRealTime() {
     Application application("Cloud Path Tracer", 600, 400);
     int i = 0;
-	while (application.HandleEvents()) {        
-		application.HandleKeyboard();
-		application.HandleMouse();
+    while (application.HandleEvents()) {
+        application.HandleKeyboard();
+        application.HandleMouse();
 
-		application.Render();
-	}
-	return 0;
+        application.Render();
+    }
+    return 0;
+}
+
+void getTask(Task* task) {
+    // TODO: WAIT ON SOCKET AND RETRIEVE VARIABLES
+    int jobId = 0;
+    int width = 640;
+    int height = 480;
+    int frame = 0;
+    int nSamples = 0;
+    Point cameraPosition(10.f, 1.2f, 3.f);
+    Vector cameraOrientation(0.03f, -0.36f, -0.9f);
+    std::string worldToRender = "movieWorld";
+
+    // define the task
+    task->setJobId(jobId);
+    task->setWidth(width);
+    task->setHeight(height);
+    task->setFrame(frame);
+    task->setNSamples(nSamples);
+    task->setCameraPosition(cameraPosition);
+    task->setCameraOrientation(cameraOrientation);
+    task->setWorldToRender(worldToRender);
 }
 
 int runMovieMaker() {
-    const unsigned		WIDTH = 1920;
-    const unsigned		HEIGHT = 1080;
-    const unsigned		SPP = 300;
-    const float			FPS = 30.f;
-	const std::string	name = "testmovie";
+    bool waitForNewTask = true;
+    while(waitForNewTask) {
+        Task* newTask = new Task();
+        getTask(newTask);
 
-	std::cout << "Initializing..." << std::endl;
+        std::stringstream nameSs;
+        nameSs << newTask->getJobId() << "_" << newTask->getFrame();
+        const std::string	name = nameSs.str();
 
-	// Initialize scene
-    Scene* pScene = new Scene();
-    LaunchInitScene(pScene);
+        std::cout << "Initializing..." << std::endl;
 
-	// Load world
-    LaunchLoadBlocks(pScene);
+        // Initialize scene
+        Scene* pScene = new Scene();
+        LaunchInitScene(pScene);
 
-    MovieMaker movie(pScene, FPS, WIDTH, HEIGHT, SPP);
-	// Set up camera path
-    movie.AddControlPoint(MMControlPoint(Point(-5.f, 1.2f, 3.f), Normalize(Vector(0.03f, -0.36f, -0.9f))));
-    movie.AddInterpolationTime(10.f);
-    movie.AddControlPoint(MMControlPoint(Point(21.f, 1.2f, 3.f), Normalize(Vector(0.03f, -0.36f, -0.9f))));
+        // Load world
+        LaunchLoadBlocks(pScene, newTask->getWorldToRender());
+
+        MovieMaker movie(pScene, newTask->getWidth(), newTask->getHeight(), newTask->getNSamples());
+        // Set up camera
+        MMControlPoint camera = MMControlPoint(newTask->getCameraPosition(), Normalize(newTask->getCameraOrientation()));
+        movie.SetCamera(camera);
 
 
-    std::cout << "Rendering movie \"" << name << "\"..." << std::endl;
-	movie.RenderMovie(name);
 
-	return 0;
+        std::cout << "Rendering movie \"" << name << "\"..." << std::endl;
+        movie.RenderFrame();
+        //movie.RenderMovie(name);
+
+        return 0;
+    }
 }
 
 int main() {
-    if(movieMaker) runMovieMaker();
-    else runRealTime();
+    runMovieMaker();
     return 0;
 }

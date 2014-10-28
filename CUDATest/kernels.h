@@ -33,7 +33,7 @@ void InitSaveBlocks(Scene* scene, Node* nextNode);
 int LaunchCountObjects(Scene* scene);
 void NumberOfBlocks(Scene* scene, int* nObjects);
 
-void LaunchLoadBlocks(Scene* scene);
+void LaunchLoadBlocks(Scene* scene, std::string worldToRender);
 void LaunchEmptyScene(Scene* scene);
 void EmptyScene(Scene* scene);
 void LaunchLoadBlock(Scene* scene, Point loc, Color col, float albedo, float intensity, MaterialType mat, ShapeType shape, ObjectType type);
