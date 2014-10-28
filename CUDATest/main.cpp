@@ -34,7 +34,7 @@ void getTask(Task* task) {
     int width = 640;
     int height = 480;
     int frame = 0;
-    int nSamples = 0;
+    int nSamples = 100;
     Point cameraPosition(10.f, 1.2f, 3.f);
     Vector cameraOrientation(0.03f, -0.36f, -0.9f);
     std::string worldToRender = "movieWorld";
