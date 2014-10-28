@@ -76,7 +76,7 @@ int runMovieMaker() {
 
 
 
-        std::cout << "Rendering movie \"" << name << "\"..." << std::endl;
+        std::cout << "Rendering image \"" << name << "\"..." << std::endl;
         movie.RenderFrame();
         //movie.RenderMovie(name);
 
