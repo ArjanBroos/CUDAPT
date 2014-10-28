@@ -35,7 +35,7 @@ void MovieMaker::RenderMovie(const std::string& name) {
 
     std::cout << "\n" << frames.size() << std::endl;
 	for (unsigned i = 0; i < frames.size(); i++) {
-        float progress = 100.f * (float) i / (float)frames.size();
+        float progress = 100.f * ((float) i + 1)/ (float)frames.size();
         RenderFrame(progress, frames[i], name, i);
 	}
     std::cout << std::endl;
