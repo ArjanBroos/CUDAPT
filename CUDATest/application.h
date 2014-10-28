@@ -3,10 +3,8 @@
 
 #include "camera.h"
 #include "color.h"
-#include "cuda_inc.h"
 #include "kernels.h"
 #include "interface.h"
-#include <SFML/Graphics.hpp>
 #include <string>
 
 class Application {
@@ -38,14 +36,14 @@ private:
 	unsigned			width, height;				// Dimensions of screen in pixels
 	unsigned			tileSize;					// A tile of tileSize*tileSize pixels is assigned per CUDA block
 
-	sf::RenderWindow	window;						// The window on which our application is displayed
-	sf::Vector2i		midScreen;					// Keep track of the middle of our screen portion of the window
+//	sf::RenderWindow	window;						// The window on which our application is displayed
+//	sf::Vector2i		midScreen;					// Keep track of the middle of our screen portion of the window
 
-	Interface			interface;					// Handles rendering of the interface
+//	Interface			interface;					// Handles rendering of the interface
 
-	sf::Texture			texture;					// Texture used to display our pixel data
-	sf::Image			image;						// Image used to display our pixel data
-	sf::Sprite			sprite;						// Sprite used to display our pixel data
+//	sf::Texture			texture;					// Texture used to display our pixel data
+//	sf::Image			image;						// Image used to display our pixel data
+//	sf::Sprite			sprite;						// Sprite used to display our pixel data
 
 	bool				frozen;						// Is movement being denied?
 };

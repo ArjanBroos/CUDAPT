@@ -8,7 +8,7 @@ Scene::Scene() : primCounter(0), lightCounter(0), objectCounter(0), planeCounter
 	lights = new Light*[MAX_LIGHTS];
 	planes = new Primitive*[MAX_PLANES];
     octree = new Node(Point(0,0,0), Point(size-1,size-1,size-1));
-	dayLight = Color(1.f, 1.f, 1.f);
+    dayLight = Color(.7f, .7f, .7f);
 }
 
 Scene::~Scene() {

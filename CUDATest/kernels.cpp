@@ -141,22 +141,6 @@ void LaunchLoadBlocks(Scene* scene) {
     std::cout << "Done" << std::endl;
 }
 
-
-void CreateRoomScene2(Scene* scene, curandState* rng) {
-	int size = 100;
-	for(int i = 0; i < size; i++) {
-		for(int j = 0; j < size; j++) {
-			int x = i;
-            int y = ((double) rand() / (RAND_MAX)) * 5;
-			int z = j;
-            if(((double) rand() / (RAND_MAX)) > .1f)
-				PreAddBlock(Point(x,y,z), scene, 2);
-			else
-				PreAddBlock(Point(x,y,z), scene, 1);
-		}
-	}
-}
-
 void PreAddBlock(Point loc, Scene* scene, int type) {
 		if(type == 0) {
 			Box*				boxShape	= new Box(loc);
@@ -384,7 +368,7 @@ void LaunchInitResult(Color* result, unsigned width, unsigned height) {
             result[y*width + x] = Color();
 }
 
-void LaunchTraceRays(const Camera* cam, const Scene* scene, Color* result, unsigned width, unsigned height) {    
+void LaunchTraceRays(const Camera* cam, const Scene* scene, Color* result, unsigned width, unsigned height) {
     for(unsigned x=0; x<width; x++)
         for(unsigned y=0; y<height; y++)
             TraceRays(x,y,cam, scene, result, width);
@@ -454,18 +438,37 @@ void LaunchConvert(const Color* result, unsigned char* pixelData, unsigned itera
             Convert(x, y, result, pixelData, iteration, width);
 }
 
+void LaunchConvertRaw(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width, unsigned height) {
+    for(unsigned x=0; x<width; x++)
+        for(unsigned y=0; y<height; y++)
+            ConvertRaw(x, y, result, pixelData, iteration, width);
+}
+
 void Convert(unsigned x, unsigned y, const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width) {
 	const unsigned i = y * width + x;
 	const unsigned pdi = i*4;
 
-	const float r = (result[i].r / iteration) * 255;
-	const float g = (result[i].g / iteration) * 255;
-	const float b = (result[i].b / iteration) * 255;
+    const float r = (result[i].r / (float) iteration) * 255.f;
+    const float g = (result[i].g / (float)iteration) * 255.f;
+    const float b = (result[i].b / (float)iteration) * 255.f;
 
 	pixelData[pdi]		= Clamp255(r);
 	pixelData[pdi+1]	= Clamp255(g);
 	pixelData[pdi+2]	= Clamp255(b);
-	pixelData[pdi+3]	= 255;
+    pixelData[pdi+3]	= 255;
+}
+
+void ConvertRaw(unsigned x, unsigned y, const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width) {
+    const unsigned i = y * width + x;
+    const unsigned pdi = i*3;
+
+    const float r = (result[i].r / (float) iteration) * 255.f;
+    const float g = (result[i].g / (float)iteration) * 255.f;
+    const float b = (result[i].b / (float)iteration) * 255.f;
+
+    pixelData[pdi]		= Clamp255(r);
+    pixelData[pdi+1]	= Clamp255(g);
+    pixelData[pdi+2]	= Clamp255(b);
 }
 
 void LaunchDestroyScene(Scene* scene) {

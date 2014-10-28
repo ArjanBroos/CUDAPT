@@ -2,7 +2,6 @@
 #define INTREC_H
 
 #include "geometry.h"
-#include "cuda_inc.h"
 #include "math.h"
 #include "primitive.h"
 #include "light.h"

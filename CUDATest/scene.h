@@ -1,7 +1,6 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "cuda_inc.h"
 #include "geometry.h"
 #include "primitive.h"
 #include "intrec.h"

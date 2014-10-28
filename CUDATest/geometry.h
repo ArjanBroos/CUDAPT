@@ -4,7 +4,6 @@
 #include "point.h"
 #include "vector.h"
 #include "ray.h"
-#include "cuda_inc.h"
 
 // Returns the dot product of two vectors
 inline float Dot(const Vector& v1, const Vector& v2) {

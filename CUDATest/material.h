@@ -3,7 +3,6 @@
 
 #include "color.h"
 #include "geometry.h"
-#include "curand_kernel.h"
 
 enum MaterialType {
 	MT_START = 0,

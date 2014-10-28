@@ -10,7 +10,7 @@ CFLAGS += $(COMMONFLAGS)
 
 OBJ_FILES = $(patsubst %.cpp,%.cpp.o,$(wildcard *.cpp))
 TARGET = traceMe
-LINKLINE = $(LINK) -o $(TARGET) $(OBJ_FILES) -lsfml-graphics -lsfml-window -lsfml-system
+LINKLINE = $(LINK) -o $(TARGET) $(OBJ_FILES)
 .SUFFIXES: .c .cpp .o
 %.c.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

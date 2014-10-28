@@ -1,8 +1,6 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#include "cuda_inc.h"
-
 class Color {
 public:
 	float r, g, b;	// Color components

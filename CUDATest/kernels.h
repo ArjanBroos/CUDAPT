@@ -10,7 +10,6 @@
 #define	 MAX_DEPTH 4
 
 //void LaunchCreateRoomScene2(Scene* scene, curandState* rng);
-void CreateRoomScene2(Scene* scene, curandState* rng);
 void PreAddBlock(Point loc, Scene* scene, int type);
 
 void LaunchInitScene(Scene* scene);
@@ -65,6 +64,8 @@ void SetFocalPoint(Camera* cam, const Scene* scene);
 
 void LaunchConvert(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width, unsigned height);
 void Convert(const unsigned x, const unsigned y, const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width);
+void LaunchConvertRaw(const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width, unsigned height);
+void ConvertRaw(const unsigned x, const unsigned y, const Color* result, unsigned char* pixelData, unsigned iteration, unsigned width);
 void LaunchDestroyScene(Scene* scene);
 void DestroyScene(Scene* scene);
 

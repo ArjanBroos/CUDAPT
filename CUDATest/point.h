@@ -1,7 +1,6 @@
 #ifndef POINT_H
 #define POINT_H
 
-#include "cuda_inc.h"
 #include "vector.h"
 #include <string>
 

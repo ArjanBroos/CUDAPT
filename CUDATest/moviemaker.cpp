@@ -3,22 +3,24 @@
 #include <iostream>
 
 MovieMaker::MovieMaker(Scene* d_scene, float fps, unsigned width, unsigned height, unsigned spp) {
-	this->d_scene = d_scene;
+    this->scene = d_scene;
 	this->fps = fps;
 	this->width = width;
 	this->height = height;
     this->spp = spp;
-
-	pixelData = new unsigned char[width*height * 4];
+    result = new Color[this->width*this->height];
+    pixelData = new unsigned char[width*height * 4];
+    pixelData2 = new unsigned char[width*height * 3];
 	camera = new Camera(Point(0.f, 0.f, 10.f), Vector(0.f, 0.f, -1.f), Vector(0.f, 1.f, 0.f), width, height, 60.f);
 
-    LaunchInitResult(d_result, width, height);
+    LaunchInitResult(result, width, height);
 }
 
 MovieMaker::~MovieMaker() {
 	delete[] pixelData;
     delete camera;
 }
+
 
 void MovieMaker::AddControlPoint(const MMControlPoint& p) {
 	controlPoints.push_back(p);
@@ -31,11 +33,12 @@ void MovieMaker::AddInterpolationTime(float t) {
 void MovieMaker::RenderMovie(const std::string& name) {
 	CalculateFrames();
 
-	std::cout << std::endl;
+    std::cout << "\n" << frames.size() << std::endl;
 	for (unsigned i = 0; i < frames.size(); i++) {
-		std::cout << "\rProgress: " << ((float)i / (float)frames.size()) * 100.f << "%            ";
-        RenderFrame(frames[i], name, i);
+        float progress = 100.f * (float) i / (float)frames.size();
+        RenderFrame(progress, frames[i], name, i);
 	}
+    std::cout << std::endl;
 }
 
 Vector MovieMaker::Interpolate(const Vector& v1, const Vector& v2, float mu) {
@@ -74,20 +77,19 @@ void MovieMaker::SetCamera(const MMControlPoint& p) {
     camera->CalcUV();
 }
 
-void MovieMaker::RenderFrame(const MMControlPoint& frame, const std::string& name, unsigned index) {
-    LaunchInitResult(d_result, width, height);	// Reset frame colors
-
+void MovieMaker::RenderFrame(float totalProgress, const MMControlPoint& frame, const std::string& name, unsigned index) {
+    LaunchInitResult(result, width, height);	// Reset frame colors
 	SetCamera(frame);
 
 	// Do path tracing for spp samples per pixel
-	for (unsigned i = 0; i < spp; i++)
-        LaunchTraceRays(d_camera, d_scene, d_result, width, height);
+    for (unsigned i = 0; i < spp; i++) {
+        float sampleProgress = 100.f * ((float) i + 1.f) / spp;
+        std::cout << "\rTotal progress: " << totalProgress << "% --- Samples progress: "  << sampleProgress << "%              " << std::flush;
+        LaunchTraceRays(camera, scene, result, width, height);
+    }
 
-	// Convert data into SFML pixel data and retrieve it from GPU
-    LaunchConvert(d_result, d_pixelData, spp, width, height);
-
-	image.create(width, height, pixelData);
-	image.saveToFile(FileName(name, index));
+    // Convert data into SFML pixel data and retrieve it from GPU
+    LaunchConvertRaw(result, pixelData2, spp, width, height);
 }
 
 std::string MovieMaker::FileName(const std::string& name, unsigned index) {

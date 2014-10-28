@@ -4,7 +4,6 @@
 #include "point.h"
 #include "vector.h"
 #include "math.h"
-#include "cuda_inc.h"
 
 // Represents a ray with an origin and direction through 3-dimensional space
 class Ray {

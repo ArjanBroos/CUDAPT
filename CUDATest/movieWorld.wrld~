@@ -1,0 +1,160 @@
+NewObject
+Location: 2 0 0
+Color: 0 0 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 2 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 4 0 0
+Color: 1 1 1
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 6 0 0
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 6 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 5 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 4 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 3 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 8 0 0
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 10 0 0
+Color: 0 0 1
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 10 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 9 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 8 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 7 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 12 0 0
+Color: 1 1 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 0 0
+Color: 1 0 1
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 14 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 13 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 12 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0
+NewObject
+Location: 11 2 1
+Color: 1 1 1
+Albedo: -1
+Intensity: 1
+Material: 0
+Shape: 0
+ObjectType: 0

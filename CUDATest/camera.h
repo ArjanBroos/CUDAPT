@@ -3,8 +3,6 @@
 
 #include "geometry.h"
 #include "ray.h"
-#include "cuda_inc.h"
-#include <curand_kernel.h>
 
 // Represents a pinhole camera
 class Camera {

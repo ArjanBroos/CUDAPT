@@ -1,7 +1,6 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include "cuda_inc.h"
 #include <string>
 
 // Represents a vector in 3-dimensional space
