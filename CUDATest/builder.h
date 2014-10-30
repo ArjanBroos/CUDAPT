@@ -18,19 +18,19 @@ enum BuildType {
 
 class Builder {
 public:
-	__device__			Builder();
+    Builder();
 
-	__device__ Shape*	GetShape(const Point& location) const;
-	__device__ Point*	GetPosition(AreaLight* neighbor, const Point& isct) const;
-	__device__ Point*	GetPosition(Primitive* neighbor, const Point& isct) const;
-	__device__ Object*	GetObject(Shape* shape, Point* location) const;
+    Shape*	GetShape(const Point& location) const;
+    Point*	GetPosition(AreaLight* neighbor, const Point& isct) const;
+    Point*	GetPosition(Primitive* neighbor, const Point& isct) const;
+    Object*	GetObject(Shape* shape, Point* location) const;
 
-	__device__ void		NextBuildType();
-	__device__ void		NextShapeType();
-	__device__ void		SetPresetColor(unsigned colorIndex);
-	__device__ void		NextMaterialType();
-	__device__ void		IncreaseAorI(float step);	// Increase albedo or intensity
-	__device__ void		DecreaseAorI(float step);	// Decrease albedo or intensity
+    void		NextBuildType();
+    void		NextShapeType();
+    void		SetPresetColor(unsigned colorIndex);
+    void		NextMaterialType();
+    void		IncreaseAorI(float step);	// Increase albedo or intensity
+    void		DecreaseAorI(float step);	// Decrease albedo or intensity
 
 private:
 	BuildType			buildType;

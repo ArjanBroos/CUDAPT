@@ -9,12 +9,12 @@
 
 class MaterialPicker {
 public:
-	__device__				MaterialPicker();
+    MaterialPicker();
 
-	__device__ Material*	GetMaterial(const Color& color) const;
-	__device__ void			NextType();
-	__device__ void			IncreaseAlbedo(float step);
-	__device__ void			DecreaseAlbedo(float step);
+    Material*	GetMaterial(const Color& color) const;
+    void			NextType();
+    void			IncreaseAlbedo(float step);
+    void			DecreaseAlbedo(float step);
 
 private:
 	MaterialType			type;
