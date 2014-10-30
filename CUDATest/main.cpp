@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
 #include <ctime>
+#include <unistd.h>
 
 #include "ray.h"
 #include "kernels.h"
@@ -14,9 +15,28 @@
 #include "interface.h"
 #include "moviemaker.h"
 #include "application.h"
+#include "server.h"
 
 int main() {
-    Application application("CUDA Path Tracer", 800, 600, 16);
+    Server server;
+    server.StartListening();
+    server.StartAcceptingConnections();
+
+    while (true) {
+        if (server.HasData()) {
+            RcvData rd = server.GetData();
+
+            // Do stuff with data
+
+            delete rd.data; // Really need to not forget this
+
+            usleep(2000); // Sleep 2ms (2000 microseconds)
+        }
+    }
+}
+
+int main3() {
+    Application application("CUDA Path Tracer", 1024, 768, 16);
 
 	while (application.HandleEvents()) {
 		application.HandleKeyboard();
