@@ -146,6 +146,8 @@ void Server::ActualReceive(int fd) {
     while (true) {
         int bufferLength = read(fd, buffer, sizeof(buffer));
 
+        std::cout << "Start receiving data" << std::endl;
+
         if (bufferLength <= 0) {
             std::cout << "Client disconnected. Removing file descriptor." << std::endl;
             pthread_mutex_lock(&fdMutex);
@@ -161,6 +163,9 @@ void Server::ActualReceive(int fd) {
         rd.fd = fd;
         rd.data = buffer;
         rd.size = bufferLength;
+
+        std::cout << "Received data: " << buffer << std::endl;
+
         pthread_mutex_lock(&dataMutex);
         receivedData.push_back(rd);
         pthread_mutex_unlock(&dataMutex);
