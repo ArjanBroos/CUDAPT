@@ -15,11 +15,26 @@
 #include "application.h"
 #include "server.h"
 #include "task.h"
+#include "client.h"
+#include <cstring>
 
 void runServer() {
     Server server;
     server.StartListening();
     server.StartAcceptingConnections();
+
+    sleep(2); // Wait 2 seconds
+
+    Client client1;
+    Client client2;
+    client1.Connect("localhost", "12345");
+    client2.Connect("localhost", "12345");
+
+    char* msg1 = "Hello!";
+    char* msg2 = "Hi!";
+
+    client1.Send((void*)msg1, strlen(msg1));
+    client2.Send((void*)msg2, strlen(msg2));
 
     while (true) {
         if (server.HasData()) {

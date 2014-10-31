@@ -46,30 +46,30 @@ bool Server::StartListening() {
     // Create socket
     fd = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if (fd < 0) {
-        std::cerr << "Error when setting up server socket" << std::endl;
+        std::cerr << "Server: Error when setting up server socket: " << strerror(errno) << std::endl;
         return false;
     }
 
     // Check if socket is free
     int yes = 1;
     if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) < 0) {
-        std::cerr << "Error, address for server socket already in use" << std::endl;
+        std::cerr << "Server: Error, address for server socket already in use" << std::endl;
         return false;
     }
 
     // Bind to this socket
     if (bind(fd, result->ai_addr, result->ai_addrlen) != 0) {
-        std::cerr << "Error, " << strerror(errno) << std::endl;
+        std::cerr << "Error binding socket: " << strerror(errno) << std::endl;
         return false;
     }
 
     // Actually start listening
     if (listen(fd, backlog) < 0) {
-        std::cerr << "Error when server is trying to listen on socket" << std::endl;
+        std::cerr << "Server: Error when server is trying to listen on socket: " << strerror(errno) << std::endl;
         return false;
     }
 
-    std::cout << "Started listening" << std::endl;
+    std::cout << "Server: Started listening" << std::endl;
 
     return true;
 }
@@ -80,7 +80,7 @@ void Server::StartAcceptingConnections() {
     if (connectionThread == nullptr)
         pthread_create(&connectionThread, NULL, KeepEstablishingConnections, &rp);
 
-    std::cout << "Started accepting connections" << std::endl;
+    std::cout << "Server: Started accepting connections" << std::endl;
 }
 
 // Stops accepting connections
@@ -90,7 +90,7 @@ void Server::StopAcceptingConnections() {
     pthread_join(connectionThread, NULL);
     connectionThread = nullptr;
 
-    std::cout << "Stopped accepting connections" << std::endl;
+    std::cout << "Server: Stopped accepting connections" << std::endl;
 }
 
 // Will constantly try to establish connections
@@ -108,7 +108,7 @@ void Server::EstablishConnection() {
     socklen_t addrSize = sizeof(socklen_t);
     int newFD = accept(fd, (sockaddr*)&remoteInfo, &addrSize);
     if (newFD < 0) {
-        std::cerr << "Error, accepting connection failed" << std::endl;
+        std::cerr << "Server: Error, accepting connection failed: " << strerror(errno) << std::endl;
         return;
     }
 
@@ -117,7 +117,7 @@ void Server::EstablishConnection() {
     int port = ntohs(s->sin_port);
     char ipStr[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &s->sin_addr, ipStr, sizeof(ipStr));
-    std::cout << "Connection accepted from " << ipStr << " using port " << port << std::endl;
+    std::cout << "Server: Connection accepted from " << ipStr << " using port " << port << std::endl;
 
     // Create a thread to receive data from this client
     pthread_mutex_lock(&fdMutex);
@@ -133,7 +133,7 @@ void Server::EstablishConnection() {
 // Send data to worker node with given file descriptor
 bool Send(int fd, void* data, int size) {
     if (send(fd, data, size, 0) != size) {
-        std::cerr << "Failed to send data to " << fd << std::endl;
+        std::cerr << "Server: Failed to send data to " << fd << std::endl;
         return false;
     }
     return true;
@@ -146,10 +146,8 @@ void Server::ActualReceive(int fd) {
     while (true) {
         int bufferLength = read(fd, buffer, sizeof(buffer));
 
-        std::cout << "Start receiving data" << std::endl;
-
         if (bufferLength <= 0) {
-            std::cout << "Client disconnected. Removing file descriptor." << std::endl;
+            std::cout << "Server: Client disconnected. Removing file descriptor." << std::endl;
             pthread_mutex_lock(&fdMutex);
             pthread_join(clientFDs.at(fd), NULL);   // Shut down the thread for receiving from this client as well
             clientFDs.erase(fd);
@@ -164,7 +162,7 @@ void Server::ActualReceive(int fd) {
         rd.data = buffer;
         rd.size = bufferLength;
 
-        std::cout << "Received data: " << buffer << std::endl;
+        std::cout << "Server: Received data: " << buffer << std::endl;
 
         pthread_mutex_lock(&dataMutex);
         receivedData.push_back(rd);
