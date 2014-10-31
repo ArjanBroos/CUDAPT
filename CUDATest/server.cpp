@@ -15,7 +15,7 @@ Server::Server() :
     port("12345"),
     fd(-1),
     backlog(24),
-    connectionThread(-1) {
+    connectionThread(nullptr) {
 }
 
 // Returns true when the server has some unprocessed received data stored
@@ -69,22 +69,28 @@ bool Server::StartListening() {
         return false;
     }
 
+    std::cout << "Started listening" << std::endl;
+
     return true;
 }
 
 // Spawns a thread to start accepting connections
 void Server::StartAcceptingConnections() {
     RcvParam rp; rp.fd = fd; rp.context = this;
-    if (connectionThread != -1)
+    if (connectionThread == nullptr)
         pthread_create(&connectionThread, NULL, KeepEstablishingConnections, &rp);
+
+    std::cout << "Started accepting connections" << std::endl;
 }
 
 // Stops accepting connections
 void Server::StopAcceptingConnections() {
-    if (connectionThread == -1)
+    if (connectionThread == nullptr)
         return;
     pthread_join(connectionThread, NULL);
-    connectionThread = -1;
+    connectionThread = nullptr;
+
+    std::cout << "Stopped accepting connections" << std::endl;
 }
 
 // Will constantly try to establish connections

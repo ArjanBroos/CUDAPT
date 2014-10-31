@@ -1,5 +1,6 @@
 #include "lambertmaterial.h"
 #include "math.h"
+#include <cstdlib>
 
 // Initializes a white material with an albedo of 1
 LambertMaterial::LambertMaterial() : color(Color(1.f, 1.f, 1.f)), albedo(1.f){

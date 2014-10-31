@@ -11,6 +11,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <cstdlib>
 
 
 bool checkOverwrite(std::string worldName) {

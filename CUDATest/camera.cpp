@@ -3,6 +3,7 @@
 #include "quaternion.h"
 #define AA true
 #define DOF true
+#include <cstdlib>
 
 // Initializes a camera at position, looking in direction, with up being the up direction for the camera
 // and a film of filmWidth x filmHeight pixels.
