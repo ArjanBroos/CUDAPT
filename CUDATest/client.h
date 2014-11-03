@@ -7,9 +7,13 @@
 class Client {
 public:
     Client();
+    ~Client();
 
     // Connects the client to server at address:port (creates a socket first)
     bool Connect(const std::string& address, const std::string& port);
+
+    // Disconnects the client from the server
+    void Disconnect();
 
     // Send data of given size to server
     bool Send(void* data, int size);

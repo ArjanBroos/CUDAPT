@@ -52,7 +52,7 @@ private:
     void EstablishConnection();
 
     // Receive data from worker node with given file descriptor
-    void ActualReceive(int fd);
+    void ActualReceive(RcvParam* rp);
     // Wrapper around ActualReceive() function, compatible with pthread
     static void* Receive(void* rcvParam);
 
@@ -62,7 +62,8 @@ private:
     int backlog;        // Number of connections allowed to be queued on listen()
     static const int mps;      // Maximum packet size
 
-    pthread_t connectionThread; // Thread handle for the establishing of connections
+    bool establishingConnections;   // True when the server is currently establishing connections
+    pthread_t connectionThread;     // Thread handle for the establishing of connections
 
     pthread_mutex_t fdMutex;    // Mutex to prevent race conditions on list of client fds
     pthread_mutex_t dataMutex;  // Mutex to prevent race conditions on list of received data

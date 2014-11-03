@@ -15,7 +15,9 @@ Server::Server() :
     port("12345"),
     fd(-1),
     backlog(24),
-    connectionThread(nullptr) {
+    connectionThread(-1),
+    fdMutex(PTHREAD_MUTEX_INITIALIZER),
+    dataMutex(PTHREAD_MUTEX_INITIALIZER) {
 }
 
 // Returns true when the server has some unprocessed received data stored
@@ -47,6 +49,7 @@ bool Server::StartListening() {
     fd = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if (fd < 0) {
         std::cerr << "Server: Error when setting up server socket: " << strerror(errno) << std::endl;
+        freeaddrinfo(result);
         return false;
     }
 
@@ -54,20 +57,25 @@ bool Server::StartListening() {
     int yes = 1;
     if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) < 0) {
         std::cerr << "Server: Error, address for server socket already in use" << std::endl;
+        freeaddrinfo(result);
         return false;
     }
 
     // Bind to this socket
     if (bind(fd, result->ai_addr, result->ai_addrlen) != 0) {
         std::cerr << "Error binding socket: " << strerror(errno) << std::endl;
+        freeaddrinfo(result);
         return false;
     }
 
     // Actually start listening
     if (listen(fd, backlog) < 0) {
         std::cerr << "Server: Error when server is trying to listen on socket: " << strerror(errno) << std::endl;
+        freeaddrinfo(result);
         return false;
     }
+
+    freeaddrinfo(result);
 
     std::cout << "Server: Started listening" << std::endl;
 
@@ -76,44 +84,50 @@ bool Server::StartListening() {
 
 // Spawns a thread to start accepting connections
 void Server::StartAcceptingConnections() {
-    RcvParam rp; rp.fd = fd; rp.context = this;
-    if (connectionThread == nullptr)
-        pthread_create(&connectionThread, NULL, KeepEstablishingConnections, &rp);
-
-    std::cout << "Server: Started accepting connections" << std::endl;
+    if (connectionThread == -1) {
+        establishingConnections = true;
+        pthread_create(&connectionThread, NULL, KeepEstablishingConnections, this);
+        std::cout << "Server: Started accepting connections" << std::endl;
+    } else {
+        std::cout << "Server: Was already accepting connections" << std::endl;
+    }
 }
 
 // Stops accepting connections
 void Server::StopAcceptingConnections() {
-    if (connectionThread == nullptr)
-        return;
-    pthread_join(connectionThread, NULL);
-    connectionThread = nullptr;
+    if (connectionThread != -1) {
+        establishingConnections = false;
+        pthread_join(connectionThread, NULL);
+        connectionThread = -1;
 
-    std::cout << "Server: Stopped accepting connections" << std::endl;
+        std::cout << "Server: Stopped accepting connections" << std::endl;
+    } else {
+        std::cout << "Server: Was not accepting any connections to stop" << std::endl;
+    }
 }
 
 // Will constantly try to establish connections
-void* Server::KeepEstablishingConnections(void* rp) {
-    RcvParam *rcvParam = (RcvParam*)rp;
-    while (true) {
-        rcvParam->context->EstablishConnection();
+void* Server::KeepEstablishingConnections(void* context) {
+    Server* server = (Server*)context;
+    while (server->establishingConnections) {
+        server->EstablishConnection();
     }
 }
 
 // When a client tries to connect, we can accept the connection with this function
 void Server::EstablishConnection() {
     // Accept the connection
-    sockaddr_storage remoteInfo;
-    socklen_t addrSize = sizeof(socklen_t);
-    int newFD = accept(fd, (sockaddr*)&remoteInfo, &addrSize);
+    sockaddr_storage clientInfo;
+    memset(&clientInfo, 0, sizeof(clientInfo));
+    socklen_t size = sizeof(clientInfo);
+    int newFD = accept(fd, (sockaddr*)&clientInfo, &size);
     if (newFD < 0) {
         std::cerr << "Server: Error, accepting connection failed: " << strerror(errno) << std::endl;
         return;
     }
 
     // Retrieve ip address and port of client to show them
-    sockaddr_in *s = (sockaddr_in*)&remoteInfo;
+    sockaddr_in *s = (sockaddr_in*)&clientInfo;
     int port = ntohs(s->sin_port);
     char ipStr[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &s->sin_addr, ipStr, sizeof(ipStr));
@@ -121,9 +135,10 @@ void Server::EstablishConnection() {
 
     // Create a thread to receive data from this client
     pthread_mutex_lock(&fdMutex);
-    RcvParam rp; rp.fd = newFD; rp.context = this;
+    RcvParam* rp = new RcvParam; rp->fd = newFD; rp->context = this;
     pthread_t thread;
-    pthread_create(&thread, NULL, Receive, &rp);
+    pthread_create(&thread, NULL, Receive, rp);
+    pthread_detach(thread);
 
     // Save file descriptor for socket of new client and thread handle
     clientFDs.insert(std::pair<int, pthread_t>(newFD, thread));
@@ -140,19 +155,24 @@ bool Send(int fd, void* data, int size) {
 }
 
 // Receive data from worker node with given file descriptor
-void Server::ActualReceive(int fd) {
+void Server::ActualReceive(RcvParam* rp) {
     char *buffer = new char[mps];   // Buffer to hold received data
 
     while (true) {
-        int bufferLength = read(fd, buffer, sizeof(buffer));
+        int bytesReceived = recv(rp->fd, buffer, mps, 0);
 
-        if (bufferLength <= 0) {
-            std::cout << "Server: Client disconnected. Removing file descriptor." << std::endl;
+        if (bytesReceived == 0 || bytesReceived < 0) {
+            if (bytesReceived == 0)
+                std::cout << "Server: Client disconnected. Removing file descriptor." << std::endl;
+            if (bytesReceived < 0)
+                std::cout << "Server: Error receiving: " << strerror(errno) << std::endl;
+
             pthread_mutex_lock(&fdMutex);
-            pthread_join(clientFDs.at(fd), NULL);   // Shut down the thread for receiving from this client as well
-            clientFDs.erase(fd);
+            clientFDs.erase(rp->fd);
             pthread_mutex_unlock(&fdMutex);
-            close(fd);
+
+            close(rp->fd);
+            delete rp;
             pthread_exit(NULL);
         }
 
@@ -160,7 +180,7 @@ void Server::ActualReceive(int fd) {
         RcvData rd;
         rd.fd = fd;
         rd.data = buffer;
-        rd.size = bufferLength;
+        rd.size = bytesReceived;
 
         std::cout << "Server: Received data: " << buffer << std::endl;
 
@@ -173,5 +193,5 @@ void Server::ActualReceive(int fd) {
 // Wrapper around ActualReceive() function, compatible with pthread
 void* Server::Receive(void *rcvParam) {
     RcvParam* rp = (RcvParam*)rcvParam;
-    rp->context->ActualReceive(rp->fd);
+    rp->context->ActualReceive(rp);
 }

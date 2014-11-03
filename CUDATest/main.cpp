@@ -20,21 +20,25 @@
 
 void runServer() {
     Server server;
-    server.StartListening();
+    if (!server.StartListening())
+        return;
     server.StartAcceptingConnections();
-
-    sleep(2); // Wait 2 seconds
 
     Client client1;
     Client client2;
-    client1.Connect("localhost", "12345");
-    client2.Connect("localhost", "12345");
+    if (!client1.Connect("localhost", "12345"))
+        return;
+    if (!client2.Connect("localhost", "12345"))
+        return;
 
-    char* msg1 = "Hello!";
-    char* msg2 = "Hi!";
+    const char* msg1 = "Hello!";
+    const char* msg2 = "Hi!";
 
     client1.Send((void*)msg1, strlen(msg1));
     client2.Send((void*)msg2, strlen(msg2));
+
+    client1.Disconnect();
+    client2.Disconnect();
 
     while (true) {
         if (server.HasData()) {
@@ -42,11 +46,13 @@ void runServer() {
 
             // Do stuff with data
 
-            delete rd.data; // Really need to not forget this
+            delete[] rd.data; // Really need to not forget this
 
-            usleep(2000); // Sleep 2ms (2000 microseconds)
+            usleep(20000); // Sleep 20ms (20000 microseconds)
         }
     }
+
+    server.StopAcceptingConnections();
 }
 
 bool movieMaker = true;

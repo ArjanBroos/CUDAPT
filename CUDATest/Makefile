@@ -5,12 +5,12 @@ LINK := g++
 
 # Common flags
 COMMONFLAGS += $(INCLUDES)
-CXXFLAGS += $(COMMONFLAGS) -std=c++11 -lpthread -g
+CXXFLAGS += $(COMMONFLAGS) -std=c++11 -g
 CFLAGS += $(COMMONFLAGS) -g
 
 OBJ_FILES = $(patsubst %.cpp,%.cpp.o,$(wildcard *.cpp))
 TARGET = traceMe
-LINKLINE = $(LINK) -o $(TARGET) $(OBJ_FILES)
+LINKLINE = $(LINK) -o $(TARGET) $(OBJ_FILES) -lpthread
 
 .SUFFIXES: .c .cpp .o
 
