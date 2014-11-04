@@ -17,19 +17,26 @@
 #include "client.h"
 #include <cstring>
 
-void runServer() {
+void runClient(const std::string &address, const std::string &port) {
     Client client1;
     Client client2;
-    if (!client1.Connect("localhost", "12345"))
+    if (!client1.Connect(address, port))
         return;
-    if (!client2.Connect("localhost", "12345"))
+    if (!client2.Connect(address, port))
         return;
 
     const char* msg1 = "Well, hello there! What a fine young man you are!\0";
     const char* msg2 = "Hi! My name is msg2, and I'm quite a long one as well!\0";
+    const char* msg3 = "Test, small message.\0";
+    const char* msg4 = "This is a very, very, very, long sentence indeed. I wonder if this will mess things up. Yep, that I do.\0";
 
     client1.Send(msg2, strlen(msg2));
     client2.Send(msg1, strlen(msg1));
+    client2.Send(msg3, strlen(msg3));
+    client2.Send(msg1, strlen(msg1));
+    client1.Send(msg4, strlen(msg4));
+    client2.Send(msg3, strlen(msg3));
+    client1.Send(msg2, strlen(msg2));
 
     client1.Disconnect();
     client2.Disconnect();
@@ -105,6 +112,16 @@ int runMovieMaker() {
     }
 }
 
-int main() {
-    runServer();
+int main(int argc, char **argv) {
+    std::cout << "!! Welcome to the path tracer worker node !!" << std::endl;
+
+    // Take address and port to connect to from cli arguments, localhost:12345 by default
+    std::string address = "localhost";
+    std::string port = "12345";
+    if (argc >= 2)
+        address = argv[1];
+    if (argc >= 3)
+        port = argv[2];
+
+    runClient(address, port);
 }

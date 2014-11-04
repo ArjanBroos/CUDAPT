@@ -4,6 +4,7 @@
 #include <list>
 #include <pthread.h>
 #include <map>
+#include <string>
 
 // Used to make a list of data received from a certain node
 struct RcvData {
@@ -24,7 +25,7 @@ struct RcvParam {
 // Run on the master node, worker nodes connect to this one
 class Server {
 public:
-    Server();
+    Server(const std::string &port);
 
     // Start listening for incoming connections
     // Returns true when succesfully started listening
@@ -63,7 +64,7 @@ private:
     // Handles errors from recv() call
     void HandleReceiveErrors(RcvParam* rp, int ret);
 
-    const char *port;   // Port to listen on
+    std::string port;   // Port to listen on
     int fd;             // Socket's file descriptor
 
     int backlog;        // Number of connections allowed to be queued on listen()
