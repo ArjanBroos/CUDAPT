@@ -9,8 +9,6 @@
 #include <pthread.h>
 #include <errno.h>
 
-const int Server::mps = 1024;
-
 Server::Server() :
     port("12345"),
     fd(-1),
@@ -156,42 +154,60 @@ bool Send(int fd, void* data, int size) {
 
 // Receive data from worker node with given file descriptor
 void Server::ActualReceive(RcvParam* rp) {
-    char *buffer = new char[mps];   // Buffer to hold received data
+    // First receive an integer, telling us the size of the data in bytes
+    int size = -1;
+    int ret = recv(rp->fd, (void*)&size, sizeof(int), 0);
+    HandleDisconnect(rp, ret);
+    HandleReceiveErrors(rp, ret);
 
-    while (true) {
-        int bytesReceived = recv(rp->fd, buffer, mps, 0);
-
-        if (bytesReceived == 0 || bytesReceived < 0) {
-            if (bytesReceived == 0)
-                std::cout << "Server: Client disconnected. Removing file descriptor." << std::endl;
-            if (bytesReceived < 0)
-                std::cout << "Server: Error receiving: " << strerror(errno) << std::endl;
-
-            pthread_mutex_lock(&fdMutex);
-            clientFDs.erase(rp->fd);
-            pthread_mutex_unlock(&fdMutex);
-
-            close(rp->fd);
-            delete rp;
-            pthread_exit(NULL);
-        }
-
-        // Store received data in list
-        RcvData rd;
-        rd.fd = fd;
-        rd.data = buffer;
-        rd.size = bytesReceived;
-
-        std::cout << "Server: Received data: " << buffer << std::endl;
-
-        pthread_mutex_lock(&dataMutex);
-        receivedData.push_back(rd);
-        pthread_mutex_unlock(&dataMutex);
+    // Receive the data in chunks
+    const int chunkSize = 8;
+    char* data = new char[size];
+    int bytesReceived = 0;
+    while (bytesReceived < size) {
+        // Receive chunkSize bytes, unless we can receive less
+        int bytesToReceive = std::min(size - bytesReceived, chunkSize);
+        int received = recv(rp->fd, data + bytesReceived, bytesToReceive, 0);
+        HandleReceiveErrors(rp, received);
+        bytesReceived += received;
     }
+
+    // Store received data in list
+    RcvData rd; rd.fd = fd; rd.data = data; rd.size = size;
+    std::cout << "Server: Received data: " << data << std::endl;
+
+    pthread_mutex_lock(&dataMutex);
+    receivedData.push_back(rd);
+    pthread_mutex_unlock(&dataMutex);
 }
 
 // Wrapper around ActualReceive() function, compatible with pthread
 void* Server::Receive(void *rcvParam) {
     RcvParam* rp = (RcvParam*)rcvParam;
     rp->context->ActualReceive(rp);
+}
+
+void Server::CleanUpThread(RcvParam* rp) {
+    pthread_mutex_lock(&fdMutex);
+    clientFDs.erase(rp->fd);
+    pthread_mutex_unlock(&fdMutex);
+
+    close(rp->fd);
+    delete rp;
+    pthread_exit(NULL);
+}
+
+void Server::HandleDisconnect(RcvParam* rp, int ret) {
+    if (ret == 0) {
+        std::cout << "Server: Client disconnected. Removing file descriptor." << std::endl;
+        CleanUpThread(rp);
+    }
+}
+
+// Handles disconnection by client or error when trying to receive data
+void Server::HandleReceiveErrors(RcvParam* rp, int ret) {
+    if (ret < 0) {
+        std::cout << "Server: Error receiving: " << strerror(errno) << std::endl;
+        CleanUpThread(rp);
+    }
 }

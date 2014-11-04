@@ -16,7 +16,7 @@ public:
     void Disconnect();
 
     // Send data of given size to server
-    bool Send(void* data, int size);
+    bool Send(const char* data, int size);
 
     // Receive data from server and process it
     // Note: This function is blocking

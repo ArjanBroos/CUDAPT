@@ -31,11 +31,11 @@ void runServer() {
     if (!client2.Connect("localhost", "12345"))
         return;
 
-    const char* msg1 = "Hello!";
-    const char* msg2 = "Hi!";
+    const char* msg1 = "Well, hello there! What a fine young man you are!\0";
+    const char* msg2 = "Hi! My name is msg2, and I'm quite a long one as well!\0";
 
-    client1.Send((void*)msg1, strlen(msg1));
-    client2.Send((void*)msg2, strlen(msg2));
+    client1.Send(msg2, strlen(msg2));
+    client2.Send(msg1, strlen(msg1));
 
     client1.Disconnect();
     client2.Disconnect();

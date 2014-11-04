@@ -56,11 +56,17 @@ private:
     // Wrapper around ActualReceive() function, compatible with pthread
     static void* Receive(void* rcvParam);
 
+    // Cleans up the receiver thread
+    void CleanUpThread(RcvParam* rp);
+    // Handles disconnection by client
+    void HandleDisconnect(RcvParam* rp, int ret);
+    // Handles errors from recv() call
+    void HandleReceiveErrors(RcvParam* rp, int ret);
+
     const char *port;   // Port to listen on
     int fd;             // Socket's file descriptor
 
     int backlog;        // Number of connections allowed to be queued on listen()
-    static const int mps;      // Maximum packet size
 
     bool establishingConnections;   // True when the server is currently establishing connections
     pthread_t connectionThread;     // Thread handle for the establishing of connections

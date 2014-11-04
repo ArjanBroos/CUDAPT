@@ -60,11 +60,29 @@ void Client::Disconnect() {
 }
 
 // Send data of given size to server
-bool Client::Send(void* data, int size) {
-    if (send(fd, data, size, 0) != size) {
-        std::cerr << "Client: Failed to send data to server: " << strerror(errno) << std::endl;
+bool Client::Send(const char* data, int size) {
+    // First let the server know how many bytes to expect
+    if (send(fd, (void*)&size, sizeof(int), 0) == -1) {
+        std::cerr << "Client: Failed to send data to server: " <<strerror(errno) << std::endl;
         return false;
     }
+
+    // Divide data into chunks and send these chunks
+    const int chunkSize = 8;
+    int bytesSent = 0;
+    while (bytesSent < size) {
+        // Send chunkSize bytes, unless we can send less
+        int bytesToSend = std::min(size - bytesSent, chunkSize);
+
+        int sent = send(fd, data + bytesSent, bytesToSend, 0);
+        if (sent == -1) {
+            std::cerr << "Client: Failed to send data to server: " <<strerror(errno) << std::endl;
+            return false;
+        } else {
+            bytesSent += sent;
+        }
+    }
+
     return true;
 }
 
