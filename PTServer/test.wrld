@@ -1,0 +1,40 @@
+NewObject
+Location: 1 0 1
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 5 0 2
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 2 0 4
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 4 0 5
+Color: 1 0 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1
+NewObject
+Location: 8 0 4
+Color: 0 1 0
+Albedo: 1
+Intensity: -1
+Material: 0
+Shape: 0
+ObjectType: 1

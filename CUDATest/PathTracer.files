@@ -57,8 +57,6 @@ sphere.cpp
 sphere.h
 vector.cpp
 vector.h
-server.h
-server.cpp
 task.h
 task.cpp
 client.h

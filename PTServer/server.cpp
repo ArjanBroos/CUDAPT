@@ -174,7 +174,7 @@ void Server::ActualReceive(RcvParam* rp) {
 
     // Store received data in list
     RcvData rd; rd.fd = fd; rd.data = data; rd.size = size;
-    std::cout << "Server: Received data: " << data << std::endl;
+    //std::cout << "Server: Received data: " << data << std::endl;
 
     pthread_mutex_lock(&dataMutex);
     receivedData.push_back(rd);

@@ -13,17 +13,11 @@
 #include "interface.h"
 #include "moviemaker.h"
 #include "application.h"
-#include "server.h"
 #include "task.h"
 #include "client.h"
 #include <cstring>
 
 void runServer() {
-    Server server;
-    if (!server.StartListening())
-        return;
-    server.StartAcceptingConnections();
-
     Client client1;
     Client client2;
     if (!client1.Connect("localhost", "12345"))
@@ -39,20 +33,6 @@ void runServer() {
 
     client1.Disconnect();
     client2.Disconnect();
-
-    while (true) {
-        if (server.HasData()) {
-            RcvData rd = server.GetData();
-
-            // Do stuff with data
-
-            delete[] rd.data; // Really need to not forget this
-
-            usleep(20000); // Sleep 20ms (20000 microseconds)
-        }
-    }
-
-    server.StopAcceptingConnections();
 }
 
 bool movieMaker = true;
