@@ -14,6 +14,7 @@ Server::Server(const std::string &port) :
     fd(-1),
     backlog(24),
     connectionThread(-1),
+    chunkSize(32 * 1024),
     fdMutex(PTHREAD_MUTEX_INITIALIZER),
     dataMutex(PTHREAD_MUTEX_INITIALIZER) {
 }
@@ -144,12 +145,29 @@ void Server::EstablishConnection() {
     pthread_mutex_unlock(&fdMutex);
 }
 
-// Send data to worker node with given file descriptor
-bool Send(int fd, void* data, int size) {
-    if (send(fd, data, size, 0) != size) {
-        std::cerr << "Failed to send data to " << fd << std::endl;
+// Send data to client node with given file descriptor
+bool Server::Send(int fd, const byte *data, int size) {
+    // First let the client know how many bytes to expect
+    if (send(fd, (void*)&size, sizeof(int), 0) == -1) {
+        std::cerr << "Failed to send data to client: " <<strerror(errno) << std::endl;
         return false;
     }
+
+    // Divide data into chunks and send these chunks
+    int bytesSent = 0;
+    while (bytesSent < size) {
+        // Send chunkSize bytes, unless we can send less
+        int bytesToSend = std::min(size - bytesSent, chunkSize);
+
+        int sent = send(fd, data + bytesSent, bytesToSend, 0);
+        if (sent == -1) {
+            std::cerr << "Failed to send data to client: " <<strerror(errno) << std::endl;
+            return false;
+        } else {
+            bytesSent += sent;
+        }
+    }
+
     return true;
 }
 
@@ -162,8 +180,7 @@ void Server::ActualReceive(RcvParam* rp) {
     HandleReceiveErrors(rp, ret);
 
     // Receive the data in chunks
-    const int chunkSize = 16 * 1024;
-    char* data = new char[size];
+    byte *data = new byte[size];
     int bytesReceived = 0;
     while (bytesReceived < size) {
         // Receive chunkSize bytes, unless we can receive less
@@ -174,10 +191,10 @@ void Server::ActualReceive(RcvParam* rp) {
         bytesReceived += received;
     }
 
-    // Store received data in list
     RcvData rd; rd.fd = rp->fd; rd.data = data; rd.size = size;
     //std::cout << "Received data from client << " << rp->fd << ": " << data << std::endl;
 
+    // Store received data in list
     pthread_mutex_lock(&dataMutex);
     receivedData.push_back(rd);
     pthread_mutex_unlock(&dataMutex);

@@ -25,6 +25,8 @@ int main(int argc, char **argv) {
 
             // Do stuff with data
             std::cout << "Received data from client " << rd.fd << ": " << rd.data << std::endl;
+            std::string thankYouMsg = "Thank you for your message!\0";
+            server.Send(rd.fd, thankYouMsg.c_str(), thankYouMsg.size());
 
             delete[] rd.data; // Really need to not forget this
 

@@ -6,10 +6,12 @@
 #include <map>
 #include <string>
 
+typedef char byte;
+
 // Used to make a list of data received from a certain node
 struct RcvData {
     int fd;
-    char* data;
+    byte* data;
     int size;
 };
 
@@ -44,7 +46,7 @@ public:
     RcvData GetData();
 
     // Send data to worker node with given file descriptor
-    bool Send(int fd, void* data, int size);
+    bool Send(int fd, const byte *data, int size);
 
 private:
     // Constantly tries to establish connections
@@ -68,6 +70,7 @@ private:
     int fd;             // Socket's file descriptor
 
     int backlog;        // Number of connections allowed to be queued on listen()
+    int chunkSize;      // Size of the chunks that the data is divided into before sending/receiving
 
     bool establishingConnections;   // True when the server is currently establishing connections
     pthread_t connectionThread;     // Thread handle for the establishing of connections

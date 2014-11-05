@@ -15,7 +15,6 @@
 #include "application.h"
 #include "task.h"
 #include "client.h"
-#include <cstring>
 
 void runClient(const std::string &address, const std::string &port) {
     Client client1;
@@ -25,18 +24,19 @@ void runClient(const std::string &address, const std::string &port) {
     if (!client2.Connect(address, port))
         return;
 
-    const char* msg1 = "Well, hello there! What a fine young man you are!\0";
-    const char* msg2 = "Hi! My name is msg2, and I'm quite a long one as well!\0";
-    const char* msg3 = "Test, small message.\0";
-    const char* msg4 = "This is a very, very, very, long sentence indeed. I wonder if this will mess things up. Yep, that I do.\0";
+    std::string msg1 = "Well, hello there! What a fine young man you are!\0";
+    std::string msg2 = "Hi! My name is msg2, and I'm quite a long one as well!\0";
+    std::string msg3 = "Test, small message.\0";
+    std::string msg4 = "This is a very, very, very, long sentence indeed. I wonder if this will mess things up. Yep, that I do.\0";
 
-    client1.Send(msg2, strlen(msg2));
-    client2.Send(msg1, strlen(msg1));
-    client2.Send(msg3, strlen(msg3));
-    client2.Send(msg1, strlen(msg1));
-    client1.Send(msg4, strlen(msg4));
-    client2.Send(msg3, strlen(msg3));
-    client1.Send(msg2, strlen(msg2));
+    client1.Send(msg2.c_str(), msg1.size());
+    client1.Receive();
+    client2.Send(msg1.c_str(), msg2.size());
+    client2.Receive();
+    client1.Send(msg4.c_str(), msg3.size());
+    client1.Receive();
+    client2.Send(msg3.c_str(), msg4.size());
+    client2.Receive();
 
     client1.Disconnect();
     client2.Disconnect();
