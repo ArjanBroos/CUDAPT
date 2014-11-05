@@ -48,9 +48,14 @@ bool Client::Connect(const std::string &address, const std::string &port) {
 
     freeaddrinfo(result);
 
-    std::cout << "Connected to server" << std::endl;
+    //std::cout << "Connected to server" << std::endl;
 
     return true;
+}
+
+// Returns true if the client is connected to the server
+bool Client::IsConnected() const {
+    return fd != -1;
 }
 
 // Disconnects the client from the server
@@ -71,7 +76,6 @@ bool Client::Send(const byte *data, int size) {
     }
 
     // Divide data into chunks and send these chunks
-    const int chunkSize = 8;
     int bytesSent = 0;
     while (bytesSent < size) {
         // Send chunkSize bytes, unless we can send less
@@ -89,10 +93,10 @@ bool Client::Send(const byte *data, int size) {
     return true;
 }
 
-// Receive data from server and process it
+// Receive data from server and store it in 'receivedData'
 // Note: This function is blocking
 // Returns false when server disconnects
-bool Client::Receive() {
+bool Client::Receive(RcvData &receivedData) {
     // First receive an integer, telling us the size of the data in bytes
     int size = -1;
     int ret = recv(fd, (void*)&size, sizeof(int), 0);
@@ -100,7 +104,6 @@ bool Client::Receive() {
         return false;
 
     // Receive the data in chunks
-    const int chunkSize = 8;
     byte *data = new byte[size];
     int bytesReceived = 0;
     while (bytesReceived < size) {
@@ -112,28 +115,20 @@ bool Client::Receive() {
         bytesReceived += received;
     }
 
-    RcvData rd; rd.fd = fd; rd.data = data; rd.size = size;
+    receivedData.fd = fd; receivedData.data = data; receivedData.size = size;
     //std::cout << "Received data: " << data << std::endl;
 
-    // Actually do stuff with the data received
-    HandleData(rd);
-
     return true;
-}
-
-// Does useful things with the received data
-void Client::HandleData(RcvData rcvData) {
-    // TODO: Do actual useful stuff here
-    std::cout << "Received data: " << rcvData.data << std::endl;
 }
 
 // Returns false if server disconnected or an error occured
 bool Client::HandleDisconnectOrError(int ret) {
     if (ret == 0) {
         std::cout << "Server disconnected." << std::endl;
+        Disconnect();
         return false;
     } else if (ret == -1) {
-        std::cout << "Error receiving data from server: " << strerror(errno) << std::endl;
+        std::cerr << "Error receiving data from server: " << strerror(errno) << std::endl;
         return false;
     } else {
         return true;

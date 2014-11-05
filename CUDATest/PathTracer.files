@@ -61,3 +61,5 @@ task.h
 task.cpp
 client.h
 client.cpp
+worker.h
+worker.cpp

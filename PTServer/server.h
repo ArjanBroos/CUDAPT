@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <map>
 #include <string>
+#include <vector>
 
 typedef char byte;
 
@@ -27,23 +28,26 @@ struct RcvParam {
 // Run on the master node, worker nodes connect to this one
 class Server {
 public:
-    Server(const std::string &port);
+    Server();
 
     // Start listening for incoming connections
     // Returns true when succesfully started listening
-    bool StartListening();
+    bool StartListening(const std::string &port);
 
     // Spawns a thread to start accepting connections
     void StartAcceptingConnections();
     // Stops the thread that accepts connections
     void StopAcceptingConnections();
+    // Returns true if the server has open connections with clients
+    bool HasConnections() const;
+    // Retrieves file descriptors for all connections
+    std::vector<int> GetConnections();
 
     // Returns true when the server has some unprocessed received data stored
     bool HasData() const;
-    // Returns received data
-    // In FIFO order
+    // Returns earliest received data and removes it from the list
     // !! BE SURE TO CALL DELETE ON THE ACTUAL DATA WHEN DONE !!
-    RcvData GetData();
+    RcvData PopData();
 
     // Send data to worker node with given file descriptor
     bool Send(int fd, const byte *data, int size);
@@ -75,7 +79,7 @@ private:
     bool establishingConnections;   // True when the server is currently establishing connections
     pthread_t connectionThread;     // Thread handle for the establishing of connections
 
-    pthread_mutex_t fdMutex;    // Mutex to prevent race conditions on list of client fds
+    pthread_mutex_t fdListMutex;    // Mutex to prevent race conditions on list of client fds
     pthread_mutex_t dataMutex;  // Mutex to prevent race conditions on list of received data
     std::map<int, pthread_t> clientFDs;   // Mapping from client socket file descriptor to thread handle
     std::list<RcvData> receivedData; // List of all data received from clients

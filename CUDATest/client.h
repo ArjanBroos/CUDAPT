@@ -21,19 +21,19 @@ public:
     // Connects the client to server at address:port (creates a socket first)
     bool Connect(const std::string &address, const std::string &port);
 
+    // Returns true if the client is connected to the server
+    bool IsConnected() const;
+
     // Disconnects the client from the server
     void Disconnect();
 
     // Send data of given size to server
     bool Send(const byte *data, int size);
 
-    // Receive data from server and process it
+    // Receive data from server and store it in 'receivedData'
     // Note: This function is blocking
     // Returns false when server disconnects
-    bool Receive();
-
-    // Does useful things with the received data
-    void HandleData(RcvData rcvData);
+    bool Receive(RcvData &receivedData);
 
 private:
     // Returns false if server disconnected or an error occured

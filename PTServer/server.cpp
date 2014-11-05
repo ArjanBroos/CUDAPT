@@ -9,13 +9,13 @@
 #include <pthread.h>
 #include <errno.h>
 
-Server::Server(const std::string &port) :
-    port(port),
+Server::Server() :
+    port(""),
     fd(-1),
     backlog(24),
     connectionThread(-1),
     chunkSize(32 * 1024),
-    fdMutex(PTHREAD_MUTEX_INITIALIZER),
+    fdListMutex(PTHREAD_MUTEX_INITIALIZER),
     dataMutex(PTHREAD_MUTEX_INITIALIZER) {
 }
 
@@ -24,10 +24,9 @@ bool Server::HasData() const {
     return !receivedData.empty();
 }
 
-// Returns received data
-// In FIFO order
+// Returns earliest received data and removes it from the list
 // !! BE SURE TO CALL DELETE ON THE ACTUAL DATA WHEN DONE !!
-RcvData Server::GetData() {
+RcvData Server::PopData() {
     RcvData rd = receivedData.front();
     receivedData.pop_front();
     return rd;
@@ -35,7 +34,9 @@ RcvData Server::GetData() {
 
 // Start listening for incoming connections
 // Returns true when succesfully started listening
-bool Server::StartListening() {
+bool Server::StartListening(const std::string &port) {
+    this->port = port;
+
     // Set up address info
     addrinfo hostinfo, *result;
     memset(&hostinfo, 0, sizeof(hostinfo));
@@ -76,7 +77,7 @@ bool Server::StartListening() {
 
     freeaddrinfo(result);
 
-    std::cout << "Started listening" << std::endl;
+    //std::cout << "Started listening" << std::endl;
 
     return true;
 }
@@ -86,9 +87,9 @@ void Server::StartAcceptingConnections() {
     if (connectionThread == -1) {
         establishingConnections = true;
         pthread_create(&connectionThread, NULL, KeepEstablishingConnections, this);
-        std::cout << "Started accepting connections" << std::endl;
+        //std::cout << "Started accepting connections" << std::endl;
     } else {
-        std::cout << "Was already accepting connections" << std::endl;
+        //std::cout << "Was already accepting connections" << std::endl;
     }
 }
 
@@ -99,10 +100,26 @@ void Server::StopAcceptingConnections() {
         pthread_join(connectionThread, NULL);
         connectionThread = -1;
 
-        std::cout << "Stopped accepting connections" << std::endl;
+        //std::cout << "Stopped accepting connections" << std::endl;
     } else {
-        std::cout << "Was not accepting any connections to stop" << std::endl;
+        //std::cout << "Was not accepting any connections to stop" << std::endl;
     }
+}
+
+// Returns true if the server has open connections with clients
+bool Server::HasConnections() const {
+    return !clientFDs.empty();
+}
+
+// Retrieves file descriptors for all connections
+std::vector<int> Server::GetConnections() {
+    std::vector<int> fds;
+    pthread_mutex_lock(&fdListMutex);
+    for (std::map<int, pthread_t>::iterator i = clientFDs.begin(); i != clientFDs.end(); i++) {
+        fds.push_back(i->first);
+    }
+    pthread_mutex_unlock(&fdListMutex);
+    return fds;
 }
 
 // Will constantly try to establish connections
@@ -126,23 +143,23 @@ void Server::EstablishConnection() {
     }
 
     // Retrieve ip address and port of client to show them
-    sockaddr_in *s = (sockaddr_in*)&clientInfo;
+    /*sockaddr_in *s = (sockaddr_in*)&clientInfo;
     int port = ntohs(s->sin_port);
     char ipStr[INET_ADDRSTRLEN];
     inet_ntop(AF_INET, &s->sin_addr, ipStr, sizeof(ipStr));
     std::cout << "Connection accepted from " << ipStr << " using port " << port << std::endl;
-    std::cout << "    New client id is " << newFD << std::endl;
+    std::cout << "    New client id is " << newFD << std::endl;*/
 
     // Create a thread to receive data from this client
-    pthread_mutex_lock(&fdMutex);
     RcvParam* rp = new RcvParam; rp->fd = newFD; rp->context = this;
     pthread_t thread;
     pthread_create(&thread, NULL, Receive, rp);
     pthread_detach(thread);
 
     // Save file descriptor for socket of new client and thread handle
+    pthread_mutex_lock(&fdListMutex);
     clientFDs.insert(std::pair<int, pthread_t>(newFD, thread));
-    pthread_mutex_unlock(&fdMutex);
+    pthread_mutex_unlock(&fdListMutex);
 }
 
 // Send data to client node with given file descriptor
@@ -209,9 +226,9 @@ void* Server::Receive(void *rcvParam) {
 }
 
 void Server::CleanUpThread(RcvParam* rp) {
-    pthread_mutex_lock(&fdMutex);
+    pthread_mutex_lock(&fdListMutex);
     clientFDs.erase(rp->fd);
-    pthread_mutex_unlock(&fdMutex);
+    pthread_mutex_unlock(&fdListMutex);
 
     close(rp->fd);
     delete rp;
@@ -220,7 +237,7 @@ void Server::CleanUpThread(RcvParam* rp) {
 
 void Server::HandleDisconnect(RcvParam* rp, int ret) {
     if (ret == 0) {
-        std::cout << "Client " << rp->fd << " disconnected. Removing file descriptor." << std::endl;
+        //std::cout << "Client " << rp->fd << " disconnected. Removing file descriptor." << std::endl;
         CleanUpThread(rp);
     }
 }
@@ -228,7 +245,7 @@ void Server::HandleDisconnect(RcvParam* rp, int ret) {
 // Handles disconnection by client or error when trying to receive data
 void Server::HandleReceiveErrors(RcvParam* rp, int ret) {
     if (ret < 0) {
-        std::cout << "Error receiving from client " << rp->fd << ": " << strerror(errno) << std::endl;
+        //std::cerr << "Error receiving from client " << rp->fd << ": " << strerror(errno) << std::endl;
         CleanUpThread(rp);
     }
 }

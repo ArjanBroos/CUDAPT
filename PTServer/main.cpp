@@ -1,4 +1,4 @@
-#include "server.h"
+#include "master.h"
 #include <iostream>
 #include <unistd.h>
 #include <string>
@@ -12,27 +12,17 @@ int main(int argc, char **argv) {
         port = argv[1];
     }
 
-    // Start accepting connections
-    Server server(port);
-    if (!server.StartListening())
-        return -1;
-    server.StartAcceptingConnections();
+    // Start the master node, listening for workers to make a connection
+    Master master;
+    master.StartListening(port);
 
-    // Keep checking whether we received data
     while (true) {
-        if (server.HasData()) {
-            RcvData rd = server.GetData();
+        // Assign tasks to the workers
+        master.AssignTasks();
 
-            // Do stuff with data
-            std::cout << "Received data from client " << rd.fd << ": " << rd.data << std::endl;
-            std::string thankYouMsg = "Thank you for your message!\0";
-            server.Send(rd.fd, thankYouMsg.c_str(), thankYouMsg.size());
+        // Handle results that workers have sent in
+        master.HandleResults();
 
-            delete[] rd.data; // Really need to not forget this
-
-            usleep(100000); // Sleep 100ms (100000 microseconds)
-        }
+        sleep(1);
     }
-
-    server.StopAcceptingConnections();
 }

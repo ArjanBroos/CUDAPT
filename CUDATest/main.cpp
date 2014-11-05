@@ -14,32 +14,20 @@
 #include "moviemaker.h"
 #include "application.h"
 #include "task.h"
-#include "client.h"
+#include "worker.h"
+#include <unistd.h>
+#include <random>
 
-void runClient(const std::string &address, const std::string &port) {
-    Client client1;
-    Client client2;
-    if (!client1.Connect(address, port))
+void runWorker(const std::string &address, const std::string &port) {
+    Worker worker;
+    if (!worker.Connect(address, port))
         return;
-    if (!client2.Connect(address, port))
-        return;
 
-    std::string msg1 = "Well, hello there! What a fine young man you are!\0";
-    std::string msg2 = "Hi! My name is msg2, and I'm quite a long one as well!\0";
-    std::string msg3 = "Test, small message.\0";
-    std::string msg4 = "This is a very, very, very, long sentence indeed. I wonder if this will mess things up. Yep, that I do.\0";
-
-    client1.Send(msg2.c_str(), msg1.size());
-    client1.Receive();
-    client2.Send(msg1.c_str(), msg2.size());
-    client2.Receive();
-    client1.Send(msg4.c_str(), msg3.size());
-    client1.Receive();
-    client2.Send(msg3.c_str(), msg4.size());
-    client2.Receive();
-
-    client1.Disconnect();
-    client2.Disconnect();
+    while (true) {
+        Task task = worker.ReceiveTask();
+        worker.PerformTask(task);
+        sleep(1);
+    }
 }
 
 bool movieMaker = true;
@@ -123,5 +111,5 @@ int main(int argc, char **argv) {
     if (argc >= 3)
         port = argv[2];
 
-    runClient(address, port);
+    runWorker(address, port);
 }
