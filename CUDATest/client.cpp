@@ -39,7 +39,7 @@ bool Client::Connect(const std::string& address, const std::string& port) {
         return false;
     }
 
-    std::cout << "Connecting to the server..." << std::endl;
+    std::cout << "Connecting to " << address << ":" << port << "..." << std::endl;
     if (connect(fd, result->ai_addr, result->ai_addrlen) == -1) {
         std::cerr << "Error connecting to server: " << strerror(errno) << std::endl;
         freeaddrinfo(result);
