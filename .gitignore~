@@ -28,13 +28,7 @@
 *.jpg
 
 # Qt Files
-*.config
-*.user
-*.creator.user
-*.creator.user.a3ec706
-*.files
-*.creator
-*.includes
+
 
 # Executable
 traceMe
