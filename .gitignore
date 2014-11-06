@@ -33,3 +33,15 @@
 # Executable
 traceMe
 ptserver
+
+# LaTeX files
+*.pdf
+*.bak
+*.aux
+*.bbl
+*.blg
+*.log
+*.kilepr
+*.tks
+*.gz
+*.synctex

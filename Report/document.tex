@@ -1,0 +1,32 @@
+\documentclass[11pt, a4paper, twocolumn]{article}
+
+\usepackage{my style}
+\newcommand*{\V}[1]{\mathbf{#1}}
+
+\begin{document}
+
+    \input{./tex/title.tex}
+    
+    \input{./tex/abstract.tex}
+	
+    \section{Introduction}
+        \input{./tex/intro.tex}
+
+    \section{System overview}
+        \input{./tex/overview.tex}
+    \section{Implementation details}
+        \input{./tex/implementation.tex}
+        
+    \section{Experimental Setup}
+        \input{./tex/exp-setup.tex}
+    \section{Results}
+        \input{./tex/results.tex}
+        
+    \section{Conclusion}
+        \input{./tex/conclusion.tex}
+
+%\bibliographystyle{abbrv}
+%%use following if all content of bibtex file should be shown
+%\nocite{*}
+%\bibliography{references}
+\end{document}
