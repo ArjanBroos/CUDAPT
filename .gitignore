@@ -3,6 +3,9 @@
 *.pdb
 *.psess
 
+# Backup files
+*~
+
 /Debug
 /Release
 /CUDATest/Debug
@@ -28,7 +31,12 @@
 *.jpg
 
 # Qt Files
-
+*.creator
+*.creator.user
+*.user
+*.config
+*.includes
+*.creator.user.a3ec706
 
 # Executable
 traceMe

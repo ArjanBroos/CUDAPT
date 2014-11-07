@@ -8,7 +8,7 @@
     pages = "143-150"
 }
 
-@misc{cudapt,
+@article{cudapt,
     author = "Arjan Broos and Jesper Huijgens",
     title = "Block Editor Rendered by a Path Tracer",
     year = "2014"

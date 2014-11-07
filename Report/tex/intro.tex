@@ -1,1 +1,30 @@
-In this section, we give an introduction to the paper.
+Path tracing is a rendering technique that simulates the paths that photons take.
+The main advantage of this technique, compared to the usual rasterization approach, is that it correctly calculates global illumination.
+Instead of only taking direct lighting into account and faking global illumination by an ambient term, path tracing also takes indirect lighting into account.
+This is where light hits a surface, bounces off and illuminates another surface.
+Another advantage is that there is no need to approximate lights as point lights; light can easily be emitted from surfaces.
+Other effects such as antialiasing and depth of field are easily implemented with this rendering technique as well.
+
+The movie industry uses a lot of computer generated imagery to enhance the visuals of their movies.
+At animation studios, even their whole movie is rendered by computers.
+Most of these movies use some form of a path tracer to produce this imagery, since the results converge to a solution of the rendering equation\cite{kajiya}.
+This means that the calculated lighting closely approximates reality.
+
+Since the calculation for the light along every ray does not depend on another ray, they can be calculated in parallel.
+In our previous work, called CUDAPT\cite{cudapt}, we implemented a path tracer that parallellizes per pixel using the power of modern graphics cards.
+Using CUDA, each small graphics card processor would calculate the color of a few pixels by tracing a set number of sample light paths through the pixels.
+
+For this paper, the parallellization happens in a slightly different way.
+Instead of using the many small processors on the graphics card for parallellization, virtual machines in a cloud are used, which we will refer to as nodes from now on.
+Every node now calculates a frame of a movie, instead of just a few pixels of such a frame.
+These nodes are called worker nodes.
+This was done to make sure that communication between nodes would not be the bottleneck in this system.
+
+In this system, there is one master node.
+This node receives jobs, which are descriptions of how to render a movie, and makes sure that the worker nodes work together to finish these jobs.
+
+In Section~\ref{sec:systemoverview}, an overview of the system is provided, which will not go into detail about the workings of a path tracer.
+Section~\ref{sec:implementationdetails} gives any further explanation required for the implementation of the system.
+An overview of the experiments done can be found in Section~\ref{sec:experimentalsetup}.
+In Section~\ref{sec:results}, the results of these experiments can be found.
+Finally, in Section~\ref{sec:conclusion}, we make some concluding remarks on our work.
