@@ -1,1 +1,16 @@
-In this section, we describe any implementation details.
+In this section, we describe details about the implemenation of the system.
+
+\subsection{Separation}
+We have implemented the master and worker nodes in separate programs.
+The functionality of the worker node includes a stripped down version our CUDAPT\cite{cudapt} path tracer.
+Here, all parallellization per pixel using the graphics card was removed and simply runs sequentially.
+
+\subsection{Communication}
+Communication between the master node and worker nodes happens via sockets.
+The master node acts as a server, listening for incoming connections and spawns a new thread to handle each accepted connection.
+
+Once the master node is listening, worker nodes can make a connection with it.
+
+Once connected, the master node can start sending tasks to workers.
+These will perform their tasks by rendering the frame that corresponds to the given task and then send the raw image data back to the master node.
+The master node collects all of this image data and stores it on disk.
