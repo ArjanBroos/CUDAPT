@@ -24,7 +24,7 @@ public:
 	~MovieMaker();
 
     // Render the movie by saving them as a lot of jpg files
-    void						RenderFrame();
+    unsigned char*						RenderFrame();
     void						SetCamera(const MMControlPoint& p);
 
 private:

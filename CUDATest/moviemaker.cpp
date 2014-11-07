@@ -25,7 +25,7 @@ void MovieMaker::SetCamera(const MMControlPoint& p) {
     camera->CalcUV();
 }
 
-void MovieMaker::RenderFrame() {
+unsigned char* MovieMaker::RenderFrame() {
 	// Do path tracing for spp samples per pixel
     for (unsigned i = 0; i < spp; i++) {
         float sampleProgress = 100.f * ((float) i + 1.f) / spp;
@@ -36,4 +36,5 @@ void MovieMaker::RenderFrame() {
 
     // Convert data into SFML pixel data and retrieve it from GPU
     LaunchConvertRaw(result, pixelData, spp, width, height);
+    return pixelData;
 }

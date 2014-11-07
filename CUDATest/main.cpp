@@ -26,6 +26,7 @@ void runWorker(const std::string &address, const std::string &port) {
     while (true) {
         Task task = worker.ReceiveTask();
         worker.PerformTask(task);
+        worker.SendResults(task);
         sleep(1);
     }
 }

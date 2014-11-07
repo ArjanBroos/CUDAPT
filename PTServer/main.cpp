@@ -2,6 +2,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <string>
+#include <vector>
 
 int main(int argc, char **argv) {
     std::cout << "!! Welcome to the path tracer master node !!" << std::endl;
@@ -16,7 +17,12 @@ int main(int argc, char **argv) {
     Master master;
     master.StartListening(port);
 
+    // Retrieve new Jobs from external service
+    master.ReceiveJob();
+
     while (true) {
+
+
         // Assign tasks to the workers
         master.AssignTasks();
 

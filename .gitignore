@@ -45,3 +45,6 @@ ptserver
 *.tks
 *.gz
 *.synctex
+
+# Archive backup
+CUDAPT.tar.gz

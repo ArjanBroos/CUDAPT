@@ -4,6 +4,7 @@
 #include "task.h"
 #include "client.h"
 #include <string>
+#include <vector>
 
 // Accepts tasks from the master node, processes them and sends back results
 class Worker {
@@ -19,7 +20,11 @@ public:
     // Performs the given task (rendering an image with path tracer)
     byte *PerformTask(const Task &task);
 
+    // Sends the result back to the master node
+    void SendResults(const Task &task);
+
 private:
+    std::vector<byte> result;
     Client client;
 };
 
