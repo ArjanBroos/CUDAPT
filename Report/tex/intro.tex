@@ -17,8 +17,8 @@ Using CUDA, each small graphics card processor would calculate the color of a fe
 For this paper, the parallellization happens in a slightly different way.
 Instead of using the many small processors on the graphics card for parallellization, virtual machines in a cloud are used, which we will refer to as nodes from now on.
 Every node now calculates a frame of a movie, instead of just a few pixels of such a frame.
-These nodes are called worker nodes.
-This was done to make sure that communication between nodes would not be the bottleneck in this system.
+The nodes that do all the calculating are called worker nodes.
+The great increase in the size of a task was done to make sure that communication between nodes would not be the bottleneck in this system.
 
 In this system, there is one master node.
 This node receives jobs, which are descriptions of how to render a movie, and makes sure that the worker nodes work together to finish these jobs.

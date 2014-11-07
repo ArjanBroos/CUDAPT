@@ -33,8 +33,10 @@ $mwpj$'s effect can be seen in Figure~\ref{fig:splitjobtotasks}.
 
 \subsection{Dividing workers over jobs}
 Suppose that we have $k$ jobs, $mwpj = 2$, the total amount of workers is $|A| + |W|$ and we have:
-\begin{align*}|A|+|W| < k \cdot mwpj\end{align*}
-Now, we cannot provide every running job with its maximal amount of dedicated workers.
-This is when the system switches to a different scheme, where workers are no longer dedicated to a job.
+\begin{align}|A|+|W| < k \cdot mwpj \label{eq:fewWorkers}\end{align}
+Now, we cannot provide every running job with its maximal amount of workers.
+This is when the system switches to a different scheme.
 Whenever a worker has finished its task, it will be assigned a task from the job that has not had a worker assigned to it the longest.
-This way, some fairness is created in the amount of workers that each job gets assigned.
+If that job already has $mwpj$ workers on it, then the next job in line will receive the worker, and so on.
+Since Equation~\ref{eq:fewWorkers} holds, there is guaranteed to be a job in line without $mwpj$ workers already assigned to it.
+This way, some fairness is created in the amount of processing time that each job gets assigned.
