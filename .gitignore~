@@ -28,8 +28,25 @@
 *.jpg
 
 # Qt Files
-
+*.creator
+*.creator.user
+*.user
+*.config
+*.includes
+*.creator.user.a3ec706
 
 # Executable
 traceMe
 ptserver
+
+# LaTeX files
+*.pdf
+*.bak
+*.aux
+*.bbl
+*.blg
+*.log
+*.kilepr
+*.tks
+*.gz
+*.synctex

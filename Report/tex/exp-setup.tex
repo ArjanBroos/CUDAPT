@@ -1,1 +1,18 @@
 In this section, we describe the experimental setup.
+
+\subsection{DAS-4}
+Our cloud path tracer system has been set up on the DAS-4\cite{das4}.
+This is a distributed supercomputer which consists of six different clusters, provided by several Dutch universities and institutions.
+
+Using OpenNebula, provided by DAS-4, 11 different virtual machines are created.
+Ten of them for worker nodes, and another with an extra 8GB of harddisk space for the master node.
+
+Workers will always be running their program, but essentially be idle when not assigned any work.
+This is because of the blocking socket receive call, which causes the program to halt until it receives a task from the master node.
+This does mean, however, that the starting and stopping of virtual machines is not taken into account for any of our experiments.
+
+\subsection{Multitenancy experiment}
+
+\subsection{Load balancing experiment}
+
+\subsection{Elasticity experiment}

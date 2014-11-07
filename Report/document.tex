@@ -1,6 +1,6 @@
 \documentclass[11pt, a4paper, twocolumn]{article}
 
-\usepackage{my style}
+\usepackage{mystyle}
 \newcommand*{\V}[1]{\mathbf{#1}}
 
 \begin{document}
@@ -10,23 +10,27 @@
     \input{./tex/abstract.tex}
 	
     \section{Introduction}
+    \label{sec:introduction}
         \input{./tex/intro.tex}
 
     \section{System overview}
+    \label{sec:systemoverview}
         \input{./tex/overview.tex}
     \section{Implementation details}
+    \label{sec:implementationdetails}
         \input{./tex/implementation.tex}
         
     \section{Experimental Setup}
+    \label{sec:experimentalsetup}
         \input{./tex/exp-setup.tex}
     \section{Results}
+    \label{sec:results}
         \input{./tex/results.tex}
         
     \section{Conclusion}
+    \label{sec:conclusion}
         \input{./tex/conclusion.tex}
 
-%\bibliographystyle{abbrv}
-%%use following if all content of bibtex file should be shown
-%\nocite{*}
-%\bibliography{references}
+\bibliographystyle{plain}
+\bibliography{references}
 \end{document}
