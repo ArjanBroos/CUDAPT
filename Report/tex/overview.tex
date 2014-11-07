@@ -40,3 +40,12 @@ Whenever a worker has finished its task, it will be assigned a task from the job
 If that job already has $mwpj$ workers on it, then the next job in line will receive the worker, and so on.
 Since Equation~\ref{eq:fewWorkers} holds, there is guaranteed to be a job in line without $mwpj$ workers already assigned to it.
 This way, some fairness is created in the amount of processing time that each job gets assigned.
+
+\subsection{Failing workers}
+It might be the case that a VM fails or the worker node malfunctions in some way.
+When this happens, the work done by the node will be lost.
+The loss of work done cannot be prevented by our system in such a case.
+However, the system does make sure that this work will not be missing in the end result.
+The master node can detect a disconnection from a worker and will reassign any task that was assigned to the worker at the time of disconnection.
+
+However, possible failure of the master node is not taken into consideration.
