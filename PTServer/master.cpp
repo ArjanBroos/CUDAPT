@@ -45,73 +45,63 @@ void Master::ReceiveJob()
             status.insert(record);
         }
         jobRecord record(jobId, job);
+        workersPerJob.insert(std::pair<int, int>(jobId, 0));
         jobs.insert(record);
     }
 }
 
 // Assigns tasks to all workers
 void Master::AssignTasks() {
+    // Set mappings of new workers and reset abandonned tasks
+    updateMappingsAndRespawnTasks();
+
     // Retrieve all the workers
     std::vector<int> workers = server.GetConnections();
-    if (workers.empty())
-        return;
 
-    // If no jobs are pending, return
-    // TODO
+    // If no jobs are pending, just return
+    if(jobs.size() == 0)
+        return;
 
     // Assign tasks to the workers
     for (std::vector<int>::iterator i = workers.begin(); i != workers.end(); i++) {
-        // Check if *i is a new worker
+        // Check if *i is idling, jump to next worker otherwise
         std::map<int,std::string>::iterator idleIt = idleList.find(*i);
-        if(idleIt == idleList.end()) {
-            idleList.insert( std::pair<int, std::string>(*i, "idle"));
-            //workerTaskMap.insert( std::pair< int, std::pair<int,int>>(*i, std::pair<int, int>(0,0)  ));
-        }
+        if(idleIt != idleList.end())
+            if(idleIt->second != "idle")
+                continue;
 
-        // Check if *i is idling
-        idleIt = idleList.find(*i);
-        if(idleIt != idleList.end()) {
-            if(idleIt->second == "idle") {
-                if(jobIt == jobs.end()) {
-                    jobIt = jobs.begin();
+        // Round Robin
+        // If jobIt is at end of list, just point it at begin again
+        if(jobIt == jobs.end())
+            jobIt = jobs.begin();
+
+        // Do not let a worker start on a job with already the max number of workers
+        if(workersPerJob[jobIt->first] >= 2)
+            break;
+
+        // Find a pending task in the job
+        for(taskList::iterator taskIt = jobIt->second.begin(); taskIt != jobIt->second.end(); taskIt++) {
+            // Check if the task is not already claimed
+            statusList::iterator statusIt = status.find( std::pair<int,int>(jobIt->first, taskIt->getFrame() ));
+            if(statusIt != status.end()) {
+                if( statusIt->second == "pending") {
+                    // Update the mapping, *i is going to work on *taskIt
+                    std::map<int, Task>::iterator workerTaskMapIt = workerTaskMap.find(*i);
+                    if( workerTaskMapIt != workerTaskMap.end() )
+                        workerTaskMapIt->second = *taskIt;
+
+                    // TODO QUEUE for JOBS
+                    workersPerJob[jobIt->first]++;
+
+                    std::cout << "::: Assigning Task " << (*taskIt).getJobId() << "_" << (*taskIt).getFrame() << " to worker " << *i << " :::\n" << std::endl;
+                    SendTask(*i, *taskIt);
+                    statusIt->second = "claimed";
+                    idleIt->second = "working";
+                    break;
                 }
-
-                taskList::iterator taskIt;
-                for(taskIt = jobIt->second.begin(); taskIt != jobIt->second.end(); taskIt++) {
-                    statusList::iterator statusIt = status.find( std::pair<int,int>(jobIt->first, taskIt->getFrame() ));
-                    if(statusIt != status.end()) {
-                        if( statusIt->second == "pending") {
-
-                            std::map<int, Task>::iterator workerTaskMapIt = workerTaskMap.find(*i);
-                            if( workerTaskMapIt != workerTaskMap.end() ) {
-                                workerTaskMapIt->second = *taskIt;
-                            } else {
-                                workerTaskMap.insert(std::pair<int, Task>(*i, *taskIt));
-                            }
-
-                            // TODO QUEUE for JOBS
-                            /*std::map<int, Task>::iterator workerTaskMapIt = workerTaskMap.find(*i);
-                            if( workerTaskMapIt != workerTaskMap.end() ) {
-                                workerTaskMapIt->second = *taskIt;
-                            } else {
-                                workerTaskMap.insert(std::pair<int, Task>(*i, *taskIt));
-                            }*/
-
-                            std::cout << "::: Assigning Task " << (*taskIt).getJobId() << "_" << (*taskIt).getFrame() << " to worker " << *i << " :::\n" << std::endl;
-                            SendTask(*i, *taskIt);
-                            statusIt->second = "claimed";
-
-                            break;
-                        }
-                    }
-                }
-
-
-                idleIt->second = "working";
-                jobIt++;
             }
         }
-
+        jobIt++;
     }
 }
 
@@ -124,6 +114,50 @@ void Master::SendTask(int fd, Task &task) {
 
     // Then send the world name
     server.Send(fd, task.getWorldToRender().c_str(), task.getWorldToRender().size());
+}
+
+// Updates the worker mappings and restarts abandonned tasks
+void Master::updateMappingsAndRespawnTasks()
+{
+    // Reset abandonned tasks
+    std::vector<int> &recentlyDisconnected = server.GetRecentlyDisconnectedClients();
+    // For each disconnected client
+    for(std::vector<int>::iterator client = recentlyDisconnected.begin(); client != recentlyDisconnected.end(); client++) {
+        // Find the task that the client was working on
+        std::map<int,Task>::iterator taskIt = workerTaskMap.find(*client);
+        if(taskIt != workerTaskMap.end()) {
+            // Find the status of that task and reset it to pending so it can start again
+            statusList::iterator statusIt = status.find( std::pair<int,int>(taskIt->second.getJobId(), taskIt->second.getFrame() ));
+            if(statusIt != status.end()) {
+                std::cout << "=== Client " << *client << " disconnected ===\n";
+
+                if(statusIt->second != "finished") {
+                    statusIt->second = "pending";
+                    workersPerJob[taskIt->second.getJobId()]--;
+                    std::cout << "=== Restarted task " << taskIt->second.getJobId() << "_" << taskIt->second.getFrame() << " ===" << std::endl;
+                }
+            }
+        }
+    }
+    server.ClearRecentlyDisconnected();
+
+    // Fix mappings voor newly connected clients
+    std::vector<int> &recentlyConnected = server.GetRecentlyConnectedClients();
+    for(std::vector<int>::iterator client = recentlyConnected.begin(); client != recentlyConnected.end(); client++) {
+        std::cout << "=== Client " << *client << " connected ===" << std::endl;
+        std::map<int, std::string>::iterator idleIt = idleList.find(*client);
+        if(idleIt == idleList.end())
+            idleList.insert( std::pair<int, std::string>(*client, "idle"));
+        else
+            idleIt->second = "idle";
+
+        std::map<int, Task>::iterator workerIt = workerTaskMap.find(*client);
+        if( workerIt == workerTaskMap.end())
+            workerTaskMap.insert( std::pair<int, Task>(*client, Task()));
+        else
+            workerIt->second = Task();
+    }
+    server.ClearRecentlyConnected();
 }
 
 // Handles results that workers have finished and sent in
@@ -161,7 +195,6 @@ void Master::HandleResults() {
 
         std::ofstream file(fileName, std::ios::out);
         if(!file.is_open()) {
-            std::cout << "GAAT FOUT" << std::endl;
             return;
         }
         else {
@@ -169,14 +202,35 @@ void Master::HandleResults() {
             file.close();
         }
 
+        workersPerJob[task.getJobId()]--;
 
-
-        std::cout << "::: Received results of task " << task.getJobId() << "_" << task.getFrame() << " from worker " << rd.fd  << " :::"<< std::endl;
-
-        // Check if *i is idling
+        // Set *i to idling
         std::map<int,std::string>::iterator idleIt = idleList.find(rd.fd);
         if(idleIt != idleList.end())
             idleIt->second = "idle";
-        // TODO: Do stuff with the results
+        std::cout << "::: Received results of task " << task.getJobId() << "_" << task.getFrame() << " from worker " << rd.fd  << " :::" << std::endl;
+
+        // Check if the task is not already claimed
+        statusList::iterator statusIt = status.find( std::pair<int,int>(task.getJobId(), task.getFrame() ));
+        if( statusIt != status.end())
+            statusIt->second = "finished";
+
+        // Check if the job is already finished, if so, remove the job
+        jobList::iterator jobIt2 = jobs.find(task.getJobId());
+        bool allTasksFinished = true;
+        // Find a pending task in the job
+        for(taskList::iterator taskIt = jobIt2->second.begin(); taskIt != jobIt2->second.end(); taskIt++) {
+            // Check if the task is not already claimed
+            statusList::iterator statusIt = status.find( std::pair<int,int>(jobIt2->first, taskIt->getFrame() ));
+            if(statusIt != status.end()) {
+                if( statusIt->second != "finished")
+                    allTasksFinished = false;
+            }
+        }
+        // Check if all tasks are finished, if so, notify the system and remove the job from the joblist
+        if(allTasksFinished) {
+            std::cout << "::: Job " << jobIt2->first << " done :::" << std::endl;
+            jobs.erase(jobIt2);
+        }
     }
 }

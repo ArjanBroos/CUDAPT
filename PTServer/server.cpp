@@ -160,6 +160,9 @@ void Server::EstablishConnection() {
     pthread_mutex_lock(&fdListMutex);
     clientFDs.insert(std::pair<int, pthread_t>(newFD, thread));
     pthread_mutex_unlock(&fdListMutex);
+
+    // Add the newFd to the recentlyConnected list so that it can be initialized
+    recentlyConnected.push_back(newFD);
 }
 
 // Send data to client node with given file descriptor
@@ -186,6 +189,30 @@ bool Server::Send(int fd, const byte *data, int size) {
     }
 
     return true;
+}
+
+// Returns recently disconnected clients
+std::vector<int> &Server::GetRecentlyDisconnectedClients()
+{
+    return recentlyDisconnected;
+}
+
+// Empties the recently disconnected clients vecor
+void Server::ClearRecentlyDisconnected()
+{
+    recentlyDisconnected.clear();
+}
+
+// Returns recently disconnected clients
+std::vector<int> &Server::GetRecentlyConnectedClients()
+{
+    return recentlyConnected;
+}
+
+// Empties the recently disconnected clients vecor
+void Server::ClearRecentlyConnected()
+{
+    recentlyConnected.clear();
 }
 
 // Receive data from worker node with given file descriptor
@@ -237,6 +264,7 @@ void Server::CleanUpThread(RcvParam* rp) {
 
 void Server::HandleDisconnect(RcvParam* rp, int ret) {
     if (ret == 0) {
+        recentlyDisconnected.push_back(rp->fd);
         //std::cout << "Client " << rp->fd << " disconnected. Removing file descriptor." << std::endl;
         CleanUpThread(rp);
     }

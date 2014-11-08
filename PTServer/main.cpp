@@ -21,8 +21,6 @@ int main(int argc, char **argv) {
     master.ReceiveJob();
 
     while (true) {
-
-
         // Assign tasks to the workers
         master.AssignTasks();
 

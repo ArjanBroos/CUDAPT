@@ -36,6 +36,9 @@ private:
     // Sends task to worker with given file descriptor
     void SendTask(int fd, Task &task);
 
+    // Updates the worker mappings and restarts abandonned tasks
+    void updateMappingsAndRespawnTasks();
+
     statusList status;
     int nextJobId;
     jobList jobs;
