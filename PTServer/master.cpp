@@ -41,16 +41,20 @@ void Master::ReceiveJob()
     // Create a dummy task
     Task task;
     task.setJobId(jobId);
-    task.setWidth(640);
-    task.setHeight(400);
-    task.setNSamples(10);
-    task.setCameraPosition(Point(10.f, 1.2f, 3.f));
+    task.setWidth(800);
+    task.setHeight(600);
+    task.setNSamples(300);
     task.setCameraOrientation(Vector(0.03f, -0.36f, -0.9f));
     task.setWorldToRender("movieWorld");
+    Point p1(-3.f, 1.2f, 3.f);
+    Point p2(19.f, 1.2f, 3.f);
 
     taskList job;
-    for(int i = 0; i < 6; i++) {
+
+    int nFrames = 1000;
+    for(int i = 0; i < nFrames; i++) {
         task.setFrame(i);
+        task.setCameraPosition(Point(p1.x + ((float) i / (float) (nFrames - 1))*(p2.x - p1.x), 1.2f, 3.f));
         job.push_back(task);
         statusRecord record(std::pair<int, int>(jobId,i) , std::string("pending"));
         status.insert(record);
@@ -91,7 +95,7 @@ void Master::AssignTasks() {
         jobIt = jobs.find(*jobQueueIt);
 
         // Do not let a worker start on a job with already the max number of workers
-        while(workersPerJob[jobIt->first] >= 2) {
+        while(workersPerJob[jobIt->first] >= 10) {
             jobQueueIt++;
             if(jobQueueIt == jobQueue.end())
                 return;
