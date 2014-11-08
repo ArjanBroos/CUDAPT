@@ -58,4 +58,4 @@ ptserver
 CUDAPT.tar.gz
 
 # ppm file
-.ppm
+*.ppm
