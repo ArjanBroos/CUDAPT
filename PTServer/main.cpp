@@ -17,10 +17,10 @@ int main(int argc, char **argv) {
     Master master;
     master.StartListening(port);
 
-    // Retrieve new Jobs from external service
-    master.ReceiveJob();
-
     while (true) {
+        // Retrieve new Jobs from external service
+        master.ReceiveJob();
+
         // Assign tasks to the workers
         master.AssignTasks();
 
