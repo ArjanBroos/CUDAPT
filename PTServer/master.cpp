@@ -43,7 +43,7 @@ void Master::ReceiveJob()
     task.setJobId(jobId);
     task.setWidth(800);
     task.setHeight(600);
-    task.setNSamples(300);
+    task.setNSamples(1000);
     task.setCameraOrientation(Vector(0.03f, -0.36f, -0.9f));
     task.setWorldToRender("movieWorld");
     Point p1(-3.f, 1.2f, 3.f);
@@ -51,7 +51,7 @@ void Master::ReceiveJob()
 
     taskList job;
 
-    int nFrames = 1000;
+    int nFrames = 300;
     for(int i = 0; i < nFrames; i++) {
         task.setFrame(i);
         task.setCameraPosition(Point(p1.x + ((float) i / (float) (nFrames - 1))*(p2.x - p1.x), 1.2f, 3.f));
