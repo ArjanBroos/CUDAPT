@@ -50,9 +50,8 @@ private:
     std::map<int, Task> workerTaskMap;
     std::map<int, int> workersPerJob;
 
-    int maxWorkersPerJob;
-
     Server server;
+    int maxWorkersPerJob;
 };
 
 #endif // MASTER_H
