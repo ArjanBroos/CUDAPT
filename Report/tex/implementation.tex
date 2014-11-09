@@ -2,7 +2,7 @@ In this section, we describe details about the implemenation of the system.
 
 \subsection{Separation}
 We have implemented the master and worker nodes in separate programs.
-The functionality of the worker node includes a stripped down version our CUDAPT\cite{cudapt} path tracer.
+The functionality of the worker node includes a stripped down version of our CUDAPT\cite{cudapt} path tracer.
 Here, all parallellization per pixel using the graphics card was removed and simply runs sequentially.
 
 \subsection{Communication}
@@ -14,3 +14,6 @@ Once the master node is listening, worker nodes can make a connection with it.
 Once connected, the master node can start sending tasks to workers.
 These will perform their tasks by rendering the frame that corresponds to the given task and then send the raw image data back to the master node.
 The master node collects all of this image data and stores it on disk.
+
+\subsection{Dynamic job generation}
+Beside the communication between the master node and the workers, some communication is needed to add new jobs to the master. Adding a new job is not done via sockets; creating a job is done via a webinterface. The user visits the master node via a webbrowser and commands the webserver to create a new job for the master node. The master node is automatically informed of the new job and appends the job to the job list and starts scheduling the tasks belonging to the job.
