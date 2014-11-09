@@ -4,6 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <ctime>
 
 Worker::Worker() {
 }
@@ -54,6 +55,8 @@ Task Worker::ReceiveTask() {
 
 // Performs the given task (rendering an image with path tracer)
 byte *Worker::PerformTask(const Task &task) {
+    time_t timer = time(0);
+    std::cout << "::: Task started on " << GetTimeStamp() << std::endl;
     std::cout << "::: Performing task. Job ID: " << task.getJobId() << ", Frame: " << task.getFrame() << std::endl;
     std::cout << "        World name: " << task.getWorldToRender() << std::endl;
 
@@ -82,6 +85,12 @@ byte *Worker::PerformTask(const Task &task) {
     for(int i = 0; i < task.getWidth() * task.getHeight() * 3; i++)
         result[i] = frame[i];
     delete pScene;
+
+    double seconds = difftime(timer, time(0));
+    secondsWorked += seconds;
+    std::cout << "::: Task finished on " << GetTimeStamp() << std::endl;
+    std::cout << "::: This worker has worked " << secondsWorked << " seconds, so far" << std::endl;
+
     return NULL;
 }
 
@@ -95,13 +104,6 @@ void Worker::SendResults(const Task &task)
 
     // First send the invariably sized part
     client.Send( (byte*) &arrayResult, task.getWidth() * task.getHeight() * 3 * sizeof(char));
-
-
-
-
-
-
-
 
     /*
     std::string fileName("Test.ppm");
@@ -119,4 +121,13 @@ void Worker::SendResults(const Task &task)
         file.close();
     }*/
     return;
+}
+
+std::string Worker::GetTimeStamp() {
+    time_t rawTime;
+    tm* timeInfo;
+
+    time(&rawTime);
+    timeInfo = localtime(&rawTime);
+    return std::string(asctime(timeInfo));
 }
