@@ -5,3 +5,8 @@ In this section, we describe the results of the three experiments mentioned earl
 \subsection{Load balancing experiment}
 
 \subsection{Reliability experiment}
+
+\subsection{Cost analysis}
+The largest movie (job) rendered on the das4 server was a movie of 300 frames (10 seconds) with 1000 samples (path trace iterations) with a resolution of ($800 \times 600$). Das4 was configured with one master node and 10 worker nodes. The total computation  time to render the movie was 10 hour. In total this is 11 machines $\times$ 10 hours $=$ 110 instance hours. Assuming that an AmazonEC2 instance is as fast as a das4 instance, and an AmazonEC2 instance is charged for \EUR$0,10$ per instance hour, rendering the 10 seconds movie would cost \EUR{$11,00$}, which is \EUR$1,10$ to render one second of a movie.\\
+If rendering is not going to be a core business it is advised to make use of the Amazon Web Services. Affording dedicated hardware is not recommended, purchasing the required hardware is expensive and not worth it.\\
+However, if rendering is core business, then it is advisable to purchase dedicated hardware. \EUR$1,10$ per second of a movie is quite expensive, especially if a lot of movies are going to be rendered. For core business rendering, purchasing dedicated hardware could definitly save a penny.
