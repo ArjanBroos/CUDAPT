@@ -7,7 +7,8 @@
 #include <stdio.h>
 
 Master::Master()
-    : nextJobId(0)
+    : nextJobId(0),
+      maxWorkersPerJob(3)
 {
     jobIt = jobs.begin();
 }
@@ -43,7 +44,7 @@ void Master::ReceiveJob()
     task.setJobId(jobId);
     task.setWidth(800);
     task.setHeight(600);
-    task.setNSamples(1000);
+    task.setNSamples(32);
     task.setCameraOrientation(Vector(0.03f, -0.36f, -0.9f));
     task.setWorldToRender("movieWorld");
     Point p1(-3.f, 1.2f, 3.f);
@@ -95,7 +96,7 @@ void Master::AssignTasks() {
         jobIt = jobs.find(*jobQueueIt);
 
         // Do not let a worker start on a job with already the max number of workers
-        while(workersPerJob[jobIt->first] >= 10) {
+        while(workersPerJob[jobIt->first] >= maxWorkersPerJob) {
             jobQueueIt++;
             if(jobQueueIt == jobQueue.end())
                 return;

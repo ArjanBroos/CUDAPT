@@ -24,8 +24,11 @@ public:
     void SendResults(const Task &task);
 
 private:
+    std::string GetTimeStamp();
+
     std::vector<byte> result;
     Client client;
+    double secondsWorked;
 };
 
 #endif // WORKER_H
