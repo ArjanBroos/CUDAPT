@@ -6,6 +6,7 @@
 #include <string>
 #include <utility>
 #include <map>
+#include <string>
 
 // Typedefs for a job and a list of jobs
 typedef std::vector<Task> taskList;
@@ -38,6 +39,8 @@ private:
 
     // Updates the worker mappings and restarts abandonned tasks
     void updateMappingsAndRespawnTasks();
+
+    std::string GetTimeStamp();
 
     statusList status;
     int nextJobId;

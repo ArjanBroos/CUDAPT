@@ -63,6 +63,7 @@ void Master::ReceiveJob()
     jobRecord record(jobId, job);
     workersPerJob.insert(std::pair<int, int>(jobId, 0));
     jobs.insert(record);
+    std::cout << "::: Currently " << jobs.size() << " jobs running, " << GetTimeStamp() << std::endl;
     jobQueue.push_back(jobId);
 
     if( remove(jobFileName.c_str()) != 0 )
@@ -262,9 +263,19 @@ void Master::HandleResults() {
         if(jobFinished) {
             std::cout << "\n\t### Job " << jobIt2->first << " done ###\n" << std::endl;
             jobs.erase(jobIt2);
+            std::cout << "::: Currently " << jobs.size() << " jobs running, " << GetTimeStamp() << std::endl;
             auto queueRemoveIt = std::find(jobQueue.begin(), jobQueue.end(), jobIt2->first);
             if(queueRemoveIt != jobQueue.end())
                 jobQueue.erase(queueRemoveIt);
         }
     }
+}
+
+std::string Master::GetTimeStamp() {
+    time_t rawtime;
+    struct tm *timeinfo;
+
+    time (&rawtime);
+    timeinfo = localtime (&rawtime);
+    return std::string(asctime(timeinfo));
 }

@@ -1,4 +1,5 @@
 In this section, we describe the experimental setup.
+Our system can be monitored via descriptive messages which are sent to the standard output of the running programs.
 
 \subsection{DAS-4}
 Our cloud path tracer system has been set up on the DAS-4\cite{das4}.
@@ -12,20 +13,21 @@ This is because of the blocking socket receive call, which causes the program to
 This does mean, however, that the starting and stopping of virtual machines is not taken into account for any of our experiments.
 
 \subsection{Multitenancy and elasticity experiment}
-In this experiment, a number of jobs are gradually sent to the master node in such a way that multiple jobs will be running at a time, up to a point where we can no longer assign the maximal amount of workers per job.
+In this experiment, five jobs are gradually sent to the master node by two users.
+This happens in such a way that multiple jobs will be running at a time, up to a point where we can no longer assign the maximal amount of workers per job.
 
 This will show how multiple users can simultaneously use the system to perform jobs for them.
 Also, it shows how the amount of working workers scales up with demand and back down again.
-Finally, it will also demonstrate how much processing time each job gets in the phase where the maximal amount of workers cannot be assigned to every job.
 
 \subsection{Load balancing experiment}
-For this experiment, one job will be run with $mwpj = 3$.
-Processing time for each worker on this job will be measured.
-This experiment will be repeated several times and the results averaged.
+For this experiment, ten jobs will be run with $mwpj = 3$ and three workers.
+The total processing time that each worker does will be measured.
 
 This will demonstrate how well balanced the load to workers turns out to be.
 
 \subsection{Reliability experiment}
-In this experiment, a series of jobs will be run, during which we manually kill off certain workers and measure any missing tasks in the end result.
+In this experiment, ten jobs will be run with $mwpj = 3$ and ten workers.
+A worker process is manually killed and restarted at some later point in time.
+This is repeated for 25 workers.
 
 This will show that the system deals with failing worker nodes.
