@@ -6,7 +6,8 @@
 #include <string>
 #include <ctime>
 
-Worker::Worker() {
+Worker::Worker() :
+    secondsWorked(0) {
 }
 
 // Connect to master node
@@ -55,7 +56,7 @@ Task Worker::ReceiveTask() {
 
 // Performs the given task (rendering an image with path tracer)
 byte *Worker::PerformTask(const Task &task) {
-    time_t timer = time(0);
+    time_t startTime = time(0);
     std::cout << "::: Task started on " << GetTimeStamp() << std::endl;
     std::cout << "::: Performing task. Job ID: " << task.getJobId() << ", Frame: " << task.getFrame() << std::endl;
     std::cout << "        World name: " << task.getWorldToRender() << std::endl;
@@ -86,7 +87,8 @@ byte *Worker::PerformTask(const Task &task) {
         result[i] = frame[i];
     delete pScene;
 
-    double seconds = difftime(timer, time(0));
+    time_t endTime = time(0);
+    double seconds = difftime(endTime, startTime);
     secondsWorked += seconds;
     std::cout << "::: Task finished on " << GetTimeStamp() << std::endl;
     std::cout << "::: This worker has worked " << secondsWorked << " seconds, so far" << std::endl;
@@ -124,10 +126,10 @@ void Worker::SendResults(const Task &task)
 }
 
 std::string Worker::GetTimeStamp() {
-    time_t rawTime;
-    tm* timeInfo;
+    time_t rawtime;
+    struct tm *timeinfo;
 
-    time(&rawTime);
-    timeInfo = localtime(&rawTime);
-    return std::string(asctime(timeInfo));
+    time (&rawtime);
+    timeinfo = localtime (&rawtime);
+    return std::string(asctime(timeinfo));
 }
