@@ -36,10 +36,15 @@ private:
     // Sends task to worker with given file descriptor
     void SendTask(int fd, Task &task);
 
+    // Updates the worker mappings and restarts abandonned tasks
+    void updateMappingsAndRespawnTasks();
+
     statusList status;
     int nextJobId;
     jobList jobs;
+    std::vector<int> jobQueue;
     jobList::iterator jobIt;
+    std::vector<int>::iterator jobQueueIt;
 
     std::map<int, std::string> idleList;
     std::map<int, Task> workerTaskMap;

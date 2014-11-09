@@ -52,6 +52,18 @@ public:
     // Send data to worker node with given file descriptor
     bool Send(int fd, const byte *data, int size);
 
+    // Returns recently disconnected clients
+    std::vector<int> &GetRecentlyDisconnectedClients();
+
+    // Empties the recently disconnected clients vecor
+    void ClearRecentlyDisconnected();
+
+    // Returns recently disconnected clients
+    std::vector<int> &GetRecentlyConnectedClients();
+
+    // Empties the recently disconnected clients vecor
+    void ClearRecentlyConnected();
+
 private:
     // Constantly tries to establish connections
     static void* KeepEstablishingConnections(void* context);
@@ -69,6 +81,9 @@ private:
     void HandleDisconnect(RcvParam* rp, int ret);
     // Handles errors from recv() call
     void HandleReceiveErrors(RcvParam* rp, int ret);
+
+    std::vector<int> recentlyDisconnected;
+    std::vector<int> recentlyConnected;
 
     std::string port;   // Port to listen on
     int fd;             // Socket's file descriptor
