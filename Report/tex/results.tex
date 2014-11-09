@@ -1,6 +1,20 @@
 In this section, we describe the results of the three experiments mentioned earlier.
 
 \subsection{Multitenancy and elasticity experiment}
+In Figure~\ref{fig:multitenancyexp}, it can clearly be seen that multiple jobs can be accepted simultaneously by the system.
+Also, we can see the number of running worker nodes increase and decrease with demand.
+At 200 seconds, we see that the maximum number of worker nodes has been reached, and we no longer have three worker nodes per job.
+
+\begin{figure}[ht!]
+    \center
+    \includegraphics[width=0.45\textwidth]{./img/multitenancyexp.png}
+    \caption{Results of the Multitenancy and elasticity experiment}
+    \label{fig:multitenancyexp}
+\end{figure}
+
+Every 50 seconds of the first 300 seconds, a job was added by a user.
+Most jobs took about 200 seconds.
+
 
 \subsection{Load balancing experiment}
 As can be seen in Figure~\ref{fig:loadbalancingexp}, the time spent processing by the worker nodes is rather balanced.

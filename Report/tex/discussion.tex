@@ -1,3 +1,8 @@
-In this section, we discuss inherent trade-offs of the design of cloud-computing-based applications.
-We will also discuss the costs of deploying this cloud path tracer to Amazon EC2.
+The IaaS-based approach allows for a lot of control over the workings of your application.
+However, it does require a lot of work to set up properly.
+Other SaaS providers might have implemented your needs already, probably better than a developer team that is new to this can do.
 
+For our use-case, the cloud path tracer, the fine control was beneficial, because we can make well-informed choices about how to distribute the work and assure efficient communication between nodes.
+
+However, running our application on Amazon EC2 would be too costly.
+The rendering of a second of video costs \EUR{1.10}, making it not a viable option when rendering videos is the core of the application.
